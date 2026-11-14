@@ -7,14 +7,14 @@
   "checks": {
     "install": "pass",
     "typecheck": "pass",
-    "tests": "66 passed across 7 files; 57 existing plus 9 new UI cases",
+    "tests": "67 passed across 7 files; 57 existing plus 10 new UI cases",
     "build": "pass",
     "diffCheck": "pass",
     "protectedFiles": "No changes to domain, storage, Results, Proposal, workflow, dependencies"
   },
   "browser": {
     "target": "http://localhost:5176/yesif/",
-    "screenshots": "Unavailable: Page.captureScreenshot timed out. No screenshots or visual sign-off claimed.",
+    "screenshots": "Captured and visually reviewed using documented screenshot clips after initial capture timeouts. Public landing at 375/900/1280, final local input at 375/900 and compact mobile commitments; archived V2 comparison at 900. Raw PNGs in artifacts/v2.1.",
     "cases": {
       "A": "Primary personal route; blank required estimate; secondary real example",
       "B": "Manually entered 5h request + 5h report, applied 3h/day; 10/15 feasible; edit preserved inputs",
@@ -176,12 +176,23 @@
       "primaryTop": 647.0625
     },
     "limits": [
-      "No screenshot comparison",
       "No new human participant test or 10-second comprehension measurement",
       "No full native keyboard/screen-reader audit",
       "Reduced-motion rules source-reviewed; preference emulation not exercised",
-      "Native screenshot and some Playwright clicks time out; DOM reads and documented native actions worked"
-    ]
+      "Initial screenshot and some Playwright clicks timed out; screenshots later succeeded with explicit clips. Documented native actions worked."
+    ],
+    "screenshotFiles": [
+      "landing-desktop.png",
+      "landing-900.png",
+      "landing-mobile.png",
+      "input-900.png",
+      "input-mobile.png",
+      "commitments-mobile.png",
+      "v2-landing-900.png",
+      "v2-input-900.png"
+    ],
+    "publicVerification": "Initial V2.1 release 11c828680f6357ad07c8b54e1f362bf63a037cb0: Actions 43626438333 succeeded; public landing and personal-input route verified in browser. Final transition refinement undergoes its own release check.",
+    "motion": "Final local input computed entrance 0.22s; heading received focus without scroll jump. Section anchor focused the existing-work heading. Reduced-motion branch covered by integration test; native preference emulation remains untested."
   },
   "testNotes": [
     "Two original long interaction tests exceeded the original 5s timeout even before modifications. Their limits are now 15s with assertions unchanged. Baseline 57 passed sequentially; final npm test passed normally.",
@@ -190,5 +201,127 @@
   "rollback": {
     "branch": "codex/yesif-v2-rollback",
     "sha": "dc326f1ac7523c960efd5030466b79782581237d"
+  },
+  "feedbackChecklist": {
+    "L01": {
+      "status": "FIXED",
+      "evidence": "Personal input is primary; example is secondary."
+    },
+    "L02": {
+      "status": "FIXED",
+      "evidence": "Concrete problem, mechanism and editable response are shown; no timed comprehension claim."
+    },
+    "L03": {
+      "status": "FIXED",
+      "evidence": "Removed repeated poetic marketing lines."
+    },
+    "L04": {
+      "status": "FIXED",
+      "evidence": "Reviewed desktop/mobile screenshots; 900px CTA substantially higher."
+    },
+    "L05": {
+      "status": "FIXED",
+      "evidence": "Preview mirrors the actual commitments and proposed move."
+    },
+    "L06": {
+      "status": "FIXED",
+      "evidence": "Engine-derived before, named change and conditional after state."
+    },
+    "L07": {
+      "status": "FIXED",
+      "evidence": "Kit promotion removed from landing and input headers; notebook and Kit routes retained."
+    },
+    "L08": {
+      "status": "FIXED",
+      "evidence": "Replaced repetitive lower sections with one concise three-step strip."
+    },
+    "L09": {
+      "status": "PARTIALLY FIXED",
+      "evidence": "Now opens a practical personal task flow; subjective product feel awaits another human session."
+    },
+    "L10": {
+      "status": "FIXED",
+      "evidence": "Plan my workload and Explore an example clearly distinguish the routes."
+    },
+    "I01": {
+      "status": "FIXED",
+      "evidence": "Request surface, time panel and compact existing-work items have different structures."
+    },
+    "I02": {
+      "status": "PARTIALLY FIXED",
+      "evidence": "Task categories and prompts changed; the original participant has not repeated the task."
+    },
+    "I03": {
+      "status": "FIXED",
+      "evidence": "Single compact purpose statement and linked section map."
+    },
+    "I04": {
+      "status": "FIXED",
+      "evidence": "One request heading; name, effort and deadline labels."
+    },
+    "I05": {
+      "status": "FIXED",
+      "evidence": "Estimated hours needed versus Hours remaining."
+    },
+    "I06": {
+      "status": "FIXED",
+      "evidence": "Custom request and new commitments have blank required effort; NaN stays invalid."
+    },
+    "I07": {
+      "status": "FIXED",
+      "evidence": "Zero is explicitly unavailable; usable total remains visible."
+    },
+    "I08": {
+      "status": "FIXED",
+      "evidence": "Explicit apply-to-weekdays with independent day editing, quarter-hour and zero validation."
+    },
+    "I09": {
+      "status": "FIXED",
+      "evidence": "Optional buffer explained and subtracted visibly; double-counting cautioned."
+    },
+    "I10": {
+      "status": "FIXED",
+      "evidence": "Timing flexibility remains visible even in compact review state."
+    },
+    "I11": {
+      "status": "FIXED",
+      "evidence": "Fixed default visible with protected-deadline explanation; no automatic moves."
+    },
+    "I12": {
+      "status": "FIXED",
+      "evidence": "Priority is separate, subordinate and explicitly ranks suggestions."
+    },
+    "I13": {
+      "status": "PARTIALLY FIXED",
+      "evidence": "Compact review cards, Edit/Done and visible timing; comfort still needs human feedback."
+    },
+    "I14": {
+      "status": "FIXED",
+      "evidence": "Three-card form 1979 to 1650px at 900; mobile 2194 to 2182px, with smaller cards and now-visible timing."
+    },
+    "I15": {
+      "status": "FIXED",
+      "evidence": "Removed persistent disabled explanations; attempted unavailable stage gives a status message."
+    },
+    "I16": {
+      "status": "FIXED",
+      "evidence": "Distinct guarded Start over and Load example."
+    },
+    "I17": {
+      "status": "FIXED",
+      "evidence": "Check my week with deadline/conflict outcome copy."
+    },
+    "I18": {
+      "status": "FIXED",
+      "evidence": "220ms immediate input entrance, controlled focus/scroll, active section feedback and reduced-motion support."
+    },
+    "I19": {
+      "status": "FIXED",
+      "evidence": "Honest details-entered indicators and compact completed items; no fake calculation delays."
+    },
+    "I20": {
+      "status": "PARTIALLY FIXED",
+      "evidence": "Friction reduced in implementation and exercised in tests; new-user learning time remains unverified."
+    }
   }
 }

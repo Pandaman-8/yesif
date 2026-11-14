@@ -138,7 +138,7 @@ function App() {
     setPage(next);
     setNotice("");
     window.scrollTo({ top: 0, behavior: "instant" });
-    setTimeout(() => heading.current?.focus(), 0);
+    setTimeout(() => heading.current?.focus({ preventScroll: true }), 0);
   }
   function change(next: Scenario) {
     setDirty(true);
@@ -488,7 +488,7 @@ function App() {
                 <span className="count">{notebook.decisions.length}</span>
               )}
             </button>
-            {page !== "landing" && (
+            {page !== "landing" && page !== "workload" && (
               <button className="nav-kit" onClick={() => go("notebook")}>
                 The negotiation kit <ArrowUpRight size={14} />
               </button>
@@ -496,7 +496,11 @@ function App() {
           </nav>
         </div>
       </header>
-      <main id="main" key={page} className="page-enter">
+      <main
+        id="main"
+        key={page}
+        className={`page-enter ${page === "workload" ? "input-page-enter" : ""}`}
+      >
         {removingDraft && (
           <ConfirmDialog
             title="Remove the saved draft?"

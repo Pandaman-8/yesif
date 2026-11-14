@@ -99,15 +99,21 @@ export function Workload({
             href={`#${id}`}
             onClick={(e) => {
               e.preventDefault();
-              document.getElementById(String(id))?.focus();
               document
                 .getElementById(String(id))
-                ?.scrollIntoView({ block: "start" });
+                ?.focus({ preventScroll: true });
+              document.getElementById(String(id))?.scrollIntoView({
+                block: "start",
+                behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+                  .matches
+                  ? "instant"
+                  : "smooth",
+              });
             }}
           >
             <span>
               {done ? <Check size={15} aria-label="Details entered" /> : i + 1}
-            </span>
+            </span>{" "}
             {name}
           </a>
         ))}

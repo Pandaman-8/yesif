@@ -1,4 +1,4 @@
-import { expect, it } from "vitest";
+import { expect, it, vi } from "vitest";
 import {
   fireEvent,
   render,
@@ -51,6 +51,7 @@ it("makes personal input primary, starts with blank required effort and focuses 
     screen.getByRole("button", { name: "Explore an example" }),
   ).not.toHaveClass("primary");
   await user.click(primary);
+  expect(screen.queryByRole("button", { name: /negotiation kit/i })).toBeNull();
   expect(field("New request hours")).toHaveValue(null);
   expect(field("New request hours")).toBeRequired();
   expect(field("New request name")).toHaveValue("");
@@ -230,4 +231,22 @@ it("collapses completed commitments while keeping timing visible and supports ed
   expect(
     screen.getByRole("button", { name: "Done editing commitment 1" }),
   ).toBeDisabled();
+});
+
+it("section links move keyboard focus and honor reduced motion when scrolling", async () => {
+  const user = await personal();
+  const title = screen.getByRole("heading", { name: "My available time" });
+  const scroll = vi.fn();
+  title.scrollIntoView = scroll;
+  vi.stubGlobal("matchMedia", vi.fn().mockReturnValue({ matches: true }));
+  try {
+    await user.click(screen.getByRole("link", { name: "2 Available time" }));
+    expect(title).toHaveFocus();
+    expect(scroll).toHaveBeenCalledWith({
+      block: "start",
+      behavior: "instant",
+    });
+  } finally {
+    vi.unstubAllGlobals();
+  }
 });

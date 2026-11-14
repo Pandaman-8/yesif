@@ -3178,3 +3178,23 @@ button,
     font-size: clamp(40px, 7vw, 52px);
   }
 }
+
+/* A distinct, immediate entrance for personal input; no timer gates interaction. */
+.input-page-enter {
+  animation: input-arrive 220ms ease-out;
+}
+@keyframes input-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .input-page-enter {
+    animation: none;
+  }
+}
