@@ -139,12 +139,14 @@ export function practiceFor(
     promise = !first
       ? "recheck before I confirm"
       : "recheck before accepting it";
-    observe =
-      "The current scope fits the entered deadlines. The extra work has no estimate yet, so I’m keeping my confirmation open.";
+    observe = first
+      ? "I understand you need a decision. The extra work has no estimate yet, so I’m keeping my confirmation open while that uncertainty remains."
+      : "The current scope fits the entered deadlines. The extra work has no estimate yet, so I’m keeping my confirmation open.";
     observeConstraint = "The extra work has no estimate yet";
     observeBoundary = "keeping my confirmation open";
-    assume =
-      "The current scope fits the entered deadlines. Could we use the available room for the extra work and confirm it now?";
+    assume = first
+      ? "Could we use the available room and confirm it now, so the team can proceed with the extra work while we clarify the estimate?"
+      : "The current scope fits the entered deadlines. Could we use the available room for the extra work and confirm it now?";
     assumedAction = "use the available room";
     assumedPromise = "confirm it now";
     lesson =
@@ -174,10 +176,14 @@ export function practiceFor(
     promise = !first
       ? "recheck before committing"
       : "before confirming the whole plan";
-    observe = `The ${deficit} gap by ${day} is still unresolved. I’ll hold off on confirming the plan while we consider the workload.`;
+    observe = first
+      ? `I hear the proposed adjustment. The ${deficit} gap by ${day} remains untested, so I’ll hold off on confirming while we consider its effect.`
+      : `The ${deficit} gap by ${day} is still unresolved. I’ll hold off on confirming the plan while we consider the workload.`;
     observeConstraint = `${deficit} gap by ${day}`;
     observeBoundary = "hold off on confirming";
-    assume = `The ${deficit} gap by ${day} needs attention. Could we add that much focused time before then and confirm the whole plan?`;
+    assume = first
+      ? `For the ${deficit} gap by ${day}. Could we add that much focused time before then and confirm the whole plan on that basis?`
+      : `The ${deficit} gap by ${day} needs attention. Could we add that much focused time before then and confirm the whole plan?`;
     assumedAction = "add that much focused time before then";
     assumedPromise = "confirm the whole plan";
     lesson = `${day}'s ${deficit} deficit needs a relevant change, followed by every weekday check.${later ? ` The new request also adds pressure by ${DAYS[later.day]}.` : " A lower bound is not proof of a sufficient repair."}`;
@@ -204,12 +210,14 @@ export function practiceFor(
     promise = !first
       ? "confirm that estimate before I commit"
       : "recheck before I confirm";
-    observe =
-      "The lower estimate covers a smaller result, with the exact contents still awaiting agreement. I’ll hold off on promising the full output.";
+    observe = first
+      ? "The full output is still unconfirmed: the lower estimate covers a smaller result. I’ll hold off on promising the full output until contents are settled."
+      : "The lower estimate covers a smaller result, with the exact contents still awaiting agreement. I’ll hold off on promising the full output.";
     observeConstraint = "lower estimate covers a smaller result";
     observeBoundary = "hold off on promising the full output";
-    assume =
-      "The lower estimate fits the available time. Could we keep all the original deliverables by simplifying how much detail goes into each one?";
+    assume = first
+      ? "Could we tell the team we’ll keep all the original deliverables in the smaller version by simplifying how much detail each contains?"
+      : "The lower estimate fits the available time. Could we keep all the original deliverables by simplifying how much detail goes into each one?";
     assumedAction = "simplifying how much detail";
     assumedPromise = "keep all the original deliverables";
     lesson = `${hours(checked!.requestUnits)}h fits the time constraints; it does not prove a useful version of the original ${hours(s.request.units)}h result exists. Agree the contents and estimate together.`;
@@ -258,16 +266,24 @@ export function practiceFor(
         : "settle the priorities and a new date";
     agreement = "Could we";
     promise = !first ? "recheck before I confirm" : "before I commit";
-    observe = combined
-      ? "Both the move and smaller scope are conditions of the checked plan. I’ll hold off on confirming while those two conditions remain open."
-      : "Moving that work is a condition of the checked plan. I’ll hold off on confirming the request while the original deadline still stands.";
+    observe = first
+      ? combined
+        ? "Both the move and smaller scope remain open after that objection. I’ll hold off on confirming while we consider what this means for the request."
+        : "Moving that work is a condition that remains open after that objection. I’ll hold off on confirming while we consider the original deadline."
+      : combined
+        ? "Both the move and smaller scope are conditions of the checked plan. I’ll hold off on confirming while those two conditions remain open."
+        : "Moving that work is a condition of the checked plan. I’ll hold off on confirming the request while the original deadline still stands.";
     observeConstraint = combined
       ? "Both the move and smaller scope"
       : "Moving that work is a condition";
     observeBoundary = "hold off on confirming";
-    assume = combined
-      ? "The checked plan needs both changes. Could we keep the smaller scope, leave that work in this week and confirm the request now?"
-      : "The checked plan needs the move. Could we put that work at the end of this week and confirm the request now?";
+    assume = first
+      ? combined
+        ? "The checked plan needs both changes. Could we leave that work in this week and confirm the request now using the smaller scope?"
+        : "The checked plan needs the move. Could we put that work at the end of this week and confirm the request now pending approval?"
+      : combined
+        ? "The checked plan needs both changes. Could we keep the smaller scope, leave that work in this week and confirm the request now?"
+        : "The checked plan needs the move. Could we put that work at the end of this week and confirm the request now?";
     assumedAction = combined
       ? "leave that work in this week"
       : "put that work at the end of this week";

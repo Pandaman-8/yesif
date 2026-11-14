@@ -1,13 +1,17 @@
 import { useState } from "react";
 import type { SavedDecision } from "../storage/scenarios";
-import { decisionBrief, playbook } from "../domain/decisionTools";
+import {
+  decisionBrief,
+  decisionBriefParts,
+  playbook,
+} from "../domain/decisionTools";
 import { ArtifactText } from "./ArtifactText";
 export function DecisionKit({
   decision,
   print,
 }: {
   decision: SavedDecision;
-  print: (text: string) => void;
+  print: (parts: string[]) => void;
 }) {
   const [prepOpen, setPrepOpen] = useState(false),
     [briefOpen, setBriefOpen] = useState(false);
@@ -39,7 +43,7 @@ export function DecisionKit({
             <ArtifactText
               label="Decision brief"
               text={decisionBrief(decision)}
-              print={() => print(decisionBrief(decision))}
+              print={() => print(decisionBriefParts(decision))}
             />
           </>
         )}

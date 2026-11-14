@@ -104,6 +104,10 @@ export function followUpText(d: SavedDecision): string {
     : `${d.outcome === "revisit" ? "Could we revisit" : "Following up on"} ${d.scenario.request.name}: ${shortProposal(d.scenario, f.plan, d.scope)}${note ? ` My note for this conversation: ${noteSentence}` : ""} Could we confirm the next step?`;
 }
 export function decisionBrief(d: SavedDecision): string {
+  return decisionBriefParts(d).join("\n\n");
+}
+// Keep authored sections intact for printing, especially multi-paragraph user text.
+export function decisionBriefParts(d: SavedDecision): string[] {
   const s = d.scenario,
     f = decisionFacts(s, d.plan, d.scope),
     a = analyzeConflicts(s);
@@ -121,5 +125,5 @@ export function decisionBrief(d: SavedDecision): string {
     `Outcome recorded by you: ${d.outcome === "agreed" ? "Agreement recorded by me (not independently verified)" : d.outcome === "revisit" ? "Needs another conversation" : "Not discussed yet"}.${d.notes ? `\nYour notes: ${d.notes}` : ""}`,
     `Your saved message (not verified by the calculation):\n${d.message}`,
     "Limits: entered estimates, divisible work available from the start, one person and five weekdays. No dependencies, delivery guarantee or verified future capacity.",
-  ].join("\n\n");
+  ];
 }

@@ -3,6 +3,7 @@ import { decisionFacts, scenarioDifferences } from "../domain/decisionTools";
 import { hours, optionTitle } from "../domain/engine";
 import type { SavedDecision } from "../storage/scenarios";
 import { DecisionFacts } from "./DecisionFacts";
+import { savedChoiceLabel, savedDate } from "./savedLabels";
 export function SavedComparison({ decisions }: { decisions: SavedDecision[] }) {
   const [a, setA] = useState(""),
     [b, setB] = useState("");
@@ -34,20 +35,29 @@ export function SavedComparison({ decisions }: { decisions: SavedDecision[] }) {
               <label key={label}>
                 Snapshot {label}
                 <select
+                  aria-label={`Snapshot ${label}`}
+                  aria-describedby={`snapshot-${label}-description`}
                   value={decisions.some((d) => d.id === value) ? value : ""}
                   onChange={(e) => set(e.target.value)}
                 >
                   <option value="">Choose a saved decision</option>
                   {decisions.map((d, i) => (
                     <option key={d.id} value={d.id} disabled={d.id === other}>
-                      {i + 1}. {d.scenario.request.name} ·{" "}
-                      {optionTitle(
-                        d.scenario,
-                        decisionFacts(d.scenario, d.plan).plan,
-                      )}
+                      {savedChoiceLabel(d, i)}
                     </option>
                   ))}
                 </select>
+                <span
+                  className="snapshot-description help"
+                  id={`snapshot-${label}-description`}
+                >
+                  {(() => {
+                    const d = decisions.find((d) => d.id === value);
+                    return d
+                      ? `${d.scenario.request.name} — ${optionTitle(d.scenario, decisionFacts(d.scenario, d.plan).plan)}. Saved ${savedDate(d)}.`
+                      : "Select a snapshot to see its full change and saved date.";
+                  })()}
+                </span>
               </label>
             ))}
           </div>
@@ -78,6 +88,7 @@ export function SavedComparison({ decisions }: { decisions: SavedDecision[] }) {
                     >
                       <p className="eyebrow">Snapshot {i === 0 ? "A" : "B"}</p>
                       <h3>{d.scenario.request.name}</h3>
+                      <p className="help">Saved {savedDate(d)}</p>
                       <p>{optionTitle(d.scenario, f.plan)}</p>
                       <p className="snapshot-math">
                         <strong>

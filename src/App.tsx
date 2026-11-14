@@ -28,6 +28,8 @@ import {
 } from "./storage/scenarios";
 
 import { Landing } from "./components/Landing";
+import { PrintBrief } from "./components/PrintBrief";
+import { savedDate } from "./components/savedLabels";
 import { Workload } from "./components/Workload";
 import { Results } from "./components/Results";
 import { Proposal } from "./components/Proposal";
@@ -71,10 +73,10 @@ function App() {
   const [notebook, setNotebook] = useState<Notebook>(initial.notebook);
   const [unlocked, setUnlocked] = useState(false);
   const [followUps, setFollowUps] = useState<Record<string, FollowUpDraft>>({});
-  const [printText, setPrintText] = useState("");
+  const [printParts, setPrintParts] = useState<string[]>([]);
   useEffect(() => {
-    if (printText) window.print();
-  }, [printText]);
+    if (printParts.length) window.print();
+  }, [printParts]);
   const [demo, setDemo] = useState(false);
   const [inputRevision, setInputRevision] = useState(0);
   const [unresolved, setUnresolved] = useState(false);
@@ -840,19 +842,14 @@ function App() {
                   </div>
                 ) : (
                   <div className="saved-grid">
-                    {notebook.decisions.map((d) => (
+                    {notebook.decisions.map((d, index) => (
                       <article
                         className="panel saved-card"
                         key={d.id}
                         aria-label={`Saved ${d.scenario.request.name}`}
                       >
                         <p className="eyebrow">
-                          {new Date(d.created).toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}{" "}
-                          · SAVED SNAPSHOT
+                          Snapshot {index + 1} · {savedDate(d)}
                         </p>
                         <h3>{d.scenario.request.name}</h3>
                         <p>
@@ -930,9 +927,9 @@ function App() {
                             />
                             <DecisionKit
                               decision={d}
-                              print={(text) => {
-                                if (text === printText) window.print();
-                                else setPrintText(text);
+                              print={(parts) => {
+                                if (parts.join("\n\n") === printParts.join("\n\n")) window.print();
+                                else setPrintParts(parts);
                               }}
                             />
                           </>
@@ -983,9 +980,7 @@ function App() {
           </div>
         )}
       </main>
-      <div className="print-brief">
-        <pre>{printText}</pre>
-      </div>
+      <PrintBrief parts={printParts} />
       <footer className="footer wrap">
         <span className="footer-logo">yesif.</span>
         <span>Every yes needs an if.</span>

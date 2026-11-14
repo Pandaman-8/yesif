@@ -7,22 +7,37 @@ import {
 } from "../domain/practice";
 import type { Option, Scenario } from "../domain/engine";
 
-function Feedback({ choice }: { choice: PracticeChoice }) {
+function Feedback({
+  choice,
+  compact = false,
+}: {
+  choice: PracticeChoice;
+  compact?: boolean;
+}) {
   return (
     <div className="practice-feedback" role="status">
-      <p>
-        <strong>What works.</strong> {choice.worked}
-      </p>
-      <p>
-        <strong>
-          {choice.id === "grounded" ? "Keep in mind." : "What to change."}
-        </strong>{" "}
-        {choice.improve}
-      </p>
-      {choice.id !== "grounded" && (
+      {compact ? (
         <p>
-          <strong>Try saying:</strong> “{choice.revision}”
+          <strong>Feedback.</strong>{" "}
+          {choice.id === "grounded" ? choice.worked : choice.improve}
         </p>
+      ) : (
+        <>
+          <p>
+            <strong>What works.</strong> {choice.worked}
+          </p>
+          <p>
+            <strong>
+              {choice.id === "grounded" ? "Keep in mind." : "What to change."}
+            </strong>{" "}
+            {choice.improve}
+          </p>
+          {choice.id !== "grounded" && (
+            <p>
+              <strong>Try saying:</strong> “{choice.revision}”
+            </p>
+          )}
+        </>
       )}
       <details className="rubric-evidence">
         <summary>Why this feedback?</summary>
@@ -124,17 +139,25 @@ export function NegotiationPractice({
           </details>
           {stage === "done" ? (
             <>
-              <p className="practice-recap">
-                <strong>Your first response:</strong>{" "}
-                {firstAnswer!.id === "grounded"
-                  ? firstAnswer!.worked
-                  : firstAnswer!.improve}
-              </p>
-              <p className="help">Your response to the follow-up</p>
-              <blockquote className="practice-selected">
-                {answer!.text}
-              </blockquote>
-              <Feedback choice={answer!} />
+              {(
+                [
+                  ["first", "Your first response", firstAnswer!],
+                  ["second", "Your response to the follow-up", answer!],
+                ] as const
+              ).map(([id, label, reply]) => (
+                <div className="practice-recap" key={id}>
+                  <p className="help" id={`practice-${id}-reply`}>
+                    {label}
+                  </p>
+                  <blockquote
+                    className="practice-selected"
+                    aria-labelledby={`practice-${id}-reply`}
+                  >
+                    {reply.text}
+                  </blockquote>
+                  <Feedback choice={reply} compact />
+                </div>
+              ))}
               <button className="button outline" onClick={restart}>
                 Try again
               </button>
