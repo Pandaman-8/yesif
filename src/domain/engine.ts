@@ -16,6 +16,8 @@ export interface Task {
 }
 export interface Scenario {
   capacity: number[];
+  /** Optional explicit daily reserve; absent in V1 records. */
+  reserve?: number[];
   tasks: Task[];
   request: Task;
 }
@@ -55,6 +57,20 @@ export function validate(value: unknown): string[] {
     !value.capacity.every((n) => integer(n, 0, 96))
   )
     errors.push("Enter 0–24 focused hours for each day, in 0.25-hour steps.");
+  if (
+    value.reserve !== undefined &&
+    (!Array.isArray(value.reserve) ||
+      value.reserve.length !== 5 ||
+      !value.reserve.every(
+        (n, i) =>
+          integer(n, 0, 96) &&
+          Array.isArray(value.capacity) &&
+          n <= value.capacity[i],
+      ))
+  )
+    errors.push(
+      "Reserve 0–24 hours per day in 0.25-hour steps, no more than that day’s available time.",
+    );
   if (!Array.isArray(value.tasks) || value.tasks.length > 8)
     errors.push("Add no more than 8 existing commitments.");
   const tasks = Array.isArray(value.tasks) ? value.tasks : [];
@@ -104,6 +120,9 @@ export function feasibility(capacity: number[], tasks: Task[]): Feasibility {
     checkpoints,
   };
 }
+export function availableCapacity(s: Scenario): number[] {
+  return s.capacity.map((n, i) => n - (s.reserve?.[i] ?? 0));
+}
 export function analyze(s: Scenario): {
   baseline: Feasibility;
   existing: Feasibility;
@@ -111,8 +130,8 @@ export function analyze(s: Scenario): {
 } {
   const errors = validate(s);
   if (errors.length) throw new Error(errors.join(" "));
-  const baseline = feasibility(s.capacity, [...s.tasks, s.request]);
-  const existing = feasibility(s.capacity, s.tasks);
+  const baseline = feasibility(availableCapacity(s), [...s.tasks, s.request]);
+  const existing = feasibility(availableCapacity(s), s.tasks);
   if (baseline.fits)
     return {
       baseline,
@@ -131,7 +150,7 @@ export function analyze(s: Scenario): {
   const candidates: Option[] = [];
   for (let mask = 1; mask < 2 ** movable.length; mask++) {
     const deferred = movable.filter((_, i) => mask & (1 << i)).map((t) => t.id);
-    const result = feasibility(s.capacity, [
+    const result = feasibility(availableCapacity(s), [
       ...s.tasks.filter((t) => !deferred.includes(t.id)),
       s.request,
     ]);
@@ -175,7 +194,7 @@ export function analyze(s: Scenario): {
         .map((c) => c.available - c.due),
     );
     if (maxUnits >= 1 && maxUnits < s.request.units) {
-      const result = feasibility(s.capacity, [
+      const result = feasibility(availableCapacity(s), [
         ...s.tasks,
         { ...s.request, units: maxUnits },
       ]);
@@ -227,7 +246,7 @@ export function simulate(
     kind,
     deferred: ordered,
     requestUnits,
-    result: feasibility(s.capacity, [
+    result: feasibility(availableCapacity(s), [
       ...s.tasks.filter((t) => !ordered.includes(t.id)),
       { ...s.request, units: requestUnits },
     ]),
@@ -249,7 +268,7 @@ export function proposal(s: Scenario, option: Option): string {
     throw new Error(
       "This plan still conflicts with a deadline. Recalculate before preparing a proposal.",
     );
-  const baseline = feasibility(s.capacity, [...s.tasks, s.request]);
+  const baseline = feasibility(availableCapacity(s), [...s.tasks, s.request]);
   const deadline = DAYS[s.request.deadline];
   const current = s.tasks.reduce((a, t) => a + t.units, 0);
   const context = `I have ${duration(current)} already committed against ${hours(baseline.capacity)} focused hours available in this planning week. The full request would bring the total to ${duration(baseline.total)}.`;

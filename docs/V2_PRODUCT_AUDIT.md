@@ -1,0 +1,25 @@
+# YESIF V2 independent product audit
+
+Baseline: `f47894bc8b59790042d9da2565b2f4e312d14ab3`. All 35 tests passed before edits; baseline CI succeeded. Local rollback branch `codex/yesif-v1-rollback`; development branch `codex/yesif-v2-human-first`. ShiftMargin is outside scope.
+
+Reviewed README, foundation, product decision, engine specification, QA and pitch handoff, application, storage, styles and all tests. Public landing DOM inspected; browser click stalled during baseline result inspection, so result findings below are source-backed, not a claimed new browser pass.
+
+| Evidence in V1                                                         | User impact                                              | Severity | Fix / regression requirement                                                                    |
+| ---------------------------------------------------------------------- | -------------------------------------------------------- | -------- | ----------------------------------------------------------------------------------------------- |
+| `start(true)` immediately shows results; no request introduction       | Numbers and controls have no context                     | P0       | Dynamic demo introduction; one-click flow test                                                  |
+| Simulator precedes generated options in DOM                            | User must solve a problem already partly solved          | P0       | Options first, optional simulation; DOM order test                                              |
+| `feasibility()` exposes cumulative counts, no assignments              | Feasibility cannot be inspected as actual work days      | P0       | Deterministic EDF allocation; independent per-slot checker                                      |
+| Empty options end with text and Revisit inputs                         | No useful output for the most constrained user           | P0       | Separate editable unresolved request, never a feasible plan                                     |
+| Deferral names appear only in controls/proposal and work leaves totals | Remaining obligation easy to miss                        | P0       | Explicit current work, proposed changes, future scheduling categories                           |
+| `start`, `restore`, reset draft, reuse overwrite state without guard   | Unsaved edits lost                                       | P0       | Save draft / discard / cancel; beforeunload; partial-input roundtrip                            |
+| `change()` destroys proposal on first input edit                       | Edited words lost during workload revision               | P0       | Guard departure to input when proposal has edits; invalidate only after acknowledged change     |
+| `Delete` persists immediately                                          | Accidental deletion                                      | P2       | Native confirmation dialog; cancel regression                                                   |
+| Object URL revoked synchronously after anchor click                    | Download reliability risk; not proof every browser fails | P2       | Attached anchor and delayed revocation; content/event QA                                        |
+| Practice quote always Friday; best answer always C; generic condition  | Incorrect context for other deadlines; shallow exercise  | P1       | Context-specific options and stable varied ordering; rubric evidence tests                      |
+| CSS repeatedly uses 7–12px for meaningful text                         | Readability and touch problems                           | P1       | Shared 16/14px scale, native control targets, responsive checks                                 |
+| Storage validator rejects entire notebook if one entry is damaged      | Valid records become inaccessible                        | P2       | Recover individually valid records, retain original until explicit write; mixed-data regression |
+| Blank capacity is NaN in memory                                        | Correct blocking behavior, not a bug                     | —        | Preserve invalid values explicitly in draft recovery                                            |
+| Weekly spare time does not override an early deadline                  | Correct model, not a bug                                 | —        | Retain all V1 deadline/oracle tests                                                             |
+| Next week / release dates / dependencies absent                        | Declared model boundary, not an algorithm bug            | —        | Keep explicit assumptions; defer speculative scheduling features                                |
+
+Implementation order: computation and safety → progressive workflow → typography/motion → contextual practice/follow-through → full checks and release. No paid demand, usability validation or absolute uniqueness is established. Implementation status and remaining limitations are recorded in V2_QA_REPORT.md.

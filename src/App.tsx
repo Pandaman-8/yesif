@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   ArrowUpRight,
   ArrowRight,
@@ -8,13 +8,8 @@ import {
   X,
   ShieldCheck,
   LockKeyhole,
-  Copy,
   BookOpen,
-  ChevronDown,
   Download,
-  Bookmark,
-  CheckCircle2,
-  RotateCcw,
 } from "lucide-react";
 import {
   DAYS,
@@ -22,14 +17,10 @@ import {
   simulate,
   emptyScenario,
   exampleScenario,
-  hours,
   optionTitle,
-  proposal,
   validate,
   type Scenario,
-  type Task,
   type Option,
-  type Feasibility,
 } from "./domain/engine";
 import {
   readNotebook,
@@ -38,8 +29,22 @@ import {
   type SavedDecision,
 } from "./storage/scenarios";
 
+import { Workload } from "./components/Workload";
+import { Results } from "./components/Results";
+import { Proposal } from "./components/Proposal";
+import { ConfirmDialog } from "./components/ConfirmDialog";
+import { FollowUp } from "./components/FollowUp";
+import { shortProposal, renegotiationRequest } from "./domain/conversation";
+import {
+  readDraft,
+  writeDraft,
+  encodeDraft,
+  DRAFT_KEY,
+  type Draft,
+} from "./storage/draft";
+
 type Page = "landing" | "workload" | "results" | "proposal" | "notebook";
-const sum = (values: number[]) => values.reduce((a, b) => a + b, 0);
+
 const load = () => {
   try {
     return readNotebook(window.localStorage);
@@ -63,7 +68,23 @@ function App() {
   const [notice, setNotice] = useState(initial.warning);
   const [notebook, setNotebook] = useState<Notebook>(initial.notebook);
   const [unlocked, setUnlocked] = useState(false);
-  const [practice, setPractice] = useState<number | null>(null);
+  const [demo, setDemo] = useState(false);
+  const [unresolved, setUnresolved] = useState(false);
+  const [scope, setScope] = useState("");
+  const [dirty, setDirty] = useState(false);
+  const [pending, setPending] = useState<(() => void) | null>(null);
+  const [noteEdits, setNoteEdits] = useState<Record<string, string>>({});
+  const [removingDraft, setRemovingDraft] = useState(false);
+  const [deleting, setDeleting] = useState<SavedDecision | null>(null);
+  const [recovery, setRecovery] = useState<Draft | null>(() => {
+    try {
+      return readDraft(window.localStorage);
+    } catch {
+      return null;
+    }
+  });
+  const messageEdited = useRef(false);
+  const [dialogError, setDialogError] = useState("");
   const [savedId, setSavedId] = useState("");
   const heading = useRef<HTMLHeadingElement>(null);
   const output = validate(scenario).length === 0 ? analyze(scenario) : null;
@@ -72,34 +93,222 @@ function App() {
       ? simulate(scenario, selected.deferred, selected.requestUnits)
       : null;
   const simulation = output ? simulate(scenario, simDeferred, simUnits) : null;
-  const anyPlanPossible = output
-    ? simulate(
-        scenario,
-        scenario.tasks.filter((t) => t.movable).map((t) => t.id),
-        1,
-      ).result.fits
-    : false;
+  const fingerprint = encodeDraft({
+    version: 2,
+    scenario,
+    plan: selected
+      ? { deferred: selected.deferred, requestUnits: selected.requestUnits }
+      : null,
+    unresolved,
+    message,
+    scope,
+    preview: { deferred: simDeferred, requestUnits: simUnits },
+  });
+  const cleanFingerprint = useRef(fingerprint);
+  const hasChanges = dirty && fingerprint !== cleanFingerprint.current;
+  useEffect(() => {
+    if (!dirty) cleanFingerprint.current = fingerprint;
+  }, [dirty, fingerprint]);
+  useEffect(() => {
+    if (!hasChanges && !Object.keys(noteEdits).length) return;
+    const warn = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [hasChanges, noteEdits]);
+  function guard(action: () => void) {
+    if (hasChanges || Object.keys(noteEdits).length) {
+      setDialogError("");
+      setPending(() => action);
+    } else action();
+  }
   function go(next: Page) {
+    if (next === "workload" && messageEdited.current) {
+      guard(() => {
+        messageEdited.current = false;
+        navigate(next);
+      });
+      return;
+    }
+    navigate(next);
+  }
+  function navigate(next: Page) {
     setPage(next);
     setNotice("");
     window.scrollTo({ top: 0, behavior: "instant" });
     setTimeout(() => heading.current?.focus(), 0);
   }
   function change(next: Scenario) {
+    setDirty(true);
+    setDemo(false);
+    setScope("");
+    messageEdited.current = false;
     setScenario(next);
     setSelected(null);
     setSimDeferred([]);
     setSimUnits(next.request.units);
     setMessage("");
-    setPractice(null);
+    setUnresolved(false);
     setSavedId("");
     setNotice("");
     if (errors.length) setErrors(validate(next));
   }
   function start(example: boolean) {
-    change(example ? exampleScenario() : emptyScenario());
-    setErrors([]);
-    go(example && page === "landing" ? "results" : "workload");
+    guard(() => {
+      change(example ? exampleScenario() : emptyScenario());
+      setDemo(example);
+      setDirty(false);
+      setErrors([]);
+      navigate(example && page === "landing" ? "results" : "workload");
+    });
+  }
+  function editSimulation(action: () => void) {
+    const apply = () => {
+      action();
+      setDirty(true);
+      setSelected(null);
+      setSavedId("");
+      setMessage("");
+      setUnresolved(false);
+      messageEdited.current = false;
+    };
+    if (messageEdited.current) guard(apply);
+    else apply();
+  }
+  function editDeferred(ids: string[]) {
+    editSimulation(() => setSimDeferred(ids));
+  }
+  function editUnits(n: number) {
+    editSimulation(() => setSimUnits(n));
+  }
+  function editScope(text: string) {
+    editSimulation(() => setScope(text));
+  }
+  function editMessage(text: string) {
+    setMessage(text);
+    setDirty(true);
+    messageEdited.current = true;
+    setNotice("");
+  }
+  function prepareConflict() {
+    const action = () => {
+      setSelected(null);
+      setUnresolved(true);
+      setMessage(renegotiationRequest(scenario));
+      setSavedId("");
+      setDirty(true);
+      messageEdited.current = false;
+      navigate("proposal");
+    };
+    if (messageEdited.current) guard(action);
+    else action();
+  }
+  function saveCurrentDraft(): boolean {
+    if (Object.keys(noteEdits).length) {
+      const next = {
+        ...notebook,
+        decisions: notebook.decisions.map((d) =>
+          noteEdits[d.id] === undefined ? d : { ...d, notes: noteEdits[d.id] },
+        ),
+      };
+      if (!persist(next)) {
+        setDialogError(
+          "Your outcome notes could not be saved. Cancel and copy them before leaving.",
+        );
+        return false;
+      }
+      setNoteEdits({});
+    }
+    const draft: Draft = {
+      version: 2,
+      page:
+        page === "workload" || page === "results" || page === "proposal"
+          ? page
+          : chosen || unresolved
+            ? "proposal"
+            : "workload",
+      scenario: structuredClone(scenario),
+      plan: chosen
+        ? { deferred: chosen.deferred, requestUnits: chosen.requestUnits }
+        : null,
+      unresolved,
+      message,
+      scope,
+      preview: simulation
+        ? { deferred: simDeferred, requestUnits: simUnits }
+        : undefined,
+    };
+    let error = "";
+    try {
+      error = writeDraft(window.localStorage, draft);
+    } catch {
+      error =
+        "This browser could not save your draft. Your current work is still here.";
+    }
+    if (error) {
+      setDialogError(error);
+      setNotice(error);
+      return false;
+    }
+    setRecovery(draft);
+    setDirty(false);
+    setNotice("Draft saved on this device. It can be resumed after reload.");
+    return true;
+  }
+  function resumeDraft() {
+    if (!recovery) return;
+    guard(() => {
+      setScenario(structuredClone(recovery.scenario));
+      setSelected(
+        recovery.plan
+          ? simulate(
+              recovery.scenario,
+              recovery.plan.deferred,
+              recovery.plan.requestUnits,
+            )
+          : null,
+      );
+      setSimDeferred(
+        recovery.preview?.deferred ?? recovery.plan?.deferred ?? [],
+      );
+      setSimUnits(
+        recovery.preview?.requestUnits ??
+          recovery.plan?.requestUnits ??
+          recovery.scenario.request.units,
+      );
+      setMessage(recovery.message);
+      setScope(recovery.scope);
+      setUnresolved(recovery.unresolved);
+      setSavedId("");
+      setDirty(false);
+      setDemo(false);
+      setErrors([]);
+      messageEdited.current = !!recovery.message;
+      navigate(
+        recovery.page ??
+          (recovery.plan || recovery.unresolved
+            ? "proposal"
+            : recovery.preview
+              ? "results"
+              : "workload"),
+      );
+    });
+  }
+  function resetMessage() {
+    const action = () => {
+      setMessage(
+        chosen
+          ? shortProposal(scenario, chosen, scope)
+          : renegotiationRequest(scenario),
+      );
+      messageEdited.current = false;
+      setDirty(true);
+      setNotice("Draft reset to the current calculation.");
+    };
+    if (messageEdited.current) guard(action);
+    else action();
   }
   function submit(event: FormEvent) {
     event.preventDefault();
@@ -112,11 +321,20 @@ function App() {
     go("results");
   }
   function choose(option: Option) {
-    setSelected(option);
-    setMessage(proposal(scenario, option));
-    setPractice(null);
-    setSavedId("");
-    go("proposal");
+    const action = () => {
+      const fresh = simulate(scenario, option.deferred, option.requestUnits);
+      setSelected(fresh);
+      setSimDeferred(fresh.deferred);
+      setSimUnits(fresh.requestUnits);
+      setMessage(shortProposal(scenario, fresh, scope));
+      setUnresolved(false);
+      setSavedId("");
+      setDirty(true);
+      messageEdited.current = false;
+      navigate("proposal");
+    };
+    if (messageEdited.current) guard(action);
+    else action();
   }
   async function copy() {
     try {
@@ -165,6 +383,7 @@ function App() {
       scenario: structuredClone(scenario),
       plan: { deferred: chosen.deferred, requestUnits: chosen.requestUnits },
       message,
+      scope,
       outcome: old?.outcome || "pending",
       notes: old?.notes || "",
     };
@@ -175,45 +394,69 @@ function App() {
       })
     ) {
       setSavedId(id);
+      setDirty(false);
+      messageEdited.current = false;
       setNotice("Saved on this device. No message was sent.");
     }
   }
   function restore(d: SavedDecision) {
-    setScenario(structuredClone(d.scenario));
-    setSelected(simulate(d.scenario, d.plan.deferred, d.plan.requestUnits));
-    setSimDeferred(d.plan.deferred);
-    setSimUnits(d.plan.requestUnits);
-    setMessage(d.message);
-    setSavedId(d.id);
-    setErrors([]);
-    setPractice(null);
-    go("proposal");
+    guard(() => {
+      setScenario(structuredClone(d.scenario));
+      setSelected(simulate(d.scenario, d.plan.deferred, d.plan.requestUnits));
+      setSimDeferred(d.plan.deferred);
+      setSimUnits(d.plan.requestUnits);
+      setMessage(d.message);
+      setSavedId(d.id);
+      setErrors([]);
+      setScope(d.scope ?? "");
+      setUnresolved(false);
+      setDemo(false);
+      setDirty(false);
+      messageEdited.current = false;
+      navigate("proposal");
+    });
   }
   function updateDecision(
     id: string,
     patch: Partial<Pick<SavedDecision, "outcome" | "notes">>,
   ) {
-    persist({
+    if (patch.notes !== undefined)
+      setNoteEdits((previous) => ({ ...previous, [id]: patch.notes! }));
+    const success = persist({
       ...notebook,
       decisions: notebook.decisions.map((d) =>
         d.id === id ? { ...d, ...patch } : d,
       ),
     });
+    if (success && patch.notes !== undefined)
+      setNoteEdits((previous) => {
+        const next = { ...previous };
+        delete next[id];
+        return next;
+      });
   }
   function exportNotebook() {
-    const url = URL.createObjectURL(
-      new Blob([JSON.stringify(notebook, null, 2)], {
-        type: "application/json",
-      }),
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "yesif-decisions.json";
-    link.click();
-    URL.revokeObjectURL(url);
-    setNotice(
-      "Export prepared. Check your browser’s downloads for yesif-decisions.json. It contains your saved task names, proposals, and notes.",
-    );
+    try {
+      const url = URL.createObjectURL(
+        new Blob([JSON.stringify(notebook, null, 2)], {
+          type: "application/json",
+        }),
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "yesif-decisions.json";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+      setNotice(
+        "Export prepared. Check your browser’s downloads for yesif-decisions.json. It contains your saved task names, proposals, and notes.",
+      );
+    } catch {
+      setNotice(
+        "Export could not be prepared. Your saved decisions are still available here.",
+      );
+    }
   }
   return (
     <>
@@ -245,7 +488,108 @@ function App() {
           </nav>
         </div>
       </header>
-      <main id="main">
+      <main id="main" key={page} className="page-enter">
+        {removingDraft && (
+          <ConfirmDialog
+            title="Remove the saved draft?"
+            description="This removes only the separate recovery copy. Your current work and saved decisions stay available."
+            cancel={() => setRemovingDraft(false)}
+          >
+            <button
+              className="button primary"
+              onClick={() => {
+                try {
+                  localStorage.removeItem(DRAFT_KEY);
+                  setRecovery(null);
+                  setRemovingDraft(false);
+                } catch {
+                  setNotice("This browser could not remove the saved draft.");
+                }
+              }}
+            >
+              Remove draft
+            </button>
+          </ConfirmDialog>
+        )}
+        {pending && (
+          <ConfirmDialog
+            title="Keep your current work?"
+            description="This action will replace unsaved changes. Save a local draft, discard the changes, or stay here."
+            cancel={() => setPending(null)}
+          >
+            <button
+              className="button primary"
+              onClick={() => {
+                if (saveCurrentDraft()) {
+                  const action = pending;
+                  setPending(null);
+                  setDirty(false);
+                  action();
+                }
+              }}
+            >
+              Save draft and continue
+            </button>
+            <button
+              className="text-button"
+              onClick={() => {
+                const action = pending;
+                setPending(null);
+                setDirty(false);
+                setNoteEdits({});
+                action();
+              }}
+            >
+              Discard changes
+            </button>
+            {dialogError && <p role="alert">{dialogError}</p>}
+          </ConfirmDialog>
+        )}
+        {deleting && (
+          <ConfirmDialog
+            title="Delete this saved decision?"
+            description={`“${deleting.scenario.request.name}” and its notes will be removed from this browser.`}
+            cancel={() => setDeleting(null)}
+          >
+            <button
+              className="button primary"
+              onClick={() => {
+                if (
+                  persist({
+                    ...notebook,
+                    decisions: notebook.decisions.filter(
+                      (d) => d.id !== deleting.id,
+                    ),
+                  })
+                ) {
+                  if (savedId === deleting.id) {
+                    setSavedId("");
+                    setDirty(true);
+                  }
+                  setNoteEdits((previous) => {
+                    const next = { ...previous };
+                    delete next[deleting.id];
+                    return next;
+                  });
+                  setDeleting(null);
+                  setNotice("Decision deleted from this browser.");
+                }
+              }}
+            >
+              Delete decision
+            </button>
+            {notice && <p role="alert">{notice}</p>}
+          </ConfirmDialog>
+        )}
+        {hasChanges && page !== "landing" && (
+          <div className="draft-strip">
+            <span>Unsaved changes · save before leaving</span>
+            <button className="text-button" onClick={saveCurrentDraft}>
+              Save local draft
+            </button>
+          </div>
+        )}
+
         {notice && (
           <div className="notice" role="status">
             {notice}
@@ -259,6 +603,23 @@ function App() {
         )}
         {page === "landing" ? (
           <>
+            {recovery && (
+              <div className="recovery-bar wrap">
+                <p>
+                  A local draft is ready to resume. It is separate from your
+                  saved decisions.
+                </p>
+                <button className="button outline" onClick={resumeDraft}>
+                  Resume local draft
+                </button>
+                <button
+                  className="text-button"
+                  onClick={() => setRemovingDraft(true)}
+                >
+                  Remove saved draft
+                </button>
+              </div>
+            )}
             <section className="hero wrap">
               <div className="hero-copy">
                 <p className="eyebrow">
@@ -272,9 +633,9 @@ function App() {
                   has <em>options.</em>
                 </h1>
                 <p className="hero-description">
-                  A new request doesn’t have to mean another late night. See
-                  what fits, find a fair trade-off, and get the words to propose
-                  it.
+                  A new request, an already full week. See which commitments can
+                  change, check how the work fits each day, and prepare a clear
+                  proposal for your manager.
                 </p>
                 <div className="hero-actions">
                   <button
@@ -409,699 +770,91 @@ function App() {
                     className={page === id ? "active" : ""}
                     aria-current={page === id ? "step" : undefined}
                   >
-                    <span>{i + 1}</span>
-                    {label}
+                    <button
+                      disabled={
+                        id === "results"
+                          ? !output
+                          : id === "proposal"
+                            ? !(chosen || unresolved)
+                            : false
+                      }
+                      title={
+                        id === "results" && !output
+                          ? "Complete valid workload inputs first"
+                          : id === "proposal" && !(chosen || unresolved)
+                            ? "Choose an option or prepare a renegotiation request first"
+                            : label
+                      }
+                      onClick={() => go(id as Page)}
+                    >
+                      <span>{i + 1}</span>
+                      {label}
+                    </button>
+                    {id === "results" && !output && (
+                      <small>Complete valid inputs first</small>
+                    )}
+                    {id === "proposal" && !(chosen || unresolved) && (
+                      <small>Choose a plan or request a change</small>
+                    )}
                   </li>
                 ))}
               </ol>
             )}
             {page === "workload" && (
-              <>
-                <div className="page-heading">
-                  <div>
-                    <p className="eyebrow">01 / SET THE SCENE</p>
-                    <h1 ref={heading} tabIndex={-1}>
-                      What’s on your plate?
-                    </h1>
-                    <p>
-                      One Monday–Friday planning week. Count the focused time
-                      you actually have.
-                    </p>
-                  </div>
-                  <button className="text-button" onClick={() => start(true)}>
-                    <RotateCcw size={15} /> Reset example
-                  </button>
-                </div>
-                <form onSubmit={submit} noValidate>
-                  {errors.length > 0 && (
-                    <div
-                      className="error-box"
-                      id="form-errors"
-                      tabIndex={-1}
-                      role="alert"
-                    >
-                      <strong>Let’s fix a few details first.</strong>
-                      <ul>
-                        {errors.map((e) => (
-                          <li key={e}>{e}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  <div className="input-layout">
-                    <div className="workload-main">
-                      <section className="panel">
-                        <div className="section-title">
-                          <div>
-                            <p className="eyebrow">YOUR AVAILABLE TIME</p>
-                            <h2>Make room for reality.</h2>
-                          </div>
-                          <span className="capacity-total">
-                            {Number.isFinite(sum(scenario.capacity))
-                              ? hours(sum(scenario.capacity))
-                              : "—"}
-                            <small>h this week</small>
-                          </span>
-                        </div>
-                        <p className="help">
-                          Hours left after meetings, admin, breaks, and a
-                          buffer. Use 0 for unavailable or already-passed days.
-                        </p>
-                        <div className="day-inputs">
-                          {DAYS.map((d, i) => (
-                            <label key={d}>
-                              <span>{d.slice(0, 3)}</span>
-                              <div className="hours-input">
-                                <input
-                                  aria-label={`${d} focused hours`}
-                                  type="number"
-                                  min="0"
-                                  max="24"
-                                  step="0.25"
-                                  value={
-                                    Number.isNaN(scenario.capacity[i])
-                                      ? ""
-                                      : scenario.capacity[i] / 4
-                                  }
-                                  onChange={(e) =>
-                                    change({
-                                      ...scenario,
-                                      capacity: scenario.capacity.map((v, j) =>
-                                        i === j
-                                          ? parseHours(e.target.value)
-                                          : v,
-                                      ),
-                                    })
-                                  }
-                                />
-                                <span>h</span>
-                              </div>
-                            </label>
-                          ))}
-                        </div>
-                      </section>
-                      <section className="panel">
-                        <div className="section-title">
-                          <div>
-                            <p className="eyebrow">EXISTING COMMITMENTS</p>
-                            <h2>The work you’ve already said yes to.</h2>
-                          </div>
-                          <span className="small-pill">
-                            {scenario.tasks.length} / 8
-                          </span>
-                        </div>
-                        <p className="help">
-                          Remaining work only. “Can discuss” means you could ask
-                          to defer it beyond this week.
-                        </p>
-                        <div className="task-list">
-                          {scenario.tasks.map((task, i) => (
-                            <TaskEditor
-                              key={task.id}
-                              task={task}
-                              label={`Commitment ${i + 1}`}
-                              onChange={(t) =>
-                                change({
-                                  ...scenario,
-                                  tasks: scenario.tasks.map((v) =>
-                                    v.id === t.id ? t : v,
-                                  ),
-                                })
-                              }
-                              onRemove={() =>
-                                change({
-                                  ...scenario,
-                                  tasks: scenario.tasks.filter(
-                                    (t) => t.id !== task.id,
-                                  ),
-                                })
-                              }
-                            />
-                          ))}
-                        </div>
-                        {scenario.tasks.length === 0 && (
-                          <p className="empty-inline">
-                            No existing commitments yet. Add the work that
-                            shares this time.
-                          </p>
-                        )}
-                        <button
-                          className="add-button"
-                          type="button"
-                          disabled={scenario.tasks.length >= 8}
-                          onClick={() =>
-                            change({
-                              ...scenario,
-                              tasks: [
-                                ...scenario.tasks,
-                                {
-                                  id: crypto.randomUUID(),
-                                  name: "",
-                                  units: 4,
-                                  deadline: 4,
-                                  movable: false,
-                                  priority: "normal",
-                                },
-                              ],
-                            })
-                          }
-                        >
-                          <Plus size={16} /> Add a commitment
-                        </button>
-                      </section>
-                    </div>
-                    <aside className="request-panel">
-                      <div className="request-icon">
-                        <ArrowUpRight size={24} />
-                      </div>
-                      <p className="eyebrow">AND THEN THIS ARRIVES…</p>
-                      <h2>The new request.</h2>
-                      <p className="help">
-                        What are you being asked to take on?
-                      </p>
-                      <TaskEditor
-                        task={scenario.request}
-                        label="New request"
-                        onChange={(request) => change({ ...scenario, request })}
-                      />
-                      <div className="request-note">
-                        <LockKeyhole size={15} />
-                        <span>
-                          Your task details stay in this browser. Nothing is
-                          sent to your manager.
-                        </span>
-                      </div>
-                      <button className="button primary full" type="submit">
-                        Find my options <ArrowRight size={17} />
-                      </button>
-                    </aside>
-                  </div>
-                  <details className="assumptions">
-                    <summary>
-                      How this check works <ChevronDown size={14} />
-                    </summary>
-                    <p>
-                      One person, one Monday–Friday planning week. All work is
-                      available from the start, can be split into 15-minute
-                      pieces, and has no dependencies. Deadlines are end of day.
-                      Enter only remaining availability; we do not infer dates,
-                      meetings, weekends, overtime, or next week’s capacity.
-                      This is an estimate, not a delivery guarantee. If work can
-                      only start later or must happen at a fixed time, this
-                      simplified check is not sufficient.
-                    </p>
-                  </details>
-                </form>
-              </>
+              <Workload
+                scenario={scenario}
+                change={change}
+                heading={heading}
+                errors={errors}
+                submit={submit}
+                reset={() => start(true)}
+              />
             )}
-            {page === "results" && output && (
-              <>
-                <div className="page-heading">
-                  <div>
-                    <p className="eyebrow">02 / FIND YOUR IF</p>
-                    <h1 ref={heading} tabIndex={-1}>
-                      {output.baseline.fits
-                        ? "There’s room for this yes."
-                        : "Something has to give. Not you."}
-                    </h1>
-                    <p>
-                      {output.baseline.fits
-                        ? "Your estimates fit the available time and every weekday deadline."
-                        : "A workable proposal starts with deciding what can change."}
-                    </p>
-                  </div>
-                  <button
-                    className="text-button"
-                    onClick={() => go("workload")}
-                  >
-                    <ArrowLeft size={16} /> Edit workload
-                  </button>
-                </div>
-                <div className="reality">
-                  <div>
-                    <p className="eyebrow">IF YOU ACCEPT EVERYTHING</p>
-                    <div className="big-number">
-                      {hours(output.baseline.total)}h{" "}
-                      <span>/ {hours(output.baseline.capacity)}h</span>
-                    </div>
-                    <p>
-                      {hours(sum(scenario.tasks.map((t) => t.units)))}h
-                      committed + {hours(scenario.request.units)}h requested
-                    </p>
-                  </div>
-                  <div className="reality-message">
-                    <span className="reality-pill">
-                      {output.baseline.fits
-                        ? "Fits your estimates"
-                        : output.baseline.overload
-                          ? `${hours(output.baseline.overload)}h over capacity`
-                          : "Early deadline conflict"}
-                    </span>
-                    <p>
-                      {output.baseline.fits
-                        ? "No change is needed under the assumptions below. Confirm the scope before committing."
-                        : conflictText(output.baseline)}
-                    </p>
-                  </div>
-                </div>
-                {!output.existing.fits && (
-                  <p className="error-box">
-                    Your existing commitments already conflict with available
-                    time. The options below must resolve that conflict too.
-                  </p>
-                )}
-                {simulation && (
-                  <section
-                    className="simulator"
-                    aria-label="Interactive trade-off simulator"
-                  >
-                    <div className="sim-controls">
-                      <p className="eyebrow">THE TRADE-OFF TABLE</p>
-                      <h2>Move a piece. See what changes.</h2>
-                      <p className="help">
-                        Choose what you could renegotiate. Your original
-                        workload stays intact.
-                      </p>
-                      <div className="sim-tasks">
-                        {scenario.tasks.map((t) => (
-                          <label
-                            key={t.id}
-                            className={`sim-task ${!t.movable ? "locked" : ""} ${simDeferred.includes(t.id) ? "deferred" : ""}`}
-                          >
-                            <input
-                              type="checkbox"
-                              disabled={!t.movable}
-                              checked={simDeferred.includes(t.id)}
-                              onChange={(e) => {
-                                setSimDeferred(
-                                  e.target.checked
-                                    ? [...simDeferred, t.id]
-                                    : simDeferred.filter((id) => id !== t.id),
-                                );
-                              }}
-                              aria-label={`Defer ${t.name}`}
-                            />
-                            <span className="sim-task-text">
-                              <strong>{t.name}</strong>
-                              <small>
-                                Due {DAYS[t.deadline]} ·{" "}
-                                {t.priority === "high"
-                                  ? "High priority"
-                                  : "Normal priority"}
-                              </small>
-                            </span>
-                            <span className="sim-task-hours">
-                              {hours(t.units)}h
-                              <small>
-                                {t.movable ? (
-                                  simDeferred.includes(t.id) ? (
-                                    "Propose deferral"
-                                  ) : (
-                                    "Can discuss"
-                                  )
-                                ) : (
-                                  <>
-                                    <LockKeyhole size={10} /> Fixed
-                                  </>
-                                )}
-                              </small>
-                            </span>
-                          </label>
-                        ))}
-                      </div>
-                      <div className="scope-control">
-                        <p className="scope-task-name">
-                          {scenario.request.name} · due{" "}
-                          {DAYS[scenario.request.deadline]}
-                        </p>
-                        <div>
-                          <label htmlFor="scope-slider">
-                            New request’s scope
-                          </label>
-                          <strong>
-                            {hours(simUnits)}h{" "}
-                            <span>/ {hours(scenario.request.units)}h</span>
-                          </strong>
-                        </div>
-                        <input
-                          id="scope-slider"
-                          type="range"
-                          min="1"
-                          max={scenario.request.units}
-                          step="1"
-                          value={simUnits}
-                          aria-valuetext={`${hours(simUnits)} hours`}
-                          onChange={(e) => setSimUnits(Number(e.target.value))}
-                        />
-                        <div className="scope-steps">
-                          <button
-                            aria-label="Reduce scope by 15 minutes"
-                            disabled={simUnits <= 1}
-                            onClick={() =>
-                              setSimUnits((n) => Math.max(1, n - 1))
-                            }
-                          >
-                            −
-                          </button>
-                          <span>Adjust by 15 minutes</span>
-                          <button
-                            aria-label="Increase scope by 15 minutes"
-                            disabled={simUnits >= scenario.request.units}
-                            onClick={() =>
-                              setSimUnits((n) =>
-                                Math.min(scenario.request.units, n + 1),
-                              )
-                            }
-                          >
-                            +
-                          </button>
-                        </div>
-                        <p>
-                          {simUnits < scenario.request.units
-                            ? "Smaller scope means agreeing on a smaller deliverable. It is not the same work done faster."
-                            : "Keep the full request, or reduce the hours to propose a smaller deliverable."}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="sim-result" aria-live="polite">
-                      <p className="eyebrow">WITH YOUR CHANGES</p>
-                      <div className="sim-number">
-                        {hours(simulation.result.total)}h{" "}
-                        <span>/ {hours(simulation.result.capacity)}h</span>
-                      </div>
-                      <span
-                        className={`sim-status ${simulation.result.fits ? "fits" : ""}`}
-                      >
-                        {simulation.result.fits ? (
-                          <>
-                            <Check size={15} /> Fits every weekday deadline
-                          </>
-                        ) : (
-                          <>Still needs a change</>
-                        )}
-                      </span>
-                      <p className="sim-explanation">
-                        {simulation.result.fits
-                          ? `${hours(simulation.result.capacity - simulation.result.total)}h left this week, based on your estimates.`
-                          : conflictText(simulation.result)}
-                      </p>
-                      <DeadlineTable result={simulation.result} />
-                      {simDeferred.length > 0 && (
-                        <p className="fine-print">
-                          Deferred work needs a new agreed date. Future capacity
-                          is unchecked.
-                        </p>
-                      )}
-                      <button
-                        className="button primary full"
-                        disabled={!simulation.result.fits}
-                        onClick={() => choose(simulation)}
-                      >
-                        Use this plan <ArrowRight size={16} />
-                      </button>
-                      <button
-                        className="text-button"
-                        onClick={() => {
-                          setSimDeferred([]);
-                          setSimUnits(scenario.request.units);
-                        }}
-                      >
-                        Reset changes
-                      </button>
-                    </div>
-                  </section>
-                )}
-                <div className="options-heading">
-                  <h2>
-                    {output.options.length
-                      ? "Want a starting point?"
-                      : anyPlanPossible
-                        ? "Try combining two changes above."
-                        : "No workable option under these constraints."}
-                  </h2>
-                  <p>
-                    {output.options.length
-                      ? "Choose a condition you could actually discuss. Nothing changes until you agree."
-                      : anyPlanPossible
-                        ? "A deferral alone or a scope cut alone does not fit. Try both in the simulator and check the deadlines before proposing a plan."
-                        : "Even deferring every negotiable task and reducing the request to 15 minutes leaves a conflict. Discuss more time, a different deadline, or help from someone else."}
-                  </p>
-                </div>
-                <div className="option-grid">
-                  {output.options.map((o, i) => (
-                    <article
-                      className={`option-card ${o.kind === "scope" ? "scope-card" : ""}`}
-                      key={o.id}
-                    >
-                      <div className="option-top">
-                        <span className="option-letter">
-                          {String.fromCharCode(65 + i)}
-                        </span>
-                        <span className="eyebrow">
-                          {o.kind === "defer"
-                            ? "CHANGE A PRIORITY"
-                            : o.kind === "scope"
-                              ? "CHANGE THE DELIVERABLE"
-                              : "KEEP THE PLAN"}
-                        </span>
-                      </div>
-                      <h3>{optionTitle(scenario, o)}</h3>
-                      <p>
-                        {o.kind === "defer"
-                          ? `Ask to move ${hours(output.baseline.total - o.result.total)}h beyond this planning week. A new date needs agreement; future capacity is unchecked.`
-                          : o.kind === "scope"
-                            ? `Agree on what a ${hours(o.requestUnits)}h version includes. The original ${hours(scenario.request.units)}h deliverable will not be completed in less time.`
-                            : "Keep the requested scope and deadline. Revisit the plan if your estimates change."}
-                      </p>
-                      <div className="option-math">
-                        <span>
-                          <strong>{hours(o.result.total)}h</strong> /{" "}
-                          {hours(o.result.capacity)}h planned
-                        </span>
-                        <span>
-                          <Check size={14} />
-                          {hours(o.result.capacity - o.result.total)}h left
-                        </span>
-                      </div>
-                      <details className="proof">
-                        <summary>
-                          Check every deadline <ChevronDown size={14} />
-                        </summary>
-                        <DeadlineTable result={o.result} />
-                      </details>
-                      <button
-                        className="button outline full"
-                        onClick={() => choose(o)}
-                      >
-                        {o.kind === "accept"
-                          ? "Prepare my reply"
-                          : "Use this trade-off"}
-                        <ArrowRight size={16} />
-                      </button>
-                    </article>
-                  ))}
-                </div>
-                <details className="assumptions">
-                  <summary>
-                    See the original deadline check <ChevronDown size={14} />
-                  </summary>
-                  <DeadlineTable result={output.baseline} />
-                </details>
-                <p className="fine-print">
-                  Up to three minimal deferral sets, ranked by fewer
-                  high-priority tasks changed, then fewer tasks, then fewer
-                  hours deferred. Scope reduction is a separate option. You can
-                  combine scope reduction and deferrals in the simulator above.
-                  Dependencies and future weeks are outside this check.
-                </p>
-                {!output.options.length && (
-                  <button
-                    className="button primary"
-                    onClick={() => go("workload")}
-                  >
-                    Revisit my inputs <ArrowLeft size={16} />
-                  </button>
-                )}
-              </>
+            {page === "results" && output && simulation && (
+              <Results
+                scenario={scenario}
+                heading={heading}
+                demo={demo}
+                simulation={simulation}
+                deferred={simDeferred}
+                units={simUnits}
+                setDeferred={editDeferred}
+                setUnits={editUnits}
+                scope={scope}
+                setScope={editScope}
+                choose={choose}
+                edit={() => go("workload")}
+                unresolved={prepareConflict}
+              />
             )}
-            {page === "proposal" && chosen && (
-              <>
-                <div className="page-heading">
-                  <div>
-                    <p className="eyebrow">03 / MAKE YOUR PROPOSAL</p>
-                    <h1 ref={heading} tabIndex={-1}>
-                      A clear ask. A better starting point.
-                    </h1>
-                    <p>
-                      Your numbers, your choice. Make the words sound like you.
-                    </p>
-                  </div>
-                  <button className="text-button" onClick={() => go("results")}>
-                    <ArrowLeft size={16} /> Compare options
-                  </button>
-                </div>
-                <div className="proposal-layout">
-                  <section className="panel proposal-panel">
-                    <div className="section-title">
-                      <p className="eyebrow">YOUR CONVERSATION STARTER</p>
-                      <span className="small-pill">Editable draft</span>
-                    </div>
-                    <label className="sr-only" htmlFor="proposal-text">
-                      Your proposal
-                    </label>
-                    <textarea
-                      id="proposal-text"
-                      value={message}
-                      maxLength={10000}
-                      onChange={(e) => {
-                        setMessage(e.target.value);
-                        setNotice("");
-                      }}
-                    />
-                    <div className="proposal-actions">
-                      <button
-                        className="button primary"
-                        onClick={copy}
-                        disabled={!message.trim()}
-                      >
-                        <Copy size={16} /> Copy proposal
-                      </button>
-                      <button
-                        className="text-button"
-                        onClick={save}
-                        disabled={!message.trim()}
-                      >
-                        <Bookmark size={16} />
-                        {savedId ? "Update saved decision" : "Save decision"}
-                      </button>
-                      <button
-                        className="reset-draft"
-                        aria-label="Reset proposal to generated draft"
-                        onClick={() => {
-                          setMessage(proposal(scenario, chosen));
-                          setNotice(
-                            "Draft reset to the current calculated proposal.",
-                          );
-                        }}
-                      >
-                        <RotateCcw size={16} />
-                      </button>
-                    </div>
-                    <p className="fine-print">
-                      Nothing is sent for you. Review before sharing. Edited
-                      text is not recalculated or scored.
-                    </p>
-                  </section>
-                  <aside className="choice-summary">
-                    <span className="round-check">
-                      <Check size={23} />
-                    </span>
-                    <p className="eyebrow">YOUR CHOSEN CONDITION</p>
-                    <h2>{optionTitle(scenario, chosen)}</h2>
-                    <div className="chosen-numbers">
-                      <strong>{hours(chosen.result.total)}h</strong>
-                      <span>of {hours(chosen.result.capacity)}h available</span>
-                    </div>
-                    <p>
-                      <CheckCircle2 size={15} /> Fits every weekday deadline
-                    </p>
-                    <span className="fine-print">
-                      {chosen.deferred.length > 0
-                        ? "Proposed deferral only. Agree on a new date and check future capacity."
-                        : chosen.kind === "scope"
-                          ? "A smaller deliverable needs agreement on what is included."
-                          : "Based on the hours and assumptions you supplied."}
-                    </span>
-                  </aside>
-                </div>
-                <section className="practice panel">
-                  <div>
-                    <p className="eyebrow">A 30-SECOND PRACTICE</p>
-                    <h2>
-                      {chosen.kind === "accept"
-                        ? "What if the scope grows?"
-                        : "What if they push back?"}
-                    </h2>
-                    <p className="manager-quote">
-                      {chosen.kind === "accept"
-                        ? "“Can you add a few more things and keep the deadline?”"
-                        : "“Everything is urgent. We still need this by Friday.”"}
-                    </p>
-                    <p className="help">
-                      Choose the response that keeps the conversation grounded.
-                    </p>
-                  </div>
-                  <div className="practice-choices">
-                    {[
-                      "“Sure. I’ll find a way to get everything done.”",
-                      "“That’s impossible. You need to be more realistic.”",
-                      `“With ${hours(output!.baseline.capacity)} focused hours available, I need us to agree on what fits. Could we confirm the scope and which commitment should change?”`,
-                    ].map((text, i) => (
-                      <button
-                        key={i}
-                        className={
-                          practice === i
-                            ? "practice-choice selected"
-                            : "practice-choice"
-                        }
-                        onClick={() => setPractice(i)}
-                        aria-pressed={practice === i}
-                      >
-                        <span>{String.fromCharCode(65 + i)}</span>
-                        {text}
-                      </button>
-                    ))}
-                  </div>
-                  {practice !== null && (
-                    <div className="practice-feedback" role="status">
-                      <strong>
-                        {practice === 2
-                          ? "You made the decision explicit."
-                          : practice === 0
-                            ? "Good intent, but the constraint disappeared."
-                            : "You named a problem, but left no decision to make."}
-                      </strong>
-                      <p>
-                        {practice === 2
-                          ? "Bring your selected trade-off into this reply, then ask for agreement."
-                          : practice === 0
-                            ? "An open-ended yes promises capacity you have not checked. Name the available time and ask what should change."
-                            : "A concrete option is easier to act on than a judgment. State the hours, offer the condition you selected, and ask for agreement."}
-                      </p>
-                      <ul>
-                        {[
-                          "Makes the constraint clear",
-                          "Identifies a decision or trade-off",
-                          "Asks for agreement on priorities",
-                          "Avoids an unchecked promise",
-                        ].map((label, i) => (
-                          <li key={label}>
-                            <span>
-                              {practice === 2 || (practice === 1 && i === 3)
-                                ? "✓"
-                                : "○"}
-                            </span>
-                            {label}
-                          </li>
-                        ))}
-                      </ul>
-                      <small>
-                        Fixed rubric for these three responses. No AI analysis
-                        or measurement of your ability.
-                      </small>
-                    </div>
-                  )}
-                </section>
-              </>
+            {page === "proposal" && (chosen || unresolved) && (
+              <Proposal
+                scenario={scenario}
+                chosen={chosen}
+                heading={heading}
+                message={message}
+                setMessage={editMessage}
+                scope={scope}
+                copy={copy}
+                save={save}
+                saveDraft={saveCurrentDraft}
+                savedId={savedId}
+                reset={resetMessage}
+                compare={() => go("results")}
+              />
             )}
             {page === "notebook" && (
               <>
                 <button
                   className="text-button notebook-return"
-                  onClick={() => go(chosen ? "proposal" : "workload")}
+                  onClick={() =>
+                    go(chosen || unresolved ? "proposal" : "workload")
+                  }
                 >
                   <ArrowLeft size={15} />{" "}
-                  {chosen ? "Back to my proposal" : "Back to my workload"}
+                  {chosen || unresolved
+                    ? "Back to my proposal"
+                    : "Back to my workload"}
                 </button>
                 <div className="page-heading">
                   <div>
@@ -1125,8 +878,9 @@ function App() {
                     </span>
                     <h2>Make your next conversation easier.</h2>
                     <p>
-                      Save multiple situations, reuse the inputs, record what
-                      was agreed, and export your notebook.
+                      Keep your decisions, compare saved conditions, record the
+                      response, and prepare a follow-up. Reuse your workload
+                      when the next request arrives.
                     </p>
                     <span className="fine-print">
                       One saved decision and the complete core workflow are
@@ -1237,16 +991,36 @@ function App() {
                           <textarea
                             rows={2}
                             maxLength={2000}
-                            value={d.notes}
+                            value={noteEdits[d.id] ?? d.notes}
                             placeholder="A new date, a smaller scope, a next step…"
                             onChange={(e) =>
                               updateDecision(d.id, { notes: e.target.value })
                             }
                           />
                         </label>
+                        {noteEdits[d.id] !== undefined && (
+                          <p className="error-box">
+                            This note is not saved yet. It stays here while this
+                            page is open.{" "}
+                            <button
+                              className="text-button"
+                              onClick={() =>
+                                updateDecision(d.id, { notes: noteEdits[d.id] })
+                              }
+                            >
+                              Retry saving note
+                            </button>
+                          </p>
+                        )}
                         <p className="fine-print">
                           Your note only; the saved workload does not change.
                         </p>
+                        {unlocked && (
+                          <FollowUp
+                            key={`${d.id}:${d.outcome}:${d.notes}`}
+                            decision={d}
+                          />
+                        )}
                         <div className="saved-actions">
                           <button
                             className="text-button"
@@ -1256,11 +1030,14 @@ function App() {
                           </button>
                           <button
                             className="text-button"
-                            onClick={() => {
-                              change(structuredClone(d.scenario));
-                              setErrors([]);
-                              go("workload");
-                            }}
+                            onClick={() =>
+                              guard(() => {
+                                change(structuredClone(d.scenario));
+                                setDirty(false);
+                                setErrors([]);
+                                navigate("workload");
+                              })
+                            }
                           >
                             Reuse workload
                           </button>
@@ -1268,19 +1045,8 @@ function App() {
                             className="delete-button"
                             aria-label={`Delete saved ${d.scenario.request.name}`}
                             onClick={() => {
-                              if (
-                                persist({
-                                  ...notebook,
-                                  decisions: notebook.decisions.filter(
-                                    (v) => v.id !== d.id,
-                                  ),
-                                })
-                              ) {
-                                if (savedId === d.id) setSavedId("");
-                                setNotice(
-                                  "Decision deleted from this browser.",
-                                );
-                              }
+                              setNotice("");
+                              setDeleting(d);
                             }}
                           >
                             Delete
@@ -1291,9 +1057,10 @@ function App() {
                   </div>
                 )}
                 <p className="fine-print">
-                  Saving is explicit. Clearing browser data removes this
-                  notebook. Avoid sensitive names on shared devices. No
-                  analytics, accounts, or task uploads.
+                  Export includes working details, proposals and notes. Keep the
+                  file private. Saving is explicit. Clearing browser data
+                  removes this notebook. Avoid sensitive names on shared
+                  devices. No analytics, accounts, or task uploads.
                 </p>
               </>
             )}
@@ -1308,149 +1075,6 @@ function App() {
         </span>
       </footer>
     </>
-  );
-}
-function parseHours(value: string) {
-  return value.trim() === "" ? NaN : Number(value) * 4;
-}
-function TaskEditor({
-  task,
-  label,
-  onChange,
-  onRemove,
-}: {
-  task: Task;
-  label: string;
-  onChange: (task: Task) => void;
-  onRemove?: () => void;
-}) {
-  return (
-    <div className={onRemove ? "task-editor" : "new-task-editor"}>
-      <div className="task-name">
-        <label>
-          {onRemove ? label : "What’s the task?"}
-          <input
-            aria-label={`${label} name`}
-            maxLength={100}
-            placeholder={
-              onRemove ? "e.g. Campaign brief" : "e.g. Urgent presentation"
-            }
-            value={task.name}
-            onChange={(e) => onChange({ ...task, name: e.target.value })}
-          />
-        </label>
-        {onRemove && (
-          <button
-            className="remove-button"
-            type="button"
-            aria-label={`Remove ${label.toLowerCase()}`}
-            onClick={onRemove}
-          >
-            <X size={16} />
-          </button>
-        )}
-      </div>
-      <div className="task-fields">
-        <label>
-          Hours left
-          <input
-            aria-label={`${label} hours`}
-            type="number"
-            min="0.25"
-            max="120"
-            step="0.25"
-            value={Number.isNaN(task.units) ? "" : task.units / 4}
-            onChange={(e) =>
-              onChange({ ...task, units: parseHours(e.target.value) })
-            }
-          />
-        </label>
-        <label>
-          Due by
-          <select
-            aria-label={`${label} deadline`}
-            value={task.deadline}
-            onChange={(e) =>
-              onChange({ ...task, deadline: Number(e.target.value) })
-            }
-          >
-            {DAYS.map((day, i) => (
-              <option key={day} value={i}>
-                {day}
-              </option>
-            ))}
-          </select>
-        </label>
-        {onRemove && (
-          <label>
-            Flexibility
-            <select
-              aria-label={`${label} flexibility`}
-              value={task.movable ? "movable" : "fixed"}
-              onChange={(e) =>
-                onChange({ ...task, movable: e.target.value === "movable" })
-              }
-            >
-              <option value="fixed">Fixed</option>
-              <option value="movable">Can discuss</option>
-            </select>
-          </label>
-        )}
-        {onRemove && (
-          <label>
-            Priority
-            <select
-              aria-label={`${label} priority`}
-              value={task.priority}
-              onChange={(e) =>
-                onChange({
-                  ...task,
-                  priority: e.target.value as Task["priority"],
-                })
-              }
-            >
-              <option value="normal">Normal</option>
-              <option value="high">High</option>
-            </select>
-          </label>
-        )}
-      </div>
-    </div>
-  );
-}
-function conflictText(result: Feasibility) {
-  const c = result.checkpoints.find((v) => v.deficit);
-  return c
-    ? `By ${DAYS[c.day]}, ${hours(c.due)}h are due, but only ${hours(c.available)}h are available. That deadline needs ${hours(c.deficit)}h more room.`
-    : "";
-}
-function DeadlineTable({ result }: { result: Feasibility }) {
-  return (
-    <div className="deadline-table">
-      <table>
-        <caption>Cumulative hours by end of day</caption>
-        <thead>
-          <tr>
-            <th>By</th>
-            <th>Due</th>
-            <th>Available</th>
-            <th>Check</th>
-          </tr>
-        </thead>
-        <tbody>
-          {result.checkpoints.map((c) => (
-            <tr key={c.day}>
-              <th scope="row">{DAYS[c.day].slice(0, 3)}</th>
-              <td>{hours(c.due)}h</td>
-              <td>{hours(c.available)}h</td>
-              <td className={c.deficit ? "conflict-cell" : ""}>
-                {c.deficit ? `${hours(c.deficit)}h short` : "Fits"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
   );
 }
 export default App;

@@ -3,6 +3,14 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { STORAGE_KEY } from "../storage/scenarios";
+// V1 scenarios retained; V2 intentionally places manual controls behind disclosure.
+async function openSimulator(user: ReturnType<typeof userEvent.setup>) {
+  const toggle = screen.queryByRole("button", {
+    name: /Explore your own trade-off/,
+  });
+  if (toggle?.getAttribute("aria-expanded") === "false")
+    await user.click(toggle);
+}
 describe("complete product flows", () => {
   it("recomputes scope in precise quarter-hour steps and blocks expanded scope", async () => {
     const user = userEvent.setup();
@@ -10,6 +18,7 @@ describe("complete product flows", () => {
     await user.click(
       screen.getByRole("button", { name: "Try a real example" }),
     );
+    await openSimulator(user);
     expect(
       screen.getByRole("button", { name: "Increase scope by 15 minutes" }),
     ).toBeDisabled();
@@ -36,6 +45,7 @@ describe("complete product flows", () => {
     await user.click(
       screen.getByRole("button", { name: "Try a real example" }),
     );
+    await openSimulator(user);
     expect(
       screen.getByRole("heading", { name: "Something has to give. Not you." }),
     ).toBeInTheDocument();
@@ -55,7 +65,7 @@ describe("complete product flows", () => {
       "Can we agree on the report date?",
     );
     await user.click(
-      screen.getByRole("button", { name: /C.*focused hours available/ }),
+      screen.getByRole("button", { name: /With .*focused hours available/ }),
     );
     expect(
       screen.getByText("You made the decision explicit."),
@@ -81,12 +91,14 @@ describe("complete product flows", () => {
       screen.getByRole("button", { name: "Use my own workload" }),
     );
     await user.click(screen.getByRole("button", { name: "Find my options" }));
+    await openSimulator(user);
     expect(screen.getByRole("alert")).toHaveTextContent("New request");
     await user.type(screen.getByLabelText("New request name"), "Client brief");
     const mon = screen.getByLabelText("Monday focused hours");
     await user.clear(mon);
     await user.type(mon, "2");
     await user.click(screen.getByRole("button", { name: "Find my options" }));
+    await openSimulator(user);
     expect(
       screen.getByRole("heading", { name: "There’s room for this yes." }),
     ).toBeInTheDocument();
@@ -104,6 +116,7 @@ describe("complete product flows", () => {
     await user.clear(hrs);
     await user.type(hrs, "4");
     await user.click(screen.getByRole("button", { name: "Find my options" }));
+    await openSimulator(user);
     expect(
       screen.getByRole("button", { name: "Use this plan" }),
     ).toBeDisabled();
@@ -122,6 +135,7 @@ describe("complete product flows", () => {
     expect(screen.getByRole("status")).toHaveTextContent("No payment");
     await user.click(screen.getByRole("button", { name: "Try the example" }));
     await user.click(screen.getByRole("button", { name: "Find my options" }));
+    await openSimulator(user);
     await user.click(screen.getByLabelText("Defer Weekly report"));
     await user.click(screen.getByRole("button", { name: "Use this plan" }));
     await user.click(screen.getByRole("button", { name: "Save decision" }));
@@ -141,6 +155,7 @@ describe("complete product flows", () => {
     await user.click(
       screen.getByRole("button", { name: "Try a real example" }),
     );
+    await openSimulator(user);
     await user.click(screen.getByLabelText("Defer Weekly report"));
     await user.click(screen.getByRole("button", { name: "Use this plan" }));
     vi.spyOn(navigator.clipboard, "writeText").mockRejectedValue(
@@ -155,6 +170,7 @@ describe("complete product flows", () => {
     await user.click(
       screen.getByRole("button", { name: "Try a real example" }),
     );
+    await openSimulator(user);
     await user.click(screen.getByLabelText("Defer Weekly report"));
     await user.click(screen.getByRole("button", { name: "Use this plan" }));
     await user.click(screen.getByRole("button", { name: "Save decision" }));

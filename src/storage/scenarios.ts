@@ -7,6 +7,7 @@ export interface SavedDecision {
   message: string;
   outcome: "pending" | "agreed" | "revisit";
   notes: string;
+  scope?: string;
 }
 export interface Notebook {
   version: 1;
@@ -25,6 +26,8 @@ function validDecision(value: unknown): value is SavedDecision {
     isScenario(v.scenario) &&
     typeof v.message === "string" &&
     v.message.length <= 10000 &&
+    (v.scope === undefined ||
+      (typeof v.scope === "string" && v.scope.length <= 500)) &&
     typeof v.notes === "string" &&
     v.notes.length <= 2000 &&
     ["pending", "agreed", "revisit"].includes(v.outcome) &&
@@ -48,12 +51,26 @@ export function readNotebook(storage: Pick<Storage, "getItem">): {
     if (
       v.version !== 1 ||
       !Array.isArray(v.decisions) ||
-      v.decisions.length > 50 ||
-      !v.decisions.every(validDecision) ||
-      new Set(v.decisions.map((d) => d.id)).size !== v.decisions.length
+      v.decisions.length > 50
     )
       throw new Error("Invalid");
-    return { notebook: v, warning: "" };
+    const seen = new Set<string>();
+    const valid = v.decisions.filter((d) => {
+      try {
+        if (!validDecision(d) || seen.has(d.id)) return false;
+        seen.add(d.id);
+        return true;
+      } catch {
+        return false;
+      }
+    });
+    return {
+      notebook: { version: 1, decisions: valid },
+      warning:
+        valid.length === v.decisions.length
+          ? ""
+          : "Some saved decisions could not be read. Valid records were recovered. The original data stays untouched until your next explicit save, update or deletion.",
+    };
   } catch {
     return {
       notebook: blank,
