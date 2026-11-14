@@ -5,6 +5,8 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "jsdom",
+    // Bound worker contention so real interaction tests retain their time budget.
+    maxWorkers: 2,
     setupFiles: ["./src/tests/setup.ts"],
     include: ["src/**/*.test.{ts,tsx}"],
   },

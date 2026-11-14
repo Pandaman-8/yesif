@@ -38,7 +38,7 @@ it("separates new early failure from independently failing later existing work",
   const text = renegotiationRequest(s);
   expect(text).toContain("By Monday");
   expect(text).toContain("requires 2h, but I have 1h");
-  expect(text).toContain("new request causes this early shortfall");
+  expect(text).toContain("new request causes this deadline shortfall");
   expect(text).toContain(
     "existing work separately falls short by 1h on Friday",
   );
@@ -119,4 +119,35 @@ it("unapplied scope has an accessible literal notice and Cancel preserves recove
   expect(
     screen.getByLabelText("What will the smaller version include?"),
   ).toHaveValue("Two charts");
+});
+
+it("Back clears the previous second answer even when the first answer stays the same", async () => {
+  const user = userEvent.setup();
+  render(<App />);
+  await user.click(screen.getByRole("button", { name: "Explore an example" }));
+  await user.click(
+    within(
+      screen.getByRole("article", { name: "Move Weekly report" }),
+    ).getByRole("button", { name: "Use this trade-off" }),
+  );
+  await user.click(screen.getByRole("button", { name: "Start practice" }));
+  await user.click(
+    within(screen.getByRole("group", { name: "Step 1 replies" })).getAllByRole(
+      "button",
+    )[0],
+  );
+  await user.click(screen.getByRole("button", { name: "Hear the pushback" }));
+  await user.click(
+    within(screen.getByRole("group", { name: "Step 2 replies" })).getAllByRole(
+      "button",
+    )[0],
+  );
+  expect(screen.getByRole("button", { name: "Finish practice" })).toBeEnabled();
+  await user.click(
+    screen.getByRole("button", { name: "Back to first response" }),
+  );
+  await user.click(screen.getByRole("button", { name: "Hear the pushback" }));
+  expect(
+    screen.getByRole("button", { name: "Finish practice" }),
+  ).toBeDisabled();
 });

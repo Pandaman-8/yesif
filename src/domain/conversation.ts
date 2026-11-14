@@ -52,7 +52,7 @@ export function renegotiationRequest(s: Scenario): string {
       ? c.requestContributes
         ? `; ${hours(c.existingDeficit)}h of this shortfall already existed, and the request adds ${hours(c.additionalDeficit)}h.`
         : "; this shortfall exists before the new request."
-      : `; the new request causes this early shortfall${a.existingFirstConflict ? `, while existing work separately falls short by ${hours(a.existingFirstConflict.deficit)}h on ${DAYS[a.existingFirstConflict.day]}` : ""}.`;
+      : `; the new request causes this deadline shortfall${a.existingFirstConflict ? `, while existing work separately falls short by ${hours(a.existingFirstConflict.deficit)}h on ${DAYS[a.existingFirstConflict.day]}` : ""}.`;
   return `${prior ? context.slice(0, -1) + prior : context} Could we discuss that work’s deadline or free up time before ${DAYS[c.day]}? I’ll recheck every deadline before confirming ${s.request.name}.`;
 }
 

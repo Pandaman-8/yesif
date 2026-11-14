@@ -155,7 +155,11 @@ it("confirms deletion, preserves cancel and enables a contextual kit follow-up",
   await chooseFirst(user);
   await user.click(screen.getByRole("button", { name: "Save decision" }));
   await user.click(screen.getByRole("button", { name: /My decisions/ }));
-  await user.click(screen.getByRole("button", { name: "Unlock free demo" }));
+  await user.click(
+    screen.getByRole("button", {
+      name: "Unlock free demo — no payment required",
+    }),
+  );
   await user.click(screen.getByText("Prepare a follow-up · Kit demo"));
   expect(
     (screen.getByLabelText("Follow-up message") as HTMLTextAreaElement).value,
@@ -178,7 +182,11 @@ it("exports the exact stored JSON and keeps the blob URL alive after initiating 
   await chooseFirst(user);
   await user.click(screen.getByRole("button", { name: "Save decision" }));
   await user.click(screen.getByRole("button", { name: /My decisions/ }));
-  await user.click(screen.getByRole("button", { name: "Unlock free demo" }));
+  await user.click(
+    screen.getByRole("button", {
+      name: "Unlock free demo — no payment required",
+    }),
+  );
   const create = vi.fn((_blob: Blob) => "blob:yesif-test"),
     revoke = vi.fn();
   vi.stubGlobal(

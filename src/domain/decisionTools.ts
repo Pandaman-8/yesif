@@ -19,7 +19,7 @@ export function decisionFacts(
     highRetained,
     priority: highMoved.length
       ? `High-priority work moved: ${highMoved.map((t) => t.name).join("; ")}.`
-      : `No high-priority commitments moved${highRetained.length ? `; ${highRetained.map((t) => t.name).join("; ")} stay` : ""}.`,
+      : `No high-priority commitments moved${highRetained.length ? `; ${highRetained.map((t) => t.name).join("; ")} ${highRetained.length === 1 ? "stays" : "stay"}` : ""}.`,
     agreements: [
       ...f.moved.map(
         (t) =>

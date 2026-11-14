@@ -3,7 +3,6 @@ import {
   ArrowUpRight,
   ArrowRight,
   ArrowLeft,
-  Check,
   Plus,
   X,
   LockKeyhole,
@@ -33,7 +32,10 @@ import { Workload } from "./components/Workload";
 import { Results } from "./components/Results";
 import { Proposal } from "./components/Proposal";
 import { ConfirmDialog } from "./components/ConfirmDialog";
-import { FollowUp } from "./components/FollowUp";
+import { FollowUp, type FollowUpDraft } from "./components/FollowUp";
+import { KitOffer } from "./components/KitOffer";
+import { SavedComparison } from "./components/SavedComparison";
+import { DecisionKit } from "./components/DecisionKit";
 import { shortProposal, renegotiationRequest } from "./domain/conversation";
 import {
   readDraft,
@@ -68,6 +70,11 @@ function App() {
   const [notice, setNotice] = useState(initial.warning);
   const [notebook, setNotebook] = useState<Notebook>(initial.notebook);
   const [unlocked, setUnlocked] = useState(false);
+  const [followUps, setFollowUps] = useState<Record<string, FollowUpDraft>>({});
+  const [printText, setPrintText] = useState("");
+  useEffect(() => {
+    if (printText) window.print();
+  }, [printText]);
   const [demo, setDemo] = useState(false);
   const [inputRevision, setInputRevision] = useState(0);
   const [unresolved, setUnresolved] = useState(false);
@@ -111,14 +118,19 @@ function App() {
     if (!dirty) cleanFingerprint.current = fingerprint;
   }, [dirty, fingerprint]);
   useEffect(() => {
-    if (!hasChanges && !Object.keys(noteEdits).length) return;
+    if (
+      !hasChanges &&
+      !Object.keys(noteEdits).length &&
+      !Object.keys(followUps).length
+    )
+      return;
     const warn = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = "";
     };
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
-  }, [hasChanges, noteEdits]);
+  }, [hasChanges, noteEdits, followUps]);
   function guard(action: () => void) {
     if (hasChanges || Object.keys(noteEdits).length) {
       setDialogError("");
@@ -783,50 +795,16 @@ function App() {
                     New situation <Plus size={16} />
                   </button>
                 </div>
-                <section className="kit-banner">
-                  <div>
-                    <span className="eyebrow">
-                      THE NEGOTIATION KIT · PRICING EXPERIMENT
-                    </span>
-                    <h2>Make your next conversation easier.</h2>
-                    <p>
-                      Keep your decisions, compare saved conditions, record the
-                      response, and prepare a follow-up. Reuse your workload
-                      when the next request arrives.
-                    </p>
-                    <span className="fine-print">
-                      One saved decision and the complete core workflow are
-                      free. Data stays in this browser; no sync. Demo unlock
-                      lasts for this visit.
-                    </span>
-                  </div>
-                  <div className="kit-action">
-                    <div className="price">
-                      $4.99 <span>one time · proposed price</span>
-                    </div>
-                    <button
-                      className="button primary"
-                      disabled={unlocked}
-                      onClick={() => {
-                        setUnlocked(true);
-                        setNotice(
-                          "Kit demo unlocked for this visit. No payment, account, or subscription.",
-                        );
-                      }}
-                    >
-                      {unlocked ? (
-                        <>
-                          <Check size={16} /> Demo unlocked
-                        </>
-                      ) : (
-                        <>
-                          Unlock free demo <ArrowUpRight size={16} />
-                        </>
-                      )}
-                    </button>
-                    <small>No checkout. No payment is collected.</small>
-                  </div>
-                </section>
+                <KitOffer
+                  unlocked={unlocked}
+                  unlock={() => {
+                    setUnlocked(true);
+                    setNotice(
+                      "Kit demo unlocked for this visit. No payment, account, or subscription.",
+                    );
+                  }}
+                />
+                {unlocked && <SavedComparison decisions={notebook.decisions} />}
                 <div className="section-title notebook-heading">
                   <h2>
                     Saved on this device{" "}
@@ -834,7 +812,7 @@ function App() {
                       {notebook.decisions.length}
                     </span>
                   </h2>
-                  {unlocked && notebook.decisions.length > 0 && (
+                  {notebook.decisions.length > 0 && (
                     <button className="text-button" onClick={exportNotebook}>
                       <Download size={16} /> Export notebook
                     </button>
@@ -858,7 +836,11 @@ function App() {
                 ) : (
                   <div className="saved-grid">
                     {notebook.decisions.map((d) => (
-                      <article className="panel saved-card" key={d.id}>
+                      <article
+                        className="panel saved-card"
+                        key={d.id}
+                        aria-label={`Saved ${d.scenario.request.name}`}
+                      >
                         <p className="eyebrow">
                           {new Date(d.created).toLocaleDateString("en-US", {
                             month: "short",
@@ -928,10 +910,27 @@ function App() {
                           Your note only; the saved workload does not change.
                         </p>
                         {unlocked && (
-                          <FollowUp
-                            key={`${d.id}:${d.outcome}:${d.notes}`}
-                            decision={d}
-                          />
+                          <>
+                            <FollowUp
+                              decision={d}
+                              draft={followUps[d.id]}
+                              change={(draft) =>
+                                setFollowUps((previous) => {
+                                  const next = { ...previous };
+                                  if (draft) next[d.id] = draft;
+                                  else delete next[d.id];
+                                  return next;
+                                })
+                              }
+                            />
+                            <DecisionKit
+                              decision={d}
+                              print={(text) => {
+                                if (text === printText) window.print();
+                                else setPrintText(text);
+                              }}
+                            />
+                          </>
                         )}
                         <div className="saved-actions">
                           <button
@@ -979,6 +978,9 @@ function App() {
           </div>
         )}
       </main>
+      <div className="print-brief">
+        <pre>{printText}</pre>
+      </div>
       <footer className="footer wrap">
         <span className="footer-logo">yesif.</span>
         <span>Every yes needs an if.</span>

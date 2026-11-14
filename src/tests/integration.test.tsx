@@ -138,7 +138,11 @@ describe("complete product flows", () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(screen.getByRole("button", { name: "My decisions" }));
-    await user.click(screen.getByRole("button", { name: "Unlock free demo" }));
+    await user.click(
+      screen.getByRole("button", {
+        name: "Unlock free demo — no payment required",
+      }),
+    );
     expect(
       screen.getByRole("button", { name: "Demo unlocked" }),
     ).toBeDisabled();
@@ -193,7 +197,11 @@ describe("complete product flows", () => {
     expect(screen.getByRole("status")).toHaveTextContent(
       "Your free saved decision is safe",
     );
-    await user.click(screen.getByRole("button", { name: "Unlock free demo" }));
+    await user.click(
+      screen.getByRole("button", {
+        name: "Unlock free demo — no payment required",
+      }),
+    );
     await user.click(
       screen.getByRole("button", { name: "Back to my proposal" }),
     );

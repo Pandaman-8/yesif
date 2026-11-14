@@ -172,7 +172,10 @@ export function NegotiationPractice({
                 {stage === "second" && (
                   <button
                     className="text-button"
-                    onClick={() => transition("first")}
+                    onClick={() => {
+                      setSecond(undefined);
+                      transition("first");
+                    }}
                   >
                     Back to first response
                   </button>
