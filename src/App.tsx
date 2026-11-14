@@ -619,6 +619,11 @@ function App() {
                     delete next[deleting.id];
                     return next;
                   });
+                  setFollowUps((previous) => {
+                    const next = { ...previous };
+                    delete next[deleting.id];
+                    return next;
+                  });
                   setDeleting(null);
                   setNotice("Decision deleted from this browser.");
                 }

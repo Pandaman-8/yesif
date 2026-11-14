@@ -521,7 +521,7 @@ function TradeoffCard({
               {moved.length
                 ? scenario.tasks.length === moved.length
                   ? "No existing work remains this week."
-                  : `${facts.retained.map((t) => t.name).join("; ")} keep their deadlines.`
+                  : `Deadlines stay: ${facts.retained.map((t) => t.name).join("; ")}.`
                 : `All existing commitments and deadlines: ${facts.retained.map((t) => t.name).join("; ")}.`}
               {!reduced && (
                 <span>

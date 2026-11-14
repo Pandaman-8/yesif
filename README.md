@@ -9,6 +9,16 @@ Start with clear context, compare verified trade-offs, inspect real task allocat
 - Primary track: Skills. Initial audience: US marketing/project coordinators aged 25–45.
 - Demand, pricing, and differentiation are hypotheses; this is a working product experiment, not a validated business.
 
+## V2.5 — decision comparison and repeat-use tools
+
+Current alternatives now name retained work, priority effects, moved hours still owed, both agreements for combined changes, and all five deadline checks. Saved snapshots can be compared using fresh calculations; materially different inputs are disclosed without ranking them as better.
+
+Notebook contains an explicitly free, current-visit Kit demo: up to 50 local decisions, saved comparison, a grounded Negotiation Playbook, editable follow-ups, and copyable/printable Decision Briefs. The $4.99 one-time price remains proposed and unvalidated. No payments occur. Core checks, alternatives, proposals and practice remain Free, with one saved decision; existing records and export remain available after demo reset.
+
+Trust fixes distinguish early deadline conflicts from weekly overload, announce unapplied scope descriptions without replacing manual text, and recognize identical saves without duplication or a misleading Free-limit prompt. Two-step practice clears its second answer on Back. Storage formats and core computation are unchanged.
+
+**147/147 tests pass** (118 baseline + 29 new), with clean install, typecheck, production build and whitespace check. See [the maintained release QA record](docs/FINAL_RELEASE_V2_5_QA.md) for exact gates, real browser evidence, limitations and deployment verification. Final native keyboard, screen-reader, print-preview and some screenshot checks remain incomplete; no complete accessibility or human acceptance signoff is claimed. Rollback: `codex/yesif-v2-4-rollback` at `44165f613237faeeae2dad24a007cb7cdfbc5e19` (see exact full SHA in QA). Demand, willingness to pay and skill improvement remain unproven.
+
 ## V2.4 — human negotiation intelligence
 
 Checked decisions now produce shorter conditional messages with separate factual evidence. The selected-plan summary spells out obligations, approvals and reduced deliverables. A scope description can be explicitly applied to the draft without silently replacing manual edits.
@@ -17,7 +27,7 @@ Optional two-step negotiation practice responds to the current scenario and the 
 
 **118 tests pass** (103 preserved + 15 new), with clean install, typecheck and production build. Real browser evidence covers 48 state/width measurements at six widths with no horizontal overflow. Copy, manual edits, explicit scope updates and saved-decision recovery were exercised. Native keyboard delivery and a full screen-reader audit remain incomplete.
 
-See [audit](docs/V2_4_AUDIT.md), [Skills specification](docs/V2_4_SKILLS_SPEC.md), [communication](docs/V2_4_COMMUNICATION.md), [QA and screenshots](docs/V2_4_QA.md), and [pitch handoff](docs/V2_4_PITCH_HANDOFF.md). Rollback: `codex/yesif-v2-3-rollback` at `171b1d0cc1c645f5ecf58e186ab35e3025252ce0`. Full Block 07, Block 09 and Block 10 remain deferred. Demand, paid value, retention and skill improvement are unproven. No PDF deck is included.
+See [audit](docs/V2_4_AUDIT.md), [Skills specification](docs/V2_4_SKILLS_SPEC.md), [communication](docs/V2_4_COMMUNICATION.md), [QA and screenshots](docs/V2_4_QA.md), and [pitch handoff](docs/V2_4_PITCH_HANDOFF.md). Rollback: `codex/yesif-v2-3-rollback` at `171b1d0cc1c645f5ecf58e186ab35e3025252ce0`. At the V2.4 checkpoint, full Blocks 07, 09 and 10 remained deferred; see the V2.5 status above. Demand, paid value, retention and skill improvement are unproven. No PDF deck is included.
 
 ## V2.3 — visual scheduling and causal decisions
 

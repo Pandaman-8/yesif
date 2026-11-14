@@ -88,11 +88,27 @@ export function SavedComparison({ decisions }: { decisions: SavedDecision[] }) {
                         unassigned
                       </p>
                       <p>{f.priority}</p>
-                      <DecisionFacts
-                        scenario={d.scenario}
-                        plan={f.plan}
-                        scope={d.scope}
-                      />
+                      <p>{f.items[0]}</p>
+                      <p>
+                        {f.moved.length
+                          ? `${hours(f.moved.reduce((n, t) => n + t.units, 0))}h moved, still owed. New dates need agreement; future capacity unchecked.`
+                          : "Existing commitments keep their deadlines."}
+                      </p>
+                      {f.smaller && (
+                        <p>
+                          {d.scope?.trim()
+                            ? `Smaller contents to agree: ${d.scope}`
+                            : "Smaller contents and estimate still need agreement."}
+                        </p>
+                      )}
+                      <details className="comparison-details">
+                        <summary>All inputs and deadline checks</summary>
+                        <DecisionFacts
+                          scenario={d.scenario}
+                          plan={f.plan}
+                          scope={d.scope}
+                        />
+                      </details>
                       <details>
                         <summary>Saved message and recorded outcome</summary>
                         <p>{d.message}</p>

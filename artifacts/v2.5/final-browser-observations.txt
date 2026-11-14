@@ -1,0 +1,6 @@
+Real browser follow-up, production preview. Captures after session recovery timed out; viewport change requests did not consistently alter actual width (375 remained after requesting 900).
+Observed: old V2.4 records and agreed notes survive fresh load; demo reset; export available in Free. Compact comparison same and differing scenarios recalculates 15/15 and 10/15, with both combined conditions and explicit differences.
+Brief text generated from real saved record; Copy entered selected-text fallback; Print populated isolated print record, OS preview unavailable.
+Manual proposal and scope edits: unapplied notice visible; update opened native dialog; Cancel preserved exact text and restored focus to update button. Tab/Enter/Space/Escape events had no effect in automation.
+Original overload 18/15 exposes 13/15 deferral and 15/15 scope; fits case10/15; early same-day conflict8/15 weekly,8/6 Tuesday,2h short; renegotiation separates1h existing+1h added.
+Console read: only Electron shell CSP warnings; no observed YESIF application errors.

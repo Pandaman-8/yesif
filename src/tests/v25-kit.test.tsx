@@ -238,3 +238,27 @@ it("follow-up clipboard failure selects exact edited text and preserves the sour
   expect(editor.selectionEnd - editor.selectionStart).toBe(editor.value.length);
   expect(localStorage.getItem(STORAGE_KEY)).toBe(raw);
 });
+it("deleting a decision cancels safely and removes its temporary follow-up warning only after confirmation", async () => {
+  const raw = seed([decision()]);
+  const user = userEvent.setup();
+  render(<App />);
+  await notebook(user);
+  await unlock(user);
+  await user.click(screen.getByText("Prepare a follow-up · Kit demo"));
+  fireEvent.change(screen.getByLabelText("Follow-up message"), {
+    target: { value: "Temporary follow-up" },
+  });
+  const before = new Event("beforeunload", { cancelable: true });
+  window.dispatchEvent(before);
+  expect(before.defaultPrevented).toBe(true);
+  await user.click(screen.getByRole("button", { name: "Delete saved Urgent presentation" }));
+  await user.click(screen.getByRole("button", { name: "Cancel" }));
+  expect(screen.getByLabelText("Follow-up message")).toHaveValue("Temporary follow-up");
+  expect(localStorage.getItem(STORAGE_KEY)).toBe(raw);
+  await user.click(screen.getByRole("button", { name: "Delete saved Urgent presentation" }));
+  await user.click(screen.getByRole("button", { name: "Delete decision" }));
+  expect(readNotebook(localStorage).notebook.decisions).toHaveLength(0);
+  const after = new Event("beforeunload", { cancelable: true });
+  window.dispatchEvent(after);
+  expect(after.defaultPrevented).toBe(false);
+});
