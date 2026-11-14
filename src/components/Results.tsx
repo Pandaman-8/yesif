@@ -20,6 +20,8 @@ import {
   type Option,
   type Scenario,
 } from "../domain/engine";
+import { decisionFacts } from "../domain/decisionTools";
+import { DecisionFacts } from "./DecisionFacts";
 import { DeadlineTable } from "./Shared";
 import { AllocationView, ChangesView } from "./AllocationView";
 interface Props {
@@ -476,7 +478,8 @@ function TradeoffCard({
   index: number;
   choose: (option: Option) => void;
 }) {
-  const moved = scenario.tasks.filter((t) => o.deferred.includes(t.id));
+  const facts = decisionFacts(scenario, o);
+  const moved = facts.moved;
   const reduced = o.requestUnits < scenario.request.units;
   const title = moved.length
     ? `Move ${moved.map((t) => t.name).join(" + ")}${reduced ? " + reduce scope" : ""}`
@@ -518,8 +521,8 @@ function TradeoffCard({
               {moved.length
                 ? scenario.tasks.length === moved.length
                   ? "No existing work remains this week."
-                  : "Other commitments keep their deadlines."
-                : "All existing commitments and deadlines."}
+                  : `${facts.retained.map((t) => t.name).join("; ")} keep their deadlines.`
+                : `All existing commitments and deadlines: ${facts.retained.map((t) => t.name).join("; ")}.`}
               {!reduced && (
                 <span>
                   Full {hours(o.requestUnits)}h {scenario.request.name}.
@@ -530,6 +533,12 @@ function TradeoffCard({
         </dl>
       </div>
       <div className="option-outcome">
+        <p className="option-priority">{facts.priority}</p>
+        {moved.length > 0 && (
+          <p className="help">
+            {hours(moved.reduce((n, t) => n + t.units, 0))}h moved, still owed.
+          </p>
+        )}
         <div className="option-math">
           <span>
             <strong>{hours(o.result.total)}h</strong> /{" "}
@@ -562,6 +571,10 @@ function TradeoffCard({
           Use this trade-off <ArrowRight size={16} />
         </button>
         <AllocationView scenario={scenario} plan={o} />
+        <details className="comparison-details">
+          <summary>Compare obligations and deadlines</summary>
+          <DecisionFacts scenario={scenario} plan={o} />
+        </details>
       </div>
     </article>
   );
