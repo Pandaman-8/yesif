@@ -212,7 +212,7 @@ function App() {
     link.click();
     URL.revokeObjectURL(url);
     setNotice(
-      "Export downloaded. It contains the task names, proposals, and notes you saved.",
+      "Export prepared. Check your browser’s downloads for yesif-decisions.json. It contains your saved task names, proposals, and notes.",
     );
   }
   return (
