@@ -1,0 +1,345 @@
+[
+  {
+    "name": "final-overload",
+    "requested": 900,
+    "height": 1400,
+    "scrollWidth": 900,
+    "width": 900
+  },
+  {
+    "name": "final-overload",
+    "requested": 1440,
+    "height": 1400,
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "name": "final-overload",
+    "requested": 375,
+    "height": 1400,
+    "scrollWidth": 375,
+    "width": 375
+  },
+  {
+    "name": "final-overload",
+    "requested": 390,
+    "height": 1400,
+    "scrollWidth": 390,
+    "width": 390
+  },
+  {
+    "name": "final-overload",
+    "requested": 768,
+    "height": 1400,
+    "scrollWidth": 768,
+    "width": 768
+  },
+  {
+    "name": "final-overload",
+    "requested": 1280,
+    "height": 1400,
+    "scrollWidth": 1280,
+    "width": 1280
+  },
+  {
+    "name": "final-three-options",
+    "requested": 375,
+    "height": 1400,
+    "scrollWidth": 375,
+    "width": 375
+  },
+  {
+    "name": "final-three-options",
+    "requested": 390,
+    "height": 1400,
+    "scrollWidth": 390,
+    "width": 390
+  },
+  {
+    "name": "final-three-options",
+    "requested": 768,
+    "height": 1400,
+    "scrollWidth": 768,
+    "width": 768
+  },
+  {
+    "name": "final-three-options",
+    "requested": 900,
+    "height": 1400,
+    "scrollWidth": 900,
+    "width": 900
+  },
+  {
+    "name": "final-three-options",
+    "requested": 1280,
+    "height": 1400,
+    "scrollWidth": 1280,
+    "width": 1280
+  },
+  {
+    "name": "final-three-options",
+    "requested": 1440,
+    "height": 1400,
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "name": "final-three-tail",
+    "requested": 375,
+    "height": 1400,
+    "scrollWidth": 375,
+    "width": 375
+  },
+  {
+    "name": "final-three-tail",
+    "requested": 390,
+    "height": 1400,
+    "scrollWidth": 390,
+    "width": 390
+  },
+  {
+    "name": "final-one-option",
+    "requested": 375,
+    "height": 1400,
+    "scrollWidth": 375,
+    "width": 375
+  },
+  {
+    "name": "final-one-option",
+    "requested": 390,
+    "height": 1400,
+    "scrollWidth": 390,
+    "width": 390
+  },
+  {
+    "name": "final-one-option",
+    "requested": 768,
+    "height": 1400,
+    "scrollWidth": 768,
+    "width": 768
+  },
+  {
+    "name": "final-one-option",
+    "requested": 900,
+    "height": 1400,
+    "scrollWidth": 900,
+    "width": 900
+  },
+  {
+    "name": "final-one-option",
+    "requested": 1280,
+    "height": 1400,
+    "scrollWidth": 1280,
+    "width": 1280
+  },
+  {
+    "name": "final-one-option",
+    "requested": 1440,
+    "height": 1400,
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "name": "final-fits",
+    "requested": 375,
+    "height": 1400,
+    "scrollWidth": 375,
+    "width": 375
+  },
+  {
+    "name": "final-fits",
+    "requested": 390,
+    "height": 1400,
+    "scrollWidth": 390,
+    "width": 390
+  },
+  {
+    "name": "final-fits",
+    "requested": 768,
+    "height": 1400,
+    "scrollWidth": 768,
+    "width": 768
+  },
+  {
+    "name": "final-fits",
+    "requested": 900,
+    "height": 1400,
+    "scrollWidth": 900,
+    "width": 900
+  },
+  {
+    "name": "final-fits",
+    "requested": 1280,
+    "height": 1400,
+    "scrollWidth": 1280,
+    "width": 1280
+  },
+  {
+    "name": "final-fits",
+    "requested": 1440,
+    "height": 1400,
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "name": "final-early-conflict",
+    "requested": 375,
+    "height": 1400,
+    "scrollWidth": 375,
+    "width": 375
+  },
+  {
+    "name": "final-early-conflict",
+    "requested": 390,
+    "height": 1400,
+    "scrollWidth": 390,
+    "width": 390
+  },
+  {
+    "name": "final-early-conflict",
+    "requested": 768,
+    "height": 1400,
+    "scrollWidth": 768,
+    "width": 768
+  },
+  {
+    "name": "final-early-conflict",
+    "requested": 900,
+    "height": 1400,
+    "scrollWidth": 900,
+    "width": 900
+  },
+  {
+    "name": "final-early-conflict",
+    "requested": 1280,
+    "height": 1400,
+    "scrollWidth": 1280,
+    "width": 1280
+  },
+  {
+    "name": "final-early-conflict",
+    "requested": 1440,
+    "height": 1400,
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "name": "final-early-proposal",
+    "requested": 900,
+    "height": 1400,
+    "scrollWidth": 900,
+    "width": 900
+  },
+  {
+    "name": "final-saved-comparison",
+    "requested": 375,
+    "height": 1400,
+    "scrollWidth": 375,
+    "width": 375
+  },
+  {
+    "name": "final-saved-comparison",
+    "requested": 390,
+    "height": 1400,
+    "scrollWidth": 390,
+    "width": 390
+  },
+  {
+    "name": "final-saved-comparison",
+    "requested": 768,
+    "height": 1400,
+    "scrollWidth": 768,
+    "width": 768
+  },
+  {
+    "name": "final-saved-comparison",
+    "requested": 900,
+    "height": 1400,
+    "scrollWidth": 900,
+    "width": 900
+  },
+  {
+    "name": "final-saved-comparison",
+    "requested": 1280,
+    "height": 1400,
+    "scrollWidth": 1280,
+    "width": 1280
+  },
+  {
+    "name": "final-saved-comparison",
+    "requested": 1440,
+    "height": 1400,
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "name": "final-combined",
+    "requested": 375,
+    "height": 1400,
+    "scrollWidth": 375,
+    "width": 375
+  },
+  {
+    "name": "final-combined",
+    "requested": 390,
+    "height": 1400,
+    "scrollWidth": 390,
+    "width": 390
+  },
+  {
+    "name": "final-combined",
+    "requested": 768,
+    "height": 1400,
+    "scrollWidth": 768,
+    "width": 768
+  },
+  {
+    "name": "final-combined",
+    "requested": 900,
+    "height": 1400,
+    "scrollWidth": 900,
+    "width": 900
+  },
+  {
+    "name": "final-combined",
+    "requested": 1280,
+    "height": 1400,
+    "scrollWidth": 1280,
+    "width": 1280
+  },
+  {
+    "name": "final-combined",
+    "requested": 1440,
+    "height": 1400,
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "name": "final-combined-tail",
+    "requested": 375,
+    "height": 1400,
+    "scrollWidth": 375,
+    "width": 375
+  },
+  {
+    "name": "final-combined-tail",
+    "requested": 390,
+    "height": 1400,
+    "scrollWidth": 390,
+    "width": 390
+  },
+  {
+    "name": "final-kit",
+    "requested": 900,
+    "height": 1400,
+    "scrollWidth": 900,
+    "width": 900
+  },
+  {
+    "name": "final-saved-comparison-tail",
+    "requested": 390,
+    "height": 1400,
+    "scrollWidth": 390,
+    "width": 390
+  }
+]

@@ -17,7 +17,7 @@ Notebook contains an explicitly free, current-visit Kit demo: up to 50 local dec
 
 Trust fixes distinguish early deadline conflicts from weekly overload, announce unapplied scope descriptions without replacing manual text, and recognize identical saves without duplication or a misleading Free-limit prompt. Two-step practice clears its second answer on Back. Storage formats and core computation are unchanged.
 
-**147/147 tests pass** (118 baseline + 29 new), with clean install, typecheck, production build and whitespace check. See [the maintained release QA record](docs/FINAL_RELEASE_V2_5_QA.md) for exact gates, real browser evidence, limitations and deployment verification. Final native keyboard, screen-reader, print-preview and some screenshot checks remain incomplete; no complete accessibility or human acceptance signoff is claimed. Rollback: `codex/yesif-v2-4-rollback` at `44165f613237faeeae2dad24a007cb7cdfbc5e19` (see exact full SHA in QA). Demand, willingness to pay and skill improvement remain unproven.
+**147/147 tests pass** (118 baseline + 29 new), with clean install, typecheck, production build and whitespace check. See [the maintained release QA record](docs/FINAL_RELEASE_V2_5_QA.md) for exact gates, real browser evidence, limitations and deployment verification. Final six-width screenshots cover the principal result and Kit states. Native keyboard, screen-reader, reduced-motion emulation, clipboard-success and print-preview checks remain incomplete; no complete accessibility or human acceptance signoff is claimed. Rollback: `codex/yesif-v2-4-rollback` at `44165f613237faeeae2dad24a007cb7cdfbc5e19` (see exact full SHA in QA). Demand, willingness to pay and skill improvement remain unproven.
 
 ## V2.4 — human negotiation intelligence
 

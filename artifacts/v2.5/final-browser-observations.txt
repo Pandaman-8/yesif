@@ -1,6 +1,9 @@
+Historical follow-up before final screenshot recovery:
 Real browser follow-up, production preview. Captures after session recovery timed out; viewport change requests did not consistently alter actual width (375 remained after requesting 900).
 Observed: old V2.4 records and agreed notes survive fresh load; demo reset; export available in Free. Compact comparison same and differing scenarios recalculates 15/15 and 10/15, with both combined conditions and explicit differences.
 Brief text generated from real saved record; Copy entered selected-text fallback; Print populated isolated print record, OS preview unavailable.
 Manual proposal and scope edits: unapplied notice visible; update opened native dialog; Cancel preserved exact text and restored focus to update button. Tab/Enter/Space/Escape events had no effect in automation.
 Original overload 18/15 exposes 13/15 deferral and 15/15 scope; fits case10/15; early same-day conflict8/15 weekly,8/6 Tuesday,2h short; renegotiation separates1h existing+1h added.
 Console read: only Electron shell CSP warnings; no observed YESIF application errors.
+
+Final recovery: fresh HTTPS app loaded source 0b68b86 with index-BbgVJKRk.js / index-CjIPZxCC.css. All final retained images were visually inspected. 68 final state captures plus production smoke; 49 retained width measurements show no horizontal overflow. Nineteen artifact/alignment capture measurements were overwritten by the other helper, so no retained numeric evidence is claimed for them. Invalid compositor captures were discarded. Native keyboard, AT, reduced-motion emulation, clipboard success and OS print preview remain NOT VERIFIED. Full inventory and release evidence: docs/FINAL_RELEASE_V2_5_QA.md.

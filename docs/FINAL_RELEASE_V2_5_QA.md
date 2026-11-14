@@ -34,8 +34,8 @@ New `decisionTools.ts` recomputes all facts through the existing simulation; `De
 
 Confirmed during this release:
 
-- Saved comparison was too long on mobile: the initial 375px comparison section measured 2,933px. Core request/priority/owed-hours/conditions now remain visible, with full obligation and weekday tables behind an explicit disclosure. The revised 375px DOM measured 1,644px. This is a size observation, **not** final visual signoff.
-- Opening one saved artifact stretched the neighboring closed card. Saved cards now align to the start of their grid row. Final screenshot verification was blocked by capture timeouts.
+- Saved comparison was too long on mobile: the initial 375px comparison section measured 2,933px. Core request/priority/owed-hours/conditions now remain visible, with full obligation and weekday tables behind an explicit disclosure. The revised 375px DOM measured 1,644px. Final screenshots subsequently confirmed the compact layout at all six widths; the height comparison itself is only a size observation.
+- Opening one saved artifact stretched the neighboring closed card. Saved cards now align to the start of their grid row. After recovering screenshot capture, the final 900px image confirms that the neighboring closed card keeps its natural height (`final-grid-alignment-900.jpg`).
 - A deleted decision's temporary follow-up left a `beforeunload` warning behind. Confirmed deletion now clears only that record's follow-up state; Cancel retains its exact text and stored record. Added regression verifies the warning before editing/deletion and its removal after confirmed deletion. Focused Kit suite: **8/8 passed (19.98s)**.
 - Singular retained-task wording now uses “Deadlines stay: …”.
 
@@ -58,13 +58,26 @@ Verified through browser interactions and current DOM:
 
 ### Screenshot inventory and limits
 
-Files: [`artifacts/v2.5`](../artifacts/v2.5/), [measurements](../artifacts/v2.5/browser-metrics.json), [follow-up observations](../artifacts/v2.5/final-browser-observations.txt).
+Files: [`artifacts/v2.5`](../artifacts/v2.5/), [stage-C measurements](../artifacts/v2.5/browser-metrics.json), [final measurements](../artifacts/v2.5/final-browser-metrics.json), [observations](../artifacts/v2.5/final-browser-observations.txt).
 
 - Seven genuine V2.4 before captures at 900px: fits, overload comparison, early conflict, early proposal, combined change, Kit, saved workspace.
-- Twenty-four V2.5 stage-C captures/measurements: Kit, saved comparison, follow-up, Playbook at **375, 390, 768, 900, 1280, 1440px**. All recorded document widths fit the viewport. The follow-up 768px image contains a capture artifact and is **not visual acceptance evidence**. Other captures were inspected; 900px follow-up was recaptured after an initial compositor artifact.
-- [Kit before](../artifacts/v2.5/before-kit-900.png) / [Kit after](../artifacts/v2.5/after-kit-900.png); [saved workspace before](../artifacts/v2.5/before-saved-workspace-900.png) / [initial saved comparison after](../artifacts/v2.5/after-saved-comparison-900.png).
-- Saved-comparison screenshots precede the final compact disclosure change. Follow-up/Playbook screenshots precede the grid alignment correction. They are **intermediate evidence**, not final screenshots of those corrections.
-- After browser session recovery, screenshot calls repeatedly timed out; requested viewport changes also did not consistently change actual width. No fabricated after-fits/after-early/after-combined/Brief captures were substituted. Final screenshots and new native visual review of 0/1/2/3 option layouts at all six widths remain **NOT VERIFIED**. Prior V2.2–V2.4 captures are historical only.
+- Twenty-four stage-C captures: Kit, saved comparison, follow-up, Playbook at **375, 390, 768, 900, 1280, 1440px**. The follow-up 768px image contains a capture artifact and is **not acceptance evidence**. These comparison/tool images precede the final compact/alignment changes. Kit content and layout are unchanged after these captures.
+- **68 final JPEG captures**, all actually viewed: ten six-width series — overload/two options, three options, one option, fits, early conflict/zero options, combined change, saved comparison, follow-up, Playbook, Brief. Additional images: three-option mobile tails (375/390), combined mobile tails (375/390), saved-comparison tail (390), early proposal (900), Kit (900), expanded-card alignment (900). Plus one fresh HTTPS production smoke image, **69 final images total**.
+- The final metrics file retains 49 matching screenshot measurements, all with document width equal to requested viewport width. The 19 Brief/follow-up/Playbook/alignment images were captured and visually inspected, but their helper's measurements were overwritten by the other capture helper; they are **visual evidence, not retained numeric records**. No reconstructed measurements were substituted.
+- Default screenshots recovered after explicit clipped captures timed out. Some resize transitions produced stale compositor images despite correct DOM widths. Invalid uncommitted captures were discarded; inspected replacements were retained. This is why DOM width alone is not treated as visual acceptance.
+- Final 1/2/3/0 layouts were inspected at all six widths: one option fills its card, two have equal visual weight, three use two plus one at tablet widths and three columns on wide screens; phones stack cards. No horizontal clipping was observed in the retained final images. Longer mobile comparisons include additional scrolled views. This does not claim an exhaustive screenshot of every disclosure or scroll position.
+
+| State | Before at 900px | Final at 900px |
+| --- | --- | --- |
+| Fits | [V2.4](../artifacts/v2.5/before-fits-900.png) | [V2.5](../artifacts/v2.5/final-fits-900.jpg) |
+| Overload comparison | [V2.4](../artifacts/v2.5/before-comparison-900.png) | [V2.5](../artifacts/v2.5/final-overload-900.jpg) |
+| Early conflict | [V2.4](../artifacts/v2.5/before-early-conflict-900.png) | [V2.5](../artifacts/v2.5/final-early-conflict-900.jpg) |
+| Early proposal | [V2.4](../artifacts/v2.5/before-early-proposal-900.png) | [V2.5](../artifacts/v2.5/final-early-proposal-900.jpg) |
+| Combined change | [V2.4](../artifacts/v2.5/before-combined-900.png) | [V2.5](../artifacts/v2.5/final-combined-900.jpg) |
+| Kit | [V2.4](../artifacts/v2.5/before-kit-900.png) | [V2.5](../artifacts/v2.5/final-kit-900.jpg) |
+| Saved workspace/comparison | [V2.4 workspace](../artifacts/v2.5/before-saved-workspace-900.png) | [V2.5 comparison](../artifacts/v2.5/final-saved-comparison-900.jpg) |
+
+Final overload, 1/3-option, fits, early-conflict and early-proposal captures use the deployed HTTPS app. Combined and saved-tool captures use the same final production build on localhost, with the real records previously saved through V2.4. No screenshots were generated from mocks or edited to hide defects. Native keyboard, screen-reader, reduced-motion emulation, successful system clipboard writes and OS print preview remain **NOT VERIFIED** as detailed above.
 
 ## Reference calculation matrix
 
@@ -123,17 +136,17 @@ Statuses describe implementation plus available acceptance evidence; **PARTIALLY
 | P0-A causal copy | FIXED | Three subcases automated; same-day case exercised in browser |
 | P0-B scope/message divergence | FIXED | Accessible literal notice, exact-text Cancel regression and actual browser check |
 | P0-C save/state defects | FIXED | Semantic duplicate reuse and deletion cleanup; original persistence guards retained |
-| Block 07 current comparison | PARTIALLY FIXED | Implemented and behavioral tests; browser facts/actions checked; final six-width 0/1/2/3 visual signoff unavailable |
+| Block 07 current comparison | PARTIALLY FIXED | Logic, selection and final six-width 0/1/2/3 visuals verified; native keyboard acceptance remains NOT VERIFIED |
 | Block 09 Free/Kit | FIXED | Real unlock/reset/recovery, six-width screenshots, honest price and boundary |
 | Block 10 workspace | FIXED | Existing open/reuse/delete/export tests, actual save/open/recovery; bound preserved |
-| Block 10 saved comparison | PARTIALLY FIXED | Same/different inputs tested and exercised; final compact layout screenshot review unavailable |
-| Block 10 Playbook | PARTIALLY FIXED | Grounded artifact and copy tests, actual content/fallback and six-width intermediate screenshots; final alignment visual review unavailable |
-| Block 10 follow-up | PARTIALLY FIXED | Edit/copy/guard/navigation/source preservation tested and exercised; native clipboard success and final alignment visual review unavailable |
-| Block 10 Brief | PARTIALLY FIXED | Real generated text and print entry point; copy/print isolation tested; native print preview and final screenshots unavailable |
+| Block 10 saved comparison | FIXED | Same/different inputs tested and exercised; final compact comparison inspected at six widths |
+| Block 10 Playbook | FIXED | Grounded artifact and copy tests, actual content/selected-text fallback, six-width final images and 900px alignment verification |
+| Block 10 follow-up | FIXED | Edit/guard/navigation/source preservation and actual selected-text copy fallback checked; final six-width images. Native clipboard success remains separately unverified |
+| Block 10 Brief | PARTIALLY FIXED | Real generated text, copy fallback, print entry point and six-width final images; print isolation tested. OS preview/pagination remains NOT VERIFIED |
 | Overall Block 10 acceptance | PARTIALLY FIXED | All five bounded tools function; browser/print acceptance gaps above prevent COMPLETE claim |
 | Backend/accounts/payments/AI/calendar | DEFERRED OUT OF SCOPE | Explicitly excluded |
 
-Remaining P0: no known unfixed computation/data-loss/trust defect in the checked scope. Remaining P1: **NOT FIXED** as release-verification gaps — final six-width visual review, native keyboard, screen reader, reduced motion and native print preview. Remaining P2: **NOT FIXED** — first-time comprehension, 60-second interaction timing, demand, price, retention and skill improvement are unvalidated. No WCAG certification or business validation is claimed.
+Remaining P0: no known unfixed computation/data-loss/trust defect in the checked scope. Remaining P1: **NOT FIXED** as release-verification gaps — native keyboard, screen reader, reduced motion, successful native clipboard writes and native print preview. Final six-width visual review is now complete for the recorded states. Remaining P2: **NOT FIXED** — first-time comprehension, 60-second interaction timing, demand, price, retention and skill improvement are unvalidated. No WCAG certification or business validation is claimed.
 
 ## 60–90 second judge demo (guidance, not measured user timing)
 
@@ -148,3 +161,12 @@ Remaining P0: no known unfixed computation/data-loss/trust defect in the checked
 Stage-C full gate passed **146/146 across 17 files (59.39s)**, typecheck, build and whitespace. After the final deletion regression, the first clean gate caught an unsupported `exact` test-query property; removed it. The next full run passed **146/147**, with one original 5-second integration test timing out at 5.238s while browser QA was active; no numerical assertion failed. A final clean sequential retry without browser activity is recorded below. No timeout or baseline assertion was weakened.
 
 Final clean gate: **PASS — 147/147 tests, 17/17 files, 108.04s** (118 baseline + 29 new). `npm ci` installed 109 packages and reported zero vulnerabilities; `npm run typecheck`, `npm test`, `npm run build`, and `git diff --check` all exited successfully in sequence. Build: 1.52s; JS `index-BbgVJKRk.js` 330.34kB (99.42kB gzip), CSS `index-CjIPZxCC.css` 56.10kB (11.58kB gzip). `/yesif/` base and built asset paths inspected. No separate lint script exists; typecheck/build and whitespace are the configured gates. Final retry had no code/test/timeout changes after the preceding timeout run; browser activity was stopped.
+
+
+### Published source and CI verification
+
+Runtime source commit: **`0b68b86da93ab0cc4fa9a7c9d54a22da03926fe1`**. Stage checkpoints: A `dff8a03`, B `e8701fe`, C `3204343`, D `0b68b86`. Feature branch `codex/yesif-v2-5-final-polish` and rollback branch `codex/yesif-v2-4-rollback` were pushed; clean `main` was fast-forwarded to D and pushed without force. The following evidence-only commit updates documentation and screenshots, not runtime source.
+
+[GitHub Actions run 43646039063](https://github.com/Pandaman-8/yesif/actions/runs/43646039063): **SUCCESS** for both `verify-build` and `deploy`. Actual build-job logs: **147/147 tests, 17 files, 18.94s**; typecheck, build and whitespace passed. Deployed assets match the local final build: `/yesif/assets/index-BbgVJKRk.js` and `/yesif/assets/index-CjIPZxCC.css`.
+
+Fresh HTTPS load at [production YESIF](https://pandaman-8.github.io/yesif/) succeeded. The example displayed 18/15 and actual 13/15 deferral / 15/15 scope alternatives. Final HTTPS browser captures additionally cover fits, early conflict and 0/1/2/3 options; [production smoke](../artifacts/v2.5/production-smoke.jpg). No runtime edits followed the passing final local gate and source deployment.
