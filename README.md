@@ -1,100 +1,95 @@
 # YESIF
 
-**Every yes needs an if.** A private, interactive commitment trade-off simulator for workload conversations.
+**Every yes needs an if.**
 
-Start with clear context, compare verified trade-offs, inspect real task allocations by day, and edit/copy a short proposal. If no plan fits, prepare an honest renegotiation request. No account, backend, external AI, analytics or payment collection.
+**Know what must change before you agree to more work.** YESIF is a private, browser-based tool for checking workload commitments, comparing trade-offs, and preparing a clear conversation about priorities.
 
-- Production: https://pandaman-8.github.io/yesif/
-- Public source: https://github.com/Pandaman-8/yesif
-- Primary track: Skills. Initial audience: US marketing/project coordinators aged 25–45.
-- Demand, pricing, and differentiation are hypotheses; this is a working product experiment, not a validated business.
+[**Open YESIF**](https://pandaman-8.github.io/yesif/) · [**View the source**](https://github.com/Pandaman-8/yesif)
 
-## V2.5 — decision comparison and repeat-use tools
+![YESIF landing page: a fictional 18h/15h week with a conditional 13h plan](screenshots/01-home.jpg)
 
-Current alternatives now name retained work, priority effects, moved hours still owed, both agreements for combined changes, and all five deadline checks. Saved snapshots can be compared using fresh calculations; materially different inputs are disclosed without ranking them as better.
+## The problem
 
-Notebook contains an explicitly free, current-visit Kit demo: up to 50 local decisions, saved comparison, a grounded Negotiation Playbook, editable follow-ups, and copyable/printable Decision Briefs. The $4.99 one-time price remains proposed and unvalidated. No payments occur. Core checks, alternatives, proposals and practice remain Free, with one saved decision; existing records and export remain available after demo reset.
+A new request can look reasonable in isolation and still collide with earlier deadlines. A weekly total alone cannot show whether work due Tuesday can actually fit by Tuesday. Saying *yes* without naming the change needed often turns a planning problem into a difficult conversation.
 
-Trust fixes distinguish early deadline conflicts from weekly overload, announce unapplied scope descriptions without replacing manual text, and recognize identical saves without duplication or a misleading Free-limit prompt. Two-step practice clears its second answer on Back. Storage formats and core computation are unchanged.
+The initial audience hypothesis is individual US project and marketing coordinators who can discuss new requests with a manager or client. YESIF is B2C-oriented; this customer focus remains unvalidated.
 
-**147/147 tests pass** (118 baseline + 29 new), with clean install, typecheck, production build and whitespace check. See [the maintained release QA record](docs/FINAL_RELEASE_V2_5_QA.md) for exact gates, real browser evidence, limitations and deployment verification. Final six-width screenshots cover the principal result and Kit states. Native keyboard, screen-reader, reduced-motion emulation, clipboard-success and print-preview checks remain incomplete; no complete accessibility or human acceptance signoff is claimed. Rollback: `codex/yesif-v2-4-rollback` at `44165f613237faeeae2dad24a007cb7cdfbc5e19` (see exact full SHA in QA). Demand, willingness to pay and skill improvement remain unproven.
+## How it works
 
-## V2.4 — human negotiation intelligence
+1. **Describe the request.** Enter its remaining effort and weekday deadline alongside existing commitments, negotiability, priority, daily focused capacity, and optional reserve.
+2. **Check the constraints.** YESIF calculates cumulative deadlines across Monday–Friday, not just total weekly hours, and distinguishes existing conflicts from pressure introduced by the new request.
+3. **Compare grounded changes.** Examine whether moving a *negotiable* commitment, reducing the new deliverable, or combining changes would fit. Fixed commitments cannot be moved automatically.
+4. **Prepare the conversation.** Choose a checked plan, inspect what remains owed and what needs approval, then edit and copy a conditional message.
+5. **Practice and return.** Rehearse a short two-step objection, record the outcome, reuse a saved decision, and prepare a follow-up.
 
-Checked decisions now produce shorter conditional messages with separate factual evidence. The selected-plan summary spells out obligations, approvals and reduced deliverables. A scope description can be explicitly applied to the draft without silently replacing manual edits.
+![Two conditional workload alternatives, with explicit remaining obligations](screenshots/02-tradeoffs.jpg)
 
-Optional two-step negotiation practice responds to the current scenario and the first answer. Comparable, plausible choices receive authored feedback with evidence for five criteria; this is not AI evaluation or proof of learning. Early deadline conflicts remain distinct from later request pressure.
+## A calculated example
 
-**118 tests pass** (103 preserved + 15 new), with clean install, typecheck and production build. Real browser evidence covers 48 state/width measurements at six widths with no horizontal overflow. Copy, manual edits, explicit scope updates and saved-decision recovery were exercised. Native keyboard delivery and a full screen-reader audit remain incomplete.
+The included fictional example has **13h of existing work**, a **5h presentation request**, and **15h of usable weekly capacity**.
 
-See [audit](docs/V2_4_AUDIT.md), [Skills specification](docs/V2_4_SKILLS_SPEC.md), [communication](docs/V2_4_COMMUNICATION.md), [QA and screenshots](docs/V2_4_QA.md), and [pitch handoff](docs/V2_4_PITCH_HANDOFF.md). Rollback: `codex/yesif-v2-3-rollback` at `171b1d0cc1c645f5ecf58e186ab35e3025252ce0`. At the V2.4 checkpoint, full Blocks 07, 09 and 10 remained deferred; see the V2.5 status above. Demand, paid value, retention and skill improvement are unproven. No PDF deck is included.
+| Choice | Planned this week | What changes |
+| --- | ---: | --- |
+| Keep everything | **18h / 15h** | Not feasible under the entered estimates |
+| Move a negotiable 5h report | **13h / 15h** | Report remains owed; a new deadline needs agreement and future capacity is unchecked |
+| Reduce the request to a 2h deliverable | **15h / 15h** | Smaller deliverable and its contents need agreement; 0h unassigned |
 
-## V2.3 — visual scheduling and causal decisions
+All figures come from the same deterministic calculation used for custom workloads. Changing inputs recomputes the results. The tool never claims that a proposed change has already been approved.
 
-The weekly allocation is now a proportional five-day view, derived from the unchanged EDF allocator. It distinguishes real task hours, unassigned usable time and explicit reserve, with accessible details and cross-day task highlighting.
+More product views: [negotiation practice](screenshots/04-practice.jpg), [Notebook](screenshots/05-notebook.jpg), [saved comparison](screenshots/06-saved-comparison.jpg), and [Decision Brief](screenshots/07-decision-brief.jpg). [Gallery and capture provenance](screenshots/README.md).
 
-A pure causal layer compares existing-only and full-workload deadline constraints. It separates preexisting conflicts from request-caused or additional pressure, rechecks every verified alternative, and keeps unverified negotiation directions distinct. Impossible-plan messages now name the work behind the binding deadline, with separate factual evidence.
+## Core features
 
-**103 tests pass**, including the unchanged 500 engine and 1,000 allocation cases, plus 500 new independently checked causal scenarios. Real browser review covers 44 state/width combinations; native keyboard and full screen-reader verification remain incomplete.
+- Deadline-aware feasibility with quarter-hour precision, daily usable capacity, and explicit reserve.
+- Task-level alternatives, manual simulation of combined changes, and day-by-day allocation details.
+- Conditional messages that can be edited and copied without automatic sending.
+- An optional **two-decision negotiation rehearsal** with authored responses and explanation of five criteria. It is **not AI grading** and does not measure skill improvement.
+- Local draft recovery, save/discard/cancel guards, and a browser-local decision notebook.
+- A clearly labeled **Negotiation Kit demo**: saved-decision comparison, preparation playbook, editable follow-ups, and copyable/printable decision briefs.
 
-See [audit](docs/V2_3_AUDIT.md), [scheduling contract](docs/V2_3_SCHEDULING.md), [causal engine](docs/V2_3_CAUSAL_ENGINE.md), [QA](docs/V2_3_QA.md), and [pitch handoff](docs/V2_3_PITCH_HANDOFF.md). Rollback: `codex/yesif-v2-2-rollback`. No PDF pitch deck is included in this release.
+![Editable proposal tied to a checked smaller deliverable](screenshots/03-proposal.jpg)
 
-## V2.2 — visual system and results
+## Free and Kit demo
 
-Results now separate **fits**, **checked alternatives**, and **unresolved conditions**. A fitting request gets one confirmation action and exact unassigned hours. Conflicting plans show the first missed deadline, separately from weekly totals, and identify conflicts already present in existing work. When no allowed combination fits, only the renegotiation route is prominent.
+**Free:** unlimited checks, alternatives and current-plan comparisons, proposal editing/copying, negotiation practice, and one locally saved decision.
 
-Alternatives expose changes, unchanged work, calculated hours and required agreement, with equal action styling. One option pairs facts and outcome across the width; two compare side by side; three use three columns on wide screens or two plus a full-width third at 900px. Mobile stacks them. The optional simulator still recomputes actual 15-minute scope changes and task moves; fixed work stays protected. Allocation details follow the primary action. Green means “fits the estimates,” never approval.
+**Kit demo:** additional locally saved decisions (up to 50), saved-snapshot comparison, playbook, follow-ups, and decision briefs. Unlocking the demo is **free and lasts for the current visit**; existing saved records remain readable and exportable afterward.
 
-The result styles use semantic ivory, forest and amber surfaces, readable type, and 180–220ms transitions respecting reduced motion. Landing, input, domain, persistence and proposal generation are preserved. All 624 original non-result CSS declaration groups were checked against V2.1.
+**$4.99 one-time is a proposed, unvalidated price.** There is no payment processing, subscription, account, or automatic charge. No user demand, conversion, retention or willingness to pay is claimed.
 
-Clean install, typecheck, **80 tests** (67 preserved + 13 new), production build and whitespace check pass. [QA record](docs/V2_2_QA.json) and [36 browser measurements](artifacts/v2.2/browser-metrics.json) cover six widths. Reviewed before/after at 900px: [fits before](artifacts/v2.2/before-fits-900.png) / [after](artifacts/v2.2/after-fits-900.png), [overload before](artifacts/v2.2/before-overload-900.png) / [after](artifacts/v2.2/after-overload-900.png), [conflict before](artifacts/v2.2/before-conflict-900.png) / [after](artifacts/v2.2/after-conflict-900.png), [simulator before](artifacts/v2.2/before-simulator-900.png) / [after](artifacts/v2.2/after-simulator-conflict-900.png). [Mobile alternatives](artifacts/v2.2/after-options-375.png) and [three-option layout](artifacts/v2.2/after-three-options-900.png) show the responsive treatment. Captures are actual bounded browser clips, not full-page mockups.
+## Privacy and limitations
 
-The comparison cards carry more explicit facts and are not shorter than V2.1; mobile still requires scrolling. Human comprehension and timing need a retest. Keyboard paths have automated coverage, but native keyboard delivery through the browser tool was inconclusive. No WCAG certification, payment validation or proof of demand is claimed. Blocks 05–13 remain out of scope.
+YESIF requires **no account**, backend, external AI service, analytics, or third-party calendar access. Task names, messages, and decisions are entered and stored in the current browser; they are not synchronized across devices. Use export when you need a backup. Clearing browser data can remove saved work.
 
-V2.1 rollback: `codex/yesif-v2-1-rollback` at `dc9a2ea4ea498dcf9905ce429b1aa8e7c97c846b`. Stage 03 checkpoint: `7539380` (67 tests passed). Restore through a reviewed revert/new commit and a successful deployment; do not force-push over subsequent work.
-
-## V2.1 — landing and input
-
-The primary **Plan my workload** action opens an empty personal request; **Explore an example** runs the original sample through the real engine. The landing preview calculates the sample's overload, named proposed move and feasible result.
-
-Input separates new work, usable focused time and existing commitments. Explicit weekday quick-entry remains editable per day; reserve is optional and visibly subtracted. Completed commitments have a compact review state with timing flexibility always visible, and an Edit action for effort, deadline and priority. New estimates are blank until entered. Start over and Load example use the existing save/discard/cancel guard.
-
-Verification: clean install, typecheck, **67 tests**, production build and whitespace check passed. Existing domain, storage, results/proposal logic, dependencies and deployment workflow are unchanged. [Observed browser/layout evidence](docs/V2_1_QA.json) covers 375, 390, 768, 900, 1280 and 1440 px without horizontal overflow, plus real 10/15, 18/15 and early-deadline 8/15 scenarios. At 900 px the primary CTA moved from about y=647 to y=461; the three-commitment form decreased from 1,979 to 1,650 px. At 375 px the form is still long (2,182 px versus V2's 2,194), but timing controls are now visible and completed cards are compact.
-
-Screenshots initially timed out, then succeeded with explicit capture clips. Reviewed comparisons: [V2 landing](artifacts/v2.1/v2-landing-900.png) / [V2.1 landing](artifacts/v2.1/landing-900.png), [V2 input](artifacts/v2.1/v2-input-900.png) / [V2.1 input](artifacts/v2.1/input-900.png). Mobile: [landing](artifacts/v2.1/landing-mobile.png), [input](artifacts/v2.1/input-mobile.png), [commitments](artifacts/v2.1/commitments-mobile.png). The final input entrance takes 220ms, with focus and section scrolling respecting reduced motion. Screenshots and automated checks do not establish first-time comprehension or full assistive-technology compatibility. Repeat human testing remains open; the individual feedback statuses are recorded in the QA JSON. Demand and payments remain unvalidated.
-
-Rollback: `codex/yesif-v2-rollback` preserves `dc326f1ac7523c960efd5030466b79782581237d`. Restore that code with a reviewed revert/new commit and a successful deployment; do not force-push over later work.
+The model covers **one person, five weekdays, and up to eight existing commitments**. Estimates are divisible, have no dependencies, and are assumed available from the start of the week. It does not verify real calendar availability, quality of a reduced deliverable, another person's approval, or capacity in a later week. **A mathematical fit is not a delivery guarantee.**
 
 ## Run locally
 
-Node 22.22+ and npm 10+:
+Requirements: Node.js 22.22+ and npm.
 
-```sh
+```bash
 npm ci
 npm run dev
 ```
 
-Open the `/yesif/` URL printed by Vite. If the port is busy, Vite prints the next available port.
+Open the URL printed by Vite, normally with the `/yesif/` path. For release checks:
 
-```sh
+```bash
 npm run typecheck
 npm test
 npm run build
-npm run preview
+git diff --check
 ```
 
-## Deployment
+The application is built with **React, TypeScript and Vite**. Domain calculations are deterministic, and tests include randomized verification of feasibility, allocation, and causal explanations. AI-assisted coding tools were used in development; their use does not replace the application’s verified calculation logic.
 
-GitHub Actions runs clean install, typecheck, tests, build and whitespace check on pushes to `main`, then deploys `dist` to GitHub Pages. Configure Pages source as GitHub Actions. Vite's base is `/yesif/`. For a different path, update `vite.config.ts` and the favicon path in `index.html`.
+## Project evidence
 
-## Scope and privacy
+- [Product and technical decision records](docs/PRODUCT_DECISION.md)
+- [Calculation specification](docs/V2_ENGINE_SPEC.md)
+- [V2.5.1 release QA](docs/FINAL_RELEASE_V2_5_1_QA.md) — 153 passing tests, captain-confirmed two-page print QA, verified production assets
+- [Release v2.5.1](https://github.com/Pandaman-8/yesif/releases/tag/v2.5.1) · [release CI](https://github.com/Pandaman-8/yesif/actions/runs/43653504693)
+- [Final engineering handoff](docs/FINAL_HANDOFF.md) · [Pitch handoff and draft corrections](docs/FINAL_PITCH_HANDOFF.md)
+- [Production website](https://pandaman-8.github.io/yesif/)
 
-One person, five weekdays, eight existing commitments, quarter-hour estimates. Work must be available at the start and divisible, with no dependencies. Users enter remaining focused capacity themselves. Deferring work never proves future capacity. Reduced effort means a reduced deliverable requiring agreement.
-
-Only explicit saves and notebook edits write to localStorage. A separate local draft protects partial inputs; destructive transitions ask whether to save, discard or cancel. The free workflow is unlimited, with one saved-decision slot. The proposed $4.99 one-time kit has a clearly labeled free demo unlocking multiple saved decisions, outcome-aware follow-ups and local export; no payments occur. Existing saved entries remain readable after the demo session ends.
-
-V2 details: [independent audit](docs/V2_PRODUCT_AUDIT.md), [allocation specification](docs/V2_ENGINE_SPEC.md), [UX decisions](docs/V2_UX_DESIGN.md), [QA](docs/V2_QA_REPORT.md), and [pitch handoff](docs/V2_PITCH_HANDOFF.md). V1 rollback: `codex/yesif-v1-rollback` at `f47894bc8b59790042d9da2565b2f4e312d14ab3`.
-
-V1 historical documents: [product decision](docs/PRODUCT_DECISION.md), [engine specification](docs/ENGINE_SPEC.md), [QA report](docs/QA_REPORT.md), and [pitch handoff](docs/PITCH_HANDOFF.md).
-
-ShiftMargin is a separate fallback and is not modified by this project. No pitch deck is included.
+**Business Cup 2.0 · Skills track.** The initial customer, pricing, differentiation and retention are hypotheses to validate, not measured commercial results.

@@ -1,4 +1,6 @@
-# YESIF — pitch handoff (no deck created)
+# YESIF — historical prototype pitch handoff
+
+**Historical record.** For the deployed V2.5.1 facts, current demo and supplied deck corrections, use [the final pitch handoff](FINAL_PITCH_HANDOFF.md). The counts, UI labels and limitations below describe the earlier prototype.
 
 ## Demonstrable claim
 

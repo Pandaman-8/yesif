@@ -1,0 +1,80 @@
+{
+  "captured_on": "2026-11-15",
+  "timezone": "Asia/Almaty",
+  "source_url": "https://pandaman-8.github.io/yesif/",
+  "runtime_commit": "7b48954171834077307c83af04b7989c5a7ba112",
+  "release_tag": "v2.5.1",
+  "viewport_css_pixels": {
+    "width": 900,
+    "height": 1000
+  },
+  "client_width_css_pixels": 885,
+  "method": "Actual in-app browser UI; direct browser region captures. No compositing, synthetic UI, retouching, or app-state injection.",
+  "data": "Fictional built-in example; two explicitly saved QA snapshots. No actual customers, payments or agreed outcomes.",
+  "candidate_review": "Supplied bundle manifest described six V2.5 production images and a V2.5.1 local comparison. All seven were replaced with fresh final-production captures.",
+  "files": [
+    {
+      "file": "01-home.jpg",
+      "description": "Landing hero and fictional calculated example",
+      "pixels": [
+        885,
+        807
+      ],
+      "sha256": "efc8d0d4780db7fa9d5a070f2de38354d97d2c32779e5f209eac042da6e94d60"
+    },
+    {
+      "file": "02-tradeoffs.jpg",
+      "description": "Verified alternatives with approval conditions",
+      "pixels": [
+        821,
+        840
+      ],
+      "sha256": "3f25199df4325e290956838a58fddf53c9f83ede94392ee34d8f2eeace258ab5"
+    },
+    {
+      "file": "03-proposal.jpg",
+      "description": "Generated editable proposal for the smaller 2h deliverable",
+      "pixels": [
+        821,
+        767
+      ],
+      "sha256": "4b7b24dcad2253e4faddf365885df8a8832490c4b0699b3881232f2a1cb8f360"
+    },
+    {
+      "file": "04-practice.jpg",
+      "description": "Two selected risky replies and separate authored feedback",
+      "pixels": [
+        821,
+        863
+      ],
+      "sha256": "e9d48a4cd7e870524feabcbf131165656dc1bd5dbcb761d2504fb0b73bce4e2f"
+    },
+    {
+      "file": "05-notebook.jpg",
+      "description": "Two saved snapshots, both not discussed yet",
+      "pixels": [
+        845,
+        900
+      ],
+      "sha256": "5bb27119c76a14fd50b603c92b2b802e32341b7ef5f0fcfe134792daa8273030"
+    },
+    {
+      "file": "06-saved-comparison.jpg",
+      "description": "Same-input snapshots: report deferral versus smaller request",
+      "pixels": [
+        821,
+        851
+      ],
+      "sha256": "168e2ed29d1298b5ad51fabf7f2cfca1a68d125dd2902fef4bb7b9d715f5c80a"
+    },
+    {
+      "file": "07-decision-brief.jpg",
+      "description": "Expanded Decision Brief panel; scrollable text excerpt and Copy/Print actions, not a PDF",
+      "pixels": [
+        400,
+        580
+      ],
+      "sha256": "acded9a0a274cac96dbfb6c640d8983ff2f62f7d2f9d3307b310b9e8737dcd21"
+    }
+  ]
+}

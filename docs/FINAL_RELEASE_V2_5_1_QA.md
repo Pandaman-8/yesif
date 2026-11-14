@@ -6,7 +6,7 @@
 
 Pre-release baseline: `51ff6b4fa48512ddebe57730579bfecd2abfd653`.
 Local rollback reference: `codex/yesif-v2-5-rollback`, pointing to that exact commit.
-Working branch: `codex/yesif-v2-5-1-human-qa`.
+Release branch: `codex/yesif-v2-5-1-human-qa`; fast-forwarded into `main` after the fresh gate.
 
 ## Confirmed corrections
 
@@ -83,22 +83,33 @@ Requested viewport widths were verified using `window.innerWidth`; client widths
 
 Diff review confirms no edits to the mathematical engine, allocation, conflicts, ranking, conversation grounding, storage files, follow-up component, clipboard component, Free/Kit offer, $4.99 experiment, package dependencies or GitHub Pages workflow/configuration. The existing follow-up function in `decisionTools.ts` is unchanged. ShiftMargin was not touched. No demand or payment-validation claim was added.
 
-The captain has closed the print gate. Release now requires a fresh sequential install, typecheck, test, build and whitespace check, followed by CI and production verification.
+**Release COMPLETE.** Final V2.5.1 runtime commit: `7b48954171834077307c83af04b7989c5a7ba112`. [GitHub Actions run 43653504693](https://github.com/Pandaman-8/yesif/actions/runs/43653504693): both `verify-build` and `deploy` succeeded. [Production](https://pandaman-8.github.io/yesif/) serves the new HTML, JavaScript and CSS, each byte-identical to the local release build. Annotated tag `v2.5.1` was created only after this verification and checked remotely. The rollback reference is preserved locally.
 
-Final V2.5.1 commit SHA: **not created**. GitHub Actions: **not triggered for this patch**. Production: **not updated by this task**. The rollback reference is preserved locally.
+The later documentation commit does not change runtime source, dependencies or configuration. See [final handoff](FINAL_HANDOFF.md) for cleanup evidence and [pitch handoff](FINAL_PITCH_HANDOFF.md) for presentation corrections.
 
 ## Historical blocked handoff attempt — 2026-11-15 (superseded by captain confirmation)
 
-The release/cleanup handoff, proposed README and cleanup script supplied in Downloads were read before changes. The actual branch is still `codex/yesif-v2-5-1-human-qa`; HEAD and the rollback reference both remain `51ff6b4fa48512ddebe57730579bfecd2abfd653`. No staged changes were present. All existing V2.5.1 source modifications were preserved.
+The release/cleanup handoff, proposed README and cleanup script supplied in Downloads were read before changes. At that historical attempt, the actual branch was `codex/yesif-v2-5-1-human-qa`; HEAD and the rollback reference both remained `51ff6b4fa48512ddebe57730579bfecd2abfd653`. No staged changes were present. All existing V2.5.1 source modifications were preserved.
 
 The production preview at `http://localhost:5181/yesif/` responded with HTTP 200. A separate Firefox process opened that build, and the actual UI successfully advanced from the example landing page to the two verified alternatives. Before the next action, that process exited with code 0 and its accessibility service disappeared. The cause of the window closing is not established.
 
 A fallback test tab was opened in the existing Firefox without closing or replacing existing tabs. Keyboard control failed because the desktop input backend could not run `ydotool`. Accessibility inspection in that browser reached its 500-node limit before the relevant page controls, so the requested semantic action could not be resolved. These attempts did **not** reach a native print preview and are not print verification.
 
-Required captain evidence: open a saved Decision Brief from this local V2.5.1 build, choose Print, and capture every preview page on standard portrait paper, including the page-count/settings area and the end of the manual proposal and Limits section. For the fictional example, the path is Explore an example → choose a trade-off → edit/save the proposal → My decisions → Unlock free demo (no payment) → Decision Brief → Print. Verify that only the Brief is printed, with no missing text, blank/duplicate pages or avoidable awkward section breaks. A PDF saved from that same preview can additionally support checking complete text.
+Evidence requested at that historical attempt (now supplied and accepted): open a saved Decision Brief from this local V2.5.1 build, choose Print, and capture every preview page on standard portrait paper, including the page-count/settings area and the end of the manual proposal and Limits section. For the fictional example, the path is Explore an example → choose a trade-off → edit/save the proposal → My decisions → Unlock free demo (no payment) → Decision Brief → Print. Verify that only the Brief is printed, with no missing text, blank/duplicate pages or avoidable awkward section breaks. A PDF saved from that same preview can additionally support checking complete text.
 
-The previous 153/153 result remains historical evidence for the unchanged runtime source. A fresh final command chain is still due **after** closing print QA, as required by the handoff. No release commit, push, merge, tag, cleanup script execution, remote branch deletion, README replacement or public pitch upload has been performed during this blocked attempt. Repository cleanup and the final jury handoff remain dependent on the verified release.
+The previous 153/153 result remains historical evidence for the unchanged runtime source. At that attempt, a fresh final command chain was still due **after** closing print QA. No release commit, push, merge, tag, cleanup script execution, remote branch deletion, README replacement or public pitch upload has been performed during this blocked attempt. Repository cleanup and the final jury handoff remain dependent on the verified release.
 
 ## Fresh release gate after captain confirmation
 
-2026-11-15: the required commands ran sequentially on the unchanged final runtime source: `npm ci` (109 packages, 6s), `npm run typecheck`, `npm test` (**153/153**, 18 files, 57.71s), `npm run build` (995ms), and `git diff --check` all passed. No assertions or timeouts were changed. Final diff inspection found only the intended V2.5.1 corrections and QA evidence. Remote main was freshly fetched and still matched the baseline, permitting a normal fast-forward. Publication/CI evidence will be recorded after the actual deployment.
+2026-11-15: the required commands ran sequentially on the unchanged final runtime source: `npm ci` (109 packages, 6s), `npm run typecheck`, `npm test` (**153/153**, 18 files, 57.71s), `npm run build` (995ms), and `git diff --check` all passed. No assertions or timeouts were changed. Final diff inspection found only the intended V2.5.1 corrections and QA evidence. Remote main was freshly fetched and still matched the baseline, permitting a normal fast-forward. Publication and CI completed successfully; evidence is recorded above and below.
+
+## Published V2.5.1 verification — 2026-11-15
+
+- Public HTML, JS and CSS downloaded after deployment matched `dist/` byte-for-byte.
+- JS SHA-256: `676731bfc6a471baf2752447ba23bf3db6c0d9d8e7ba14f5a908efc8f8476c25`.
+- CSS SHA-256: `f19f277b355cca7c4652cff6570a2245f58a2fd3a2afa2d69963d77858c12c31`.
+- Actual public UI reproduced the 18/15 example and both verified alternatives: 13/15 after moving the 5h report, and 15/15 after reducing the request to 2h.
+- The 2h scope path, risky/risky practice completion and exact selected quotations were verified again on production. The manually entered proposal remained unchanged: “I can prepare a two-hour outline by Friday if we agree what it includes. Please confirm the smaller scope before I commit.”
+- Two fictional snapshots were explicitly saved through the UI; comparison showed different change labels and saved times, correct calculations, and the approval/future-capacity limitations. No agreement or customer outcome was fabricated. The existing draft was not opened, replaced or deleted.
+- The actual Brief panel exposes the factual text and Copy/Print actions. Its gallery capture is a scrollable on-screen excerpt, **not** the two-page PDF verification. The latter remains captain-confirmed external QA.
+- Seven fresh public-product screenshots replace the older supplied candidates; see [gallery and provenance](../screenshots/README.md). This later production practice capture supersedes the earlier local screenshot limitation.

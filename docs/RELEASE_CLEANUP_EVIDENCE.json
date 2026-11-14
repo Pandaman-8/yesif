@@ -1,0 +1,84 @@
+{
+  "release": "7b48954171834077307c83af04b7989c5a7ba112",
+  "open_pull_requests": 0,
+  "workflow_branch_dependencies": [
+    "main"
+  ],
+  "status": "completed; all listed remote branches deleted after dry-run, ancestry, open-PR, dependency and remote-tag checks",
+  "branches_removed": [
+    {
+      "branch": "codex/yesif-v1-rollback",
+      "sha": "f47894bc8b59790042d9da2565b2f4e312d14ab3",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-human-first",
+      "sha": "dc326f1ac7523c960efd5030466b79782581237d",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-rollback",
+      "sha": "dc326f1ac7523c960efd5030466b79782581237d",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-1-landing-input",
+      "sha": "dc9a2ea4ea498dcf9905ce429b1aa8e7c97c846b",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-1-rollback",
+      "sha": "dc9a2ea4ea498dcf9905ce429b1aa8e7c97c846b",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-2-results",
+      "sha": "c78be7e3b58b372f22a3b4f95d97100b3f29691b",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-2-rollback",
+      "sha": "c78be7e3b58b372f22a3b4f95d97100b3f29691b",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-3-scheduling-causality",
+      "sha": "171b1d0cc1c645f5ecf58e186ab35e3025252ce0",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-3-rollback",
+      "sha": "171b1d0cc1c645f5ecf58e186ab35e3025252ce0",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-4-negotiation",
+      "sha": "44165f613237faeeae2dad24a007cb7cdfbc5e19",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-4-rollback",
+      "sha": "44165f613237faeeae2dad24a007cb7cdfbc5e19",
+      "recoverable_from": "v2.5.0"
+    },
+    {
+      "branch": "codex/yesif-v2-5-final-polish",
+      "sha": "0b68b86da93ab0cc4fa9a7c9d54a22da03926fe1",
+      "recoverable_from": "v2.5.0"
+    }
+  ],
+  "branches_kept": [
+    "main",
+    "codex/yesif-v2-5-1-human-qa"
+  ],
+  "annotated_tags": {
+    "v1.0.0-prototype": "f47894bc8b59790042d9da2565b2f4e312d14ab3",
+    "v2.0.0": "dc326f1ac7523c960efd5030466b79782581237d",
+    "v2.1.0": "dc9a2ea4ea498dcf9905ce429b1aa8e7c97c846b",
+    "v2.2.0": "c78be7e3b58b372f22a3b4f95d97100b3f29691b",
+    "v2.3.0": "171b1d0cc1c645f5ecf58e186ab35e3025252ce0",
+    "v2.4.0": "44165f613237faeeae2dad24a007cb7cdfbc5e19",
+    "v2.5.0": "51ff6b4fa48512ddebe57730579bfecd2abfd653",
+    "v2.5.1": "7b48954171834077307c83af04b7989c5a7ba112"
+  }
+}
