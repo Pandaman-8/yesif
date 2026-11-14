@@ -1814,3 +1814,20 @@ th {
 .notebook-return {
   margin-bottom: 18px;
 }
+.scope-control .scope-steps {
+  justify-content: flex-start;
+  gap: 12px;
+  margin: 0 0 15px;
+}
+.scope-steps button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #c7d1ba;
+  border-radius: 4px;
+  font-size: 20px;
+  background: #f5f7ed;
+}
+.scope-steps span {
+  font-size: 10px;
+  color: var(--muted);
+}

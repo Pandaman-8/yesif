@@ -4,6 +4,32 @@ import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { STORAGE_KEY } from "../storage/scenarios";
 describe("complete product flows", () => {
+  it("recomputes scope in precise quarter-hour steps and blocks expanded scope", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(
+      screen.getByRole("button", { name: "Try a real example" }),
+    );
+    expect(
+      screen.getByRole("button", { name: "Increase scope by 15 minutes" }),
+    ).toBeDisabled();
+    for (let n = 0; n < 12; n++)
+      await user.click(
+        screen.getByRole("button", { name: "Reduce scope by 15 minutes" }),
+      );
+    expect(
+      screen.getByRole("slider", { name: "New request’s scope" }),
+    ).toHaveAttribute("aria-valuetext", "2 hours");
+    expect(screen.getByRole("button", { name: "Use this plan" })).toBeEnabled();
+    await user.click(screen.getByRole("button", { name: "Use this plan" }));
+    expect(
+      (
+        screen.getByRole("textbox", {
+          name: "Your proposal",
+        }) as HTMLTextAreaElement
+      ).value,
+    ).toContain("smaller, 2-hour version");
+  });
   it("simulates an example, edits and copies the proposal, practices, saves and reopens", async () => {
     const user = userEvent.setup();
     render(<App />);

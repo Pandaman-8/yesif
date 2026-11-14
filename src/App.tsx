@@ -127,6 +127,9 @@ function App() {
         "Clipboard access was unavailable. Select the proposal text and copy it manually.",
       );
       document.getElementById("proposal-text")?.focus();
+      (
+        document.getElementById("proposal-text") as HTMLTextAreaElement | null
+      )?.select();
     }
   }
   function persist(next: Notebook) {
@@ -750,6 +753,29 @@ function App() {
                           aria-valuetext={`${hours(simUnits)} hours`}
                           onChange={(e) => setSimUnits(Number(e.target.value))}
                         />
+                        <div className="scope-steps">
+                          <button
+                            aria-label="Reduce scope by 15 minutes"
+                            disabled={simUnits <= 1}
+                            onClick={() =>
+                              setSimUnits((n) => Math.max(1, n - 1))
+                            }
+                          >
+                            −
+                          </button>
+                          <span>Adjust by 15 minutes</span>
+                          <button
+                            aria-label="Increase scope by 15 minutes"
+                            disabled={simUnits >= scenario.request.units}
+                            onClick={() =>
+                              setSimUnits((n) =>
+                                Math.min(scenario.request.units, n + 1),
+                              )
+                            }
+                          >
+                            +
+                          </button>
+                        </div>
                         <p>
                           {simUnits < scenario.request.units
                             ? "Smaller scope means agreeing on a smaller deliverable. It is not the same work done faster."
