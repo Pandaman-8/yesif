@@ -52,4 +52,6 @@ Buyer: individual US coordinator aged 25–45, with authority to discuss priorit
 
 Keep ShiftMargin as fallback. YESIF may be a compelling engineering/Skills demonstration, but no independent comparison of ShiftMargin or real user preference has been completed. Do not replace the competition submission solely because this prototype works. Captain makes the final selection after live evaluation. The PDF pitch deck is intentionally outside this assignment.
 
-Screenshots and exact production/release evidence: see QA_REPORT.md; only artifacts actually captured should be used in the deck.
+Production: https://pandaman-8.github.io/yesif/ . Public source: https://github.com/Pandaman-8/yesif .
+
+35 automated tests pass, including 500 generated engine cases; desktop/mobile production interactions are recorded in [QA_REPORT.md](QA_REPORT.md). Screenshot capture failed in the available browser tool. No screenshots are supplied or visually approved; capture the public landing, simulator after a chosen change, and proposal in a supported browser before creating the deck. Live clipboard success and actual export-download receipt remain unconfirmed; their fallback/status behavior is documented. Do not label these as passed.

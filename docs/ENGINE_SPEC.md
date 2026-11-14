@@ -29,7 +29,7 @@ When the baseline fits, the sole suggested starting point is accepting without c
 
 ## Interactive simulation
 
-The user can independently toggle any negotiable commitment and set a reduced request scope with a quarter-hour slider. This supports combined deferral and scope plans, including valid combinations absent from automatic suggestions. Each change calls `simulate` and rebuilds every checkpoint immediately. Fixed tasks are disabled in UI and rejected by the engine. Unknown IDs, duplicate deferrals, noninteger/zero/expanded scope are rejected. Invalid plans remain visible as conflicts; proposal action stays disabled.
+The user can independently toggle any negotiable commitment and set a reduced request scope with a quarter-hour slider or explicit ±15-minute buttons. This supports combined deferral and scope plans, including valid combinations absent from automatic suggestions. Each change calls `simulate` and rebuilds every checkpoint immediately. Fixed tasks are disabled in UI and rejected by the engine. Unknown IDs, duplicate deferrals, noninteger/zero/expanded scope are rejected. Invalid plans remain visible as conflicts; proposal action stays disabled.
 
 Deferral removes current-period effort only; it does not establish next week's availability or a new deadline. Scope reduction changes the deliverable, never the estimated productivity of the original task. Neither implies manager approval. Existing task scope cuts and within-week deadline renegotiation are not modeled; edit inputs only after independently choosing appropriate constraints.
 
