@@ -29,11 +29,13 @@ it("introduces the demo, puts options first and exposes a concrete allocation", 
   ).toBeTruthy();
   expect(screen.queryByLabelText("Defer Weekly report")).toBeNull();
   const card = screen.getAllByRole("article")[0];
-  await user.click(within(card).getByText("How your week could work"));
-  expect(within(card).getByText("Monday")).toBeVisible();
-  expect(within(card).getAllByText("Launch QA")).toHaveLength(2);
+  await user.click(within(card).getByText("Your week, mapped"));
+  expect(within(card).getAllByText("Monday")[0]).toBeVisible();
   expect(
-    within(card).getByText("2h unassigned", { selector: ".day-spare" }),
+    within(card).getByRole("img", { name: /Monday:.*Launch QA: 3h/ }),
+  ).toBeVisible();
+  expect(
+    within(card).getByRole("img", { name: /Friday:.*2h unassigned/ }),
   ).toBeVisible();
   await chooseFirst(user);
   expect(

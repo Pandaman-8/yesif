@@ -73,8 +73,10 @@ it("A: presents 10/15 as one confirmation with 5h unassigned and real allocation
     0,
   );
   expect(screen.queryByRole("region", { name: "Your options" })).toBeNull();
-  await user.click(screen.getByText("How your week could work"));
-  expect(screen.getAllByText("Weekly report")).toHaveLength(2);
+  await user.click(screen.getByText("Your week, mapped"));
+  expect(
+    screen.getByRole("img", { name: /Monday:.*Weekly report: 3h/ }),
+  ).toBeVisible();
   expect(screen.queryByText(/0h available/)).toBeNull();
   await user.click(
     screen.getByRole("button", { name: "Prepare a confirmation" }),
@@ -105,7 +107,7 @@ it("B: compares actual 13/15 and 15/15 alternatives with equal actions and expli
     expect(button).toHaveClass("primary");
     expect(
       button.compareDocumentPosition(
-        within(card).getByText("How your week could work"),
+        within(card).getByText("Your week, mapped"),
       ) & Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
   }
@@ -367,7 +369,7 @@ it("supports keyboard choice, disclosure and proposal activation without custom 
   });
   await user.tab();
   const disclosure = within(first)
-    .getByText("How your week could work")
+    .getByText("Your week, mapped")
     .closest("summary");
   expect(disclosure).toHaveFocus();
 });
