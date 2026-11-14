@@ -114,7 +114,9 @@ it("case B: visible flexibility and personal 10h/15h submit to a feasible real r
   expect(screen.getByText(/agreement and a new deadline/)).toBeVisible();
   await user.click(screen.getByRole("button", { name: "Check my week" }));
   expect(
-    screen.getByRole("heading", { name: "There’s room for this yes." }),
+    screen.getByRole("heading", {
+      name: "This request fits your estimated week.",
+    }),
   ).toBeVisible();
   expect(screen.getByText("10h", { selector: ".big-number" })).toBeVisible();
   expect(
@@ -134,7 +136,7 @@ it("case C: independently entered conflict produces the genuine report trade-off
   await commitment(user, 3, "Weekly report", "5", "4", true);
   await user.click(screen.getByRole("button", { name: "Check my week" }));
   expect(
-    screen.getByRole("heading", { name: "Something has to give. Not you." }),
+    screen.getByRole("heading", { name: "Your current plan needs a change." }),
   ).toBeVisible();
   expect(screen.getByText("18h", { selector: ".big-number" })).toBeVisible();
   const card = screen.getAllByRole("article")[0];
@@ -150,9 +152,11 @@ it("case D: 8h/15h still fails Tuesday by 1h", async () => {
   await user.click(screen.getByRole("button", { name: "Check my week" }));
   expect(screen.getByText("8h", { selector: ".big-number" })).toBeVisible();
   expect(
-    screen.getAllByText(/By Tuesday, 7h are due, but only 6h are available/)
-      .length,
+    screen.getAllByText(/Your Tuesday deadline is short by 1 hour/).length,
   ).toBeGreaterThan(0);
+  const proof = screen.getByRole("region", { name: "Reality check" });
+  expect(proof).toHaveTextContent("7hdue by Tuesday");
+  expect(proof).toHaveTextContent("6havailable through Tuesday");
   expect(
     screen.queryByRole("button", { name: "Use this trade-off" }),
   ).toBeNull();

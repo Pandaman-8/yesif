@@ -18,7 +18,7 @@ it("introduces the demo, puts options first and exposes a concrete allocation", 
   render(<App />);
   await demo(user);
   expect(
-    screen.getByText("Your manager just added another urgent request."),
+    screen.getByText("Fictional example · real calculations"),
   ).toBeInTheDocument();
   expect(
     screen
@@ -32,7 +32,9 @@ it("introduces the demo, puts options first and exposes a concrete allocation", 
   await user.click(within(card).getByText("How your week could work"));
   expect(within(card).getByText("Monday")).toBeVisible();
   expect(within(card).getAllByText("Launch QA")).toHaveLength(2);
-  expect(within(card).getByText("2h available")).toBeVisible();
+  expect(
+    within(card).getByText("2h unassigned", { selector: ".day-spare" }),
+  ).toBeVisible();
   await chooseFirst(user);
   expect(
     (

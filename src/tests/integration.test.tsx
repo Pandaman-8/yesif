@@ -49,7 +49,9 @@ describe("complete product flows", () => {
     );
     await openSimulator(user);
     expect(
-      screen.getByRole("heading", { name: "Something has to give. Not you." }),
+      screen.getByRole("heading", {
+        name: "Your current plan needs a change.",
+      }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Use this plan" }),
@@ -101,7 +103,9 @@ describe("complete product flows", () => {
     await user.click(screen.getByRole("button", { name: "Check my week" }));
     await openSimulator(user);
     expect(
-      screen.getByRole("heading", { name: "There’s room for this yes." }),
+      screen.getByRole("heading", {
+        name: "This request fits your estimated week.",
+      }),
     ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Use this plan" }));
     expect(

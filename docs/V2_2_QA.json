@@ -23,8 +23,182 @@
   ],
   "stage03": {
     "scope": "Consolidated Results CSS, semantic surface roles, small motion, no engine changes",
-    "status": "implementation checkpoint"
+    "status": "FIXED",
+    "checkpoint": "7539380",
+    "tests": "67/67 passed; typecheck and diff check passed"
   },
   "evidence_directory": "artifacts/v2.2",
-  "human_retest": "Not performed; screenshot review is not human usability validation."
+  "human_retest": "Not performed; screenshot review is not human usability validation.",
+  "stage04": {
+    "status": "FIXED",
+    "states": {
+      "fits": "One full-width summary, unchanged scope/commitments, exact unassigned hours, confirmation CTA before allocation.",
+      "alternatives": "Engine startingOptions unchanged; 1/2/3 options use distinct layouts; equal CTA classes, explicit change/unchanged/agreement facts.",
+      "unresolved": "First violated checkpoint leads; existing conflict comes from analyze().existing; no simulator if the all-movable/minimum-scope check fails; existing unresolved proposal route."
+    },
+    "simulator": "Existing 15-minute controls, combined changes, reduced deliverable, reset, and real recomputation retained. One concise live status, disabled action explained, changed task marked amber, feasible result marked green. Ledger is optional.",
+    "allocation": "Allocator unchanged. Display label available corrected to unassigned. Primary actions precede disclosures."
+  },
+  "protected_systems": {
+    "git_diff": "No changes to domain, storage, Shared, Landing, Workload, Proposal, FollowUp, dependency manifests or CI workflow.",
+    "styles": "AST comparison preserved all 624 original non-result CSS selector/declaration groups. Added rules are scoped to Results and result/proposal entrance.",
+    "shiftmargin": "Not accessed or changed."
+  },
+  "regression": {
+    "original_tests": 67,
+    "new_targeted_tests": 13,
+    "total_expected": 80,
+    "last_full_run": "80/80 passed in 8 files (24.08s); typecheck and diff check passed. Clean npm ci and build passed; production source unchanged since that build.",
+    "new_cases": [
+      "A fits 10/15 and real allocation",
+      "B reference 18/15 with 13/15 and 15/15 alternatives",
+      "C fixed Tuesday 7/6 with weekly 8/15",
+      "D exact capacity",
+      "E combined move plus scope with preserved custom controls",
+      "F zero capacity",
+      "weekly plus early overload",
+      "early conflict with a feasible scope option",
+      "existing negotiable conflict can be resolved",
+      "three real alternatives",
+      "one concise live region and focused toggles",
+      "G changed hours/deadline/flexibility invalidates previous proposal",
+      "keyboard Tab/Enter option selection and disclosure focus"
+    ],
+    "mathematical_assertions": "Unchanged, including independent engine and allocation oracles. Existing UI tests updated only for intentional copy and the daily unassigned label.",
+    "build_assets": [
+      "index-m5mZCW_O.css",
+      "index-CikSp8Rs.js"
+    ]
+  },
+  "browser": {
+    "widths": [
+      375,
+      390,
+      768,
+      900,
+      1280,
+      1440
+    ],
+    "reviewed_states_all_widths": [
+      "fits",
+      "reference overload",
+      "two option cards",
+      "impossible Tuesday",
+      "expanded simulator with report selected",
+      "chosen deferral proposal"
+    ],
+    "metrics": "../artifacts/v2.2/browser-metrics.json",
+    "overflow": "All 36 recorded states: scrollWidth equals clientWidth.",
+    "one_option": "14h fixed + 2h new, capacity 15h: one 1h scope plan, reviewed 375 and 900.",
+    "three_options": "Reference example with Launch QA explicitly changed to negotiable; two 13h deferrals and 15h scope; reviewed 375, 900, 1280, with separate third mobile card.",
+    "interaction": [
+      "Report deferral changes 18/15 to 13/15, enables Use this plan and retains checkbox focus. Undo disables it.",
+      "A computed option opens the original valid proposal with report condition and unchecked future capacity. Heading focused, scroll 0.",
+      "10/15 confirmation opens original acceptance message without inventing a change.",
+      "8/15 unresolved route includes Tuesday 1h deficit and has no Save decision action.",
+      "Editing hours, deadlines and flexibility preserves entered values and removes previous proposal availability.",
+      "Native save/discard/cancel guard still appears with Cancel focused during example replacement."
+    ],
+    "console_errors": [],
+    "temporary_problem": "Old local dev server had stopped; the browser retained the loaded baseline. Reload reached an ERR_CONNECTION_REFUSED error page. Restarted the local server, obtained a fresh tab in the same browser and verified current source.",
+    "screenshot_limits": "PNG captures are bounded top-of-page or section clips, not full-page claims. Mobile comparisons need scrolling; separate option-section captures expose both CTAs. No raster editing or mockups."
+  },
+  "accessibility": {
+    "status": "PARTIALLY FIXED",
+    "implemented": [
+      "Semantic headings, labelled regions and named articles",
+      "Native buttons, selects, checkboxes, range and disclosures",
+      "Existing 3px focus-visible outline and guarded heading focus",
+      "Native disabled controls with explanation",
+      "Single concise simulator status; no live tables/cards",
+      "180–220ms motion, no delayed navigation, reduced-motion global overrides retained",
+      "Readable 16px main text, 14px supporting text, 44px controls"
+    ],
+    "verified": [
+      "Automated keyboard Tab/Enter choice and disclosure focus",
+      "Automated focus preservation, stale-plan and disabled state checks",
+      "Real browser heading/checkbox/modal focus",
+      "Calculated text contrast ratios of selected new semantic pairs 5.41–11.76:1"
+    ],
+    "not_verified": [
+      "Full screen-reader audit or WCAG certification",
+      "Native browser keyboard delivery: tool press calls focused controls but did not demonstrate Tab/Enter activation",
+      "Native OS reduced-motion preference emulation; CSS override and existing reduced-motion test reviewed instead"
+    ]
+  },
+  "motion": {
+    "page": "One entrance per page: Results/Proposal 220ms, existing Workload 220ms; no added delay.",
+    "details": "180ms opacity/small vertical reveal; simulator 200ms.",
+    "selection": "Native active/focus treatment on option; simulator task and status surfaces transition as actual feasibility changes.",
+    "human_perception": "Requires human retest; no time-to-understand claim."
+  },
+  "deferred": {
+    "status": "DEFERRED OUT OF SCOPE",
+    "items": [
+      "Block 05 full calendar/allocation visualization",
+      "Block 06 causal negotiation generation",
+      "Blocks 07–13, new Plus/Kit functionality",
+      "Backend, AI API, pricing or demand validation"
+    ]
+  },
+  "limitations": [
+    "No repeat human usability test; immediate comprehension and task completion speed remain unproven.",
+    "Default two-option comparison is more explicit but cards are not shorter than V2.1; at 900px about 615px high. The large reduction is in fits and unresolved flows, with disclosures below the CTA.",
+    "Scope is already constrained to Blocks 03/04; proposal content and notebook UI are intentionally unchanged."
+  ],
+  "release": {
+    "branch": "codex/yesif-v2-2-results",
+    "production": "https://pandaman-8.github.io/yesif/",
+    "status": "Local release gate passed; commit/CI/public proof recorded in the release report."
+  },
+  "screenshot_files": [
+    "after-conflict-1280.png",
+    "after-conflict-1440.png",
+    "after-conflict-375.png",
+    "after-conflict-390.png",
+    "after-conflict-768.png",
+    "after-conflict-900.png",
+    "after-fits-1280.png",
+    "after-fits-1440.png",
+    "after-fits-375.png",
+    "after-fits-390.png",
+    "after-fits-768.png",
+    "after-fits-900.png",
+    "after-one-option-375.png",
+    "after-one-option-900.png",
+    "after-options-1280.png",
+    "after-options-1440.png",
+    "after-options-375.png",
+    "after-options-390.png",
+    "after-options-768.png",
+    "after-options-900.png",
+    "after-overload-1280.png",
+    "after-overload-1440.png",
+    "after-overload-375.png",
+    "after-overload-390.png",
+    "after-overload-768.png",
+    "after-overload-900.png",
+    "after-proposal-1280.png",
+    "after-proposal-1440.png",
+    "after-proposal-375.png",
+    "after-proposal-390.png",
+    "after-proposal-768.png",
+    "after-proposal-900.png",
+    "after-simulator-conflict-900.png",
+    "after-simulator-selected-1280.png",
+    "after-simulator-selected-1440.png",
+    "after-simulator-selected-375.png",
+    "after-simulator-selected-390.png",
+    "after-simulator-selected-768.png",
+    "after-simulator-selected-900.png",
+    "after-three-options-1280.png",
+    "after-three-options-375.png",
+    "after-three-options-900.png",
+    "after-three-options-third-375.png",
+    "before-conflict-375.png",
+    "before-conflict-900.png",
+    "before-fits-900.png",
+    "before-overload-900.png",
+    "before-simulator-900.png"
+  ]
 }

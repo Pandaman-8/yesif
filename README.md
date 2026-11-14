@@ -9,6 +9,20 @@ Start with clear context, compare verified trade-offs, inspect real task allocat
 - Primary track: Skills. Initial audience: US marketing/project coordinators aged 25–45.
 - Demand, pricing, and differentiation are hypotheses; this is a working product experiment, not a validated business.
 
+## V2.2 — visual system and results
+
+Results now separate **fits**, **checked alternatives**, and **unresolved conditions**. A fitting request gets one confirmation action and exact unassigned hours. Conflicting plans show the first missed deadline, separately from weekly totals, and identify conflicts already present in existing work. When no allowed combination fits, only the renegotiation route is prominent.
+
+Alternatives expose changes, unchanged work, calculated hours and required agreement, with equal action styling. One option pairs facts and outcome across the width; two compare side by side; three use three columns on wide screens or two plus a full-width third at 900px. Mobile stacks them. The optional simulator still recomputes actual 15-minute scope changes and task moves; fixed work stays protected. Allocation details follow the primary action. Green means “fits the estimates,” never approval.
+
+The result styles use semantic ivory, forest and amber surfaces, readable type, and 180–220ms transitions respecting reduced motion. Landing, input, domain, persistence and proposal generation are preserved. All 624 original non-result CSS declaration groups were checked against V2.1.
+
+Clean install, typecheck, **80 tests** (67 preserved + 13 new), production build and whitespace check pass. [QA record](docs/V2_2_QA.json) and [36 browser measurements](artifacts/v2.2/browser-metrics.json) cover six widths. Reviewed before/after at 900px: [fits before](artifacts/v2.2/before-fits-900.png) / [after](artifacts/v2.2/after-fits-900.png), [overload before](artifacts/v2.2/before-overload-900.png) / [after](artifacts/v2.2/after-overload-900.png), [conflict before](artifacts/v2.2/before-conflict-900.png) / [after](artifacts/v2.2/after-conflict-900.png), [simulator before](artifacts/v2.2/before-simulator-900.png) / [after](artifacts/v2.2/after-simulator-conflict-900.png). [Mobile alternatives](artifacts/v2.2/after-options-375.png) and [three-option layout](artifacts/v2.2/after-three-options-900.png) show the responsive treatment. Captures are actual bounded browser clips, not full-page mockups.
+
+The comparison cards carry more explicit facts and are not shorter than V2.1; mobile still requires scrolling. Human comprehension and timing need a retest. Keyboard paths have automated coverage, but native keyboard delivery through the browser tool was inconclusive. No WCAG certification, payment validation or proof of demand is claimed. Blocks 05–13 remain out of scope.
+
+V2.1 rollback: `codex/yesif-v2-1-rollback` at `dc9a2ea4ea498dcf9905ce429b1aa8e7c97c846b`. Stage 03 checkpoint: `7539380` (67 tests passed). Restore through a reviewed revert/new commit and a successful deployment; do not force-push over subsequent work.
+
 ## V2.1 — landing and input
 
 The primary **Plan my workload** action opens an empty personal request; **Explore an example** runs the original sample through the real engine. The landing preview calculates the sample's overload, named proposed move and feasible result.

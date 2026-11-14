@@ -40,7 +40,7 @@ export function AllocationView({
                 </p>
               ))}
               <p className="day-spare">
-                {hours(day.available)}h available
+                {hours(day.available)}h unassigned
                 {day.reserve > 0 &&
                   ` · ${hours(day.reserve)}h reserved separately`}
               </p>
