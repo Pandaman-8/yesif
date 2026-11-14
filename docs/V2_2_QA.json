@@ -1,0 +1,30 @@
+{
+  "baseline": "dc9a2ea4ea498dcf9905ce429b1aa8e7c97c846b",
+  "rollback": "codex/yesif-v2-1-rollback",
+  "baseline_checks": {
+    "tests": "67 / 67 passed",
+    "build": "passed",
+    "tree": "clean before work",
+    "browser": [
+      "10/15 fit at 900px",
+      "18/15 two alternatives at 900px",
+      "8/15 Tuesday deficit 1h at 900px and 375px",
+      "expanded simulator at 900px"
+    ]
+  },
+  "confirmed_defects": [
+    "One feasible option wastes half the comparison grid.",
+    "First alternative has a stronger CTA with no user preference justification.",
+    "Impossible fixed deadline repeats warnings and presents controls that cannot resolve it.",
+    "Green summary surface is shared by feasible and infeasible results.",
+    "Primary CTA appears after allocation disclosure, so expanding proof moves the action below it.",
+    "Daily available label actually means unassigned after allocation.",
+    "Simulator uses a broad live region and repeated conflict text."
+  ],
+  "stage03": {
+    "scope": "Consolidated Results CSS, semantic surface roles, small motion, no engine changes",
+    "status": "implementation checkpoint"
+  },
+  "evidence_directory": "artifacts/v2.2",
+  "human_retest": "Not performed; screenshot review is not human usability validation."
+}

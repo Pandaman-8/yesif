@@ -790,123 +790,6 @@ summary::marker {
   min-width: 28px;
   min-height: 28px;
 }
-.reality {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  background: var(--green);
-  color: #fffefa;
-  border-radius: 8px;
-  padding: 32px 36px;
-}
-.reality .eyebrow {
-  color: #c6d3b9;
-  font-size: var(--text-small);
-}
-.big-number {
-  font: 54px var(--serif);
-  letter-spacing: -1px;
-  margin: 14px 0 7px;
-}
-.big-number span {
-  font-size: 34px;
-  color: #bbc9b9;
-}
-.reality p {
-  font-size: var(--text-small);
-  color: #d9e1d1;
-}
-.reality-message {
-  align-self: center;
-  border-left: 1px solid #52705a;
-  padding-left: 36px;
-}
-.reality-pill {
-  display: inline-block;
-  background: #e8edb8;
-  color: #31492c;
-  font-size: var(--text-small);
-  border-radius: 3px;
-  padding: 7px 10px;
-  margin-bottom: 12px;
-}
-.reality-message p {
-  font-size: var(--text-small);
-  max-width: 330px;
-}
-.options-heading {
-  margin: 36px 0 22px;
-}
-.options-heading h2 {
-  font-size: 27px;
-}
-.options-heading p {
-  font-size: var(--text-small);
-  color: var(--muted);
-  margin-top: 10px;
-}
-.option-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px;
-}
-.option-card {
-  display: flex;
-  flex-direction: column;
-  border: 1px solid #cdd6c2;
-  background: var(--paper);
-  border-radius: 8px;
-  padding: 26px;
-}
-.option-top {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.option-letter {
-  border-radius: 50%;
-  background: #e9edda;
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  font: italic 18px var(--serif);
-}
-.option-top .eyebrow {
-  font-size: var(--text-small);
-  color: #6d7c61;
-}
-.option-card h3 {
-  font: 27px/1.2 var(--serif);
-  margin-bottom: 14px;
-  overflow-wrap: anywhere;
-}
-.option-card > p {
-  font-size: var(--text-small);
-  color: var(--muted);
-  margin-bottom: 24px;
-  flex: 1;
-}
-.option-math {
-  border-top: 1px solid var(--line);
-  padding-top: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: var(--text-small);
-}
-.option-math strong {
-  font: 25px var(--serif);
-}
-.option-math > span:last-child {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #587244;
-  font-size: var(--text-small);
-}
 .proof {
   font-size: var(--text-small);
   margin: 12px 0 18px;
@@ -1485,40 +1368,6 @@ th {
   .assumptions {
     font-size: var(--text-small);
   }
-  .reality {
-    grid-template-columns: 1fr;
-    gap: 23px;
-    padding: 26px;
-  }
-  .big-number {
-    font-size: 47px;
-  }
-  .big-number span {
-    font-size: 29px;
-  }
-  .reality-message {
-    border-left: 0;
-    border-top: 1px solid #52705a;
-    padding: 22px 0 0;
-  }
-  .reality-message p {
-    font-size: var(--text-small);
-  }
-  .option-grid {
-    grid-template-columns: 1fr;
-  }
-  .option-card {
-    padding: 24px;
-  }
-  .options-heading h2 {
-    font-size: 26px;
-  }
-  .options-heading p {
-    font-size: var(--text-small);
-  }
-  .option-card h3 {
-    font-size: 28px;
-  }
   .proposal-layout {
     grid-template-columns: 1fr;
   }
@@ -1618,222 +1467,8 @@ th {
     animation: none !important;
   }
 }
-.simulator {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  margin-top: 27px;
-  border: 1px solid #cbd5be;
-  border-radius: 8px;
-  background: var(--paper);
-  overflow: hidden;
-}
-.sim-controls {
-  padding: 30px;
-}
-.sim-controls h2 {
-  font-size: 28px;
-  margin-top: 9px;
-}
-.sim-controls > .eyebrow {
-  color: #667752;
-  font-size: var(--text-small);
-}
-.sim-tasks {
-  margin-top: 20px;
-  display: grid;
-  gap: 9px;
-}
-.sim-task {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  border: 1px solid #dce1d2;
-  border-radius: 5px;
-  padding: 15px 13px;
-  cursor: pointer;
-}
-.sim-task input {
-  width: 17px;
-  height: 17px;
-  flex-shrink: 0;
-  margin: 0;
-  accent-color: var(--green);
-}
-.sim-task-text {
-  flex: 1;
-  min-width: 0;
-}
-.sim-task-text strong {
-  display: block;
-  font-size: var(--text-small);
-  font-weight: 500;
-  overflow-wrap: anywhere;
-}
-.sim-task small {
-  font-size: var(--text-small);
-  color: var(--muted);
-  display: block;
-  margin-top: 6px;
-}
-.sim-task-hours {
-  text-align: right;
-  font: 20px var(--serif);
-  min-width: 72px;
-}
-.sim-task-hours small {
-  font:
-    var(--text-small) Arial,
-    sans-serif;
-  margin-top: 6px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 4px;
-  align-items: center;
-}
-.sim-task.locked {
-  background: #f7f8f2;
-  cursor: default;
-}
-.sim-task.deferred {
-  border-color: #819969;
-  background: #eef2e3;
-}
-.scope-control {
-  margin-top: 25px;
-  border-top: 1px solid var(--line);
-  padding-top: 21px;
-}
-.scope-control > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.scope-control label {
-  font-size: var(--text-small);
-}
-.scope-control strong {
-  font: 25px var(--serif);
-}
-.scope-control strong span {
-  font-size: 17px;
-  color: var(--muted);
-}
-.scope-control input {
-  width: 100%;
-  margin: 16px 0 10px;
-  accent-color: var(--green);
-  padding: 0;
-}
-.scope-control p {
-  font-size: var(--text-small);
-  color: var(--muted);
-}
-.sim-result {
-  background: #eef1e6;
-  padding: 30px;
-  border-left: 1px solid #d8dfcd;
-}
-.sim-result > .eyebrow {
-  font-size: var(--text-small);
-}
-.sim-number {
-  font: 47px var(--serif);
-  margin: 15px 0;
-}
-.sim-number span {
-  font-size: 29px;
-  color: #7d8b74;
-}
-.sim-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: var(--text-small);
-  color: #805c2e;
-  background: #f1e6d2;
-  padding: 8px;
-  border-radius: 3px;
-}
-.sim-status.fits {
-  color: var(--green);
-  background: #dde8cd;
-}
-.sim-explanation {
-  font-size: var(--text-small);
-  margin: 12px 0 14px;
-  color: var(--muted);
-}
-.sim-result > .button {
-  margin-top: 23px;
-}
-.sim-result > .text-button {
-  font-size: var(--text-small);
-  margin-top: 4px;
-}
-.sim-result table {
-  font-size: var(--text-small);
-}
-.sim-result caption {
-  font-size: var(--text-small);
-}
-@media (max-width: 700px) {
-  .simulator {
-    grid-template-columns: 1fr;
-  }
-  .sim-controls,
-  .sim-result {
-    padding: 23px;
-  }
-  .sim-result {
-    border-left: 0;
-    border-top: 1px solid #d8dfcd;
-  }
-  .sim-controls h2 {
-    font-size: 26px;
-  }
-  .sim-task {
-    padding: 13px 10px;
-    gap: 9px;
-  }
-  .sim-task-text strong {
-    font-size: var(--text-small);
-  }
-  .sim-task small {
-    font-size: var(--text-small);
-  }
-  .sim-task-hours {
-    font-size: 20px;
-    min-width: 65px;
-  }
-  .sim-task-hours small {
-    font-size: var(--text-small);
-  }
-}
-.scope-control .scope-task-name {
-  font-size: var(--text-small);
-  color: var(--ink);
-  margin-bottom: 16px;
-  overflow-wrap: anywhere;
-}
 .notebook-return {
   margin-bottom: 18px;
-}
-.scope-control .scope-steps {
-  justify-content: flex-start;
-  gap: 12px;
-  margin: 0 0 15px;
-}
-.scope-steps button {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #c7d1ba;
-  border-radius: 4px;
-  font-size: 20px;
-  background: #f5f7ed;
-}
-.scope-steps span {
-  font-size: var(--text-small);
-  color: var(--muted);
 }
 
 /* V2: one reading scale, progressive detail, and short state transitions. */
@@ -1995,8 +1630,7 @@ label {
 }
 .remove-button,
 .reset-draft,
-.notice button,
-.scope-steps button {
+.notice button {
   min-width: 44px;
   min-height: 44px;
 }
@@ -2007,128 +1641,6 @@ label {
   border-radius: 4px;
   margin-bottom: 22px;
   max-width: 900px;
-}
-.reality {
-  padding: 26px 30px;
-  gap: 24px;
-}
-.reality p,
-.reality-message p {
-  font-size: 16px;
-}
-.reality-message p {
-  max-width: none;
-}
-.reality-pill {
-  line-height: 1.5;
-  font-size: 16px;
-}
-.big-number {
-  margin: 8px 0;
-}
-.options-heading {
-  margin: 28px 0 20px;
-}
-.options-heading p {
-  font-size: 16px;
-  max-width: 750px;
-}
-.option-top {
-  font-size: 14px;
-  margin-bottom: 14px;
-}
-.option-letter {
-  min-width: 30px;
-}
-.option-card {
-  gap: 0;
-  padding: 26px;
-}
-.option-card > p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
-.option-card h3 {
-  font-size: 28px;
-}
-.option-card .button {
-  margin-top: 18px;
-}
-.option-math {
-  flex-wrap: wrap;
-}
-.advanced-section {
-  border-top: 1px solid var(--line);
-  margin-top: 32px;
-  padding-top: 20px;
-}
-.advanced-toggle {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  text-align: left;
-  width: 100%;
-  padding: 4px 0;
-  color: var(--green);
-}
-.advanced-toggle > span:first-child {
-  font: 28px var(--serif);
-}
-.advanced-toggle > span:last-child {
-  font-size: 14px;
-  flex-shrink: 0;
-}
-.simulator {
-  margin-top: 20px;
-}
-.sim-controls,
-.sim-result {
-  padding: 24px;
-}
-.sim-task {
-  padding: 14px 12px;
-}
-.sim-task-text strong {
-  font-size: 16px;
-}
-.sim-task small {
-  font-size: 14px;
-  line-height: 1.45;
-}
-.sim-task-hours {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: auto;
-  font-size: 22px;
-}
-.sim-task input {
-  min-height: 20px;
-  width: 20px;
-  height: 20px;
-}
-.scope-control .scope-task-name {
-  font-size: 16px;
-}
-.scope-control > div {
-  gap: 10px;
-}
-.scope-steps span {
-  flex: 1;
-}
-.scope-description {
-  margin-top: 18px;
-}
-.sim-result .button {
-  margin-top: 8px;
-}
-.sim-status {
-  font-size: 16px;
-  transition: background-color 180ms ease;
-}
-.sim-explanation {
-  font-size: 16px;
 }
 .allocation {
   border-top: 1px solid var(--line);
@@ -2328,7 +1840,6 @@ details[open] > summary::after {
   }
 }
 button,
-.sim-task,
 .practice-choice {
   transition:
     background-color 180ms ease,
@@ -2429,26 +1940,8 @@ button,
   .section-title {
     flex-wrap: wrap;
   }
-  .reality {
-    padding: 22px;
-    gap: 16px;
-  }
-  .reality-message {
-    padding-top: 16px;
-  }
-  .option-card {
-    padding: 22px;
-  }
-  .advanced-toggle > span:first-child {
-    font-size: 25px;
-  }
-  .sim-controls,
-  .sim-result,
   .change-ledger {
     padding: 20px;
-  }
-  .scope-control strong {
-    white-space: nowrap;
   }
   .proposal-panel textarea {
     font-size: 18px;
@@ -3196,5 +2689,382 @@ button,
 @media (prefers-reduced-motion: reduce) {
   .input-page-enter {
     animation: none;
+  }
+}
+
+/* V2.2 result system. Ivory = context; paper = evidence; olive = interactive.
+   Forest/check = fits estimates, amber/label = conflict or agreement pending.
+   A feasible calculation never represents approval. */
+.results-screen {
+  --result-surface: var(--paper);
+  --result-interactive: #f0f2e7;
+  --result-neutral: #eeede6;
+  --result-success: #eaf1e7;
+  --result-success-ink: #244c3c;
+  --result-warning: #f7efdf;
+  --result-warning-ink: #785118;
+  --result-warning-line: #d8bd8f;
+  --result-disabled: #e5e5df;
+  --result-muted: #58645d;
+  --result-motion: 200ms ease-out;
+}
+.results-screen .page-heading {
+  margin-bottom: 24px;
+}
+.results-screen .page-heading h1 {
+  font-size: clamp(32px, 3.4vw, 44px);
+  max-width: 760px;
+  letter-spacing: -1.3px;
+}
+.results-screen p {
+  line-height: 1.55;
+}
+.reality {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--result-surface);
+}
+.reality.is-feasible {
+  border-top: 4px solid var(--green);
+}
+.reality.is-conflict {
+  border-top: 4px solid var(--result-warning-ink);
+}
+.big-number {
+  font: 48px/1.1 var(--serif);
+  letter-spacing: -1px;
+  margin: 8px 0;
+  font-variant-numeric: tabular-nums;
+}
+.big-number span {
+  font-size: 28px;
+  color: var(--result-muted);
+}
+.reality-message {
+  border-left: 1px solid var(--line);
+  padding-left: 24px;
+  align-self: center;
+}
+.reality-pill {
+  display: inline-block;
+  padding: 6px 10px;
+  margin-bottom: 8px;
+  background: var(--result-warning);
+  color: var(--result-warning-ink);
+  border-radius: 4px;
+}
+.is-feasible .reality-pill {
+  background: var(--result-success);
+  color: var(--result-success-ink);
+}
+.options-heading {
+  margin: 28px 0 18px;
+}
+.options-heading h2 {
+  font-size: 28px;
+}
+.options-heading p {
+  margin-top: 8px;
+  color: var(--result-muted);
+  max-width: 68ch;
+}
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+.option-card {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--result-surface);
+}
+.option-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.option-letter {
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  background: var(--result-neutral);
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  font: 20px var(--serif);
+}
+.option-card h3 {
+  font: 27px/1.2 var(--serif);
+  overflow-wrap: anywhere;
+  margin-bottom: 14px;
+}
+.option-card > p {
+  color: var(--result-muted);
+}
+.option-math {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+  padding-block: 14px;
+  border-block: 1px solid var(--line);
+  font-size: 14px;
+}
+.option-math strong {
+  font: 30px var(--serif);
+}
+.option-math > span:last-child {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--result-success-ink);
+}
+.option-card .button {
+  margin-top: 16px;
+}
+.advanced-section {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin-top: 28px;
+}
+.advanced-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  text-align: left;
+  width: 100%;
+  padding: 6px 0;
+  min-height: 44px;
+}
+.advanced-toggle > span:first-child {
+  font: 24px var(--serif);
+}
+.advanced-toggle > span:last-child {
+  font-size: 14px;
+  white-space: nowrap;
+}
+.simulator {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--result-surface);
+  margin-top: 16px;
+  overflow: hidden;
+  animation: result-reveal var(--result-motion);
+}
+.sim-controls,
+.sim-result {
+  padding: 24px;
+  min-width: 0;
+}
+.sim-controls h2 {
+  font-size: 28px;
+}
+.sim-tasks {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+}
+.sim-task {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 12px;
+  cursor: pointer;
+  transition:
+    background-color var(--result-motion),
+    border-color var(--result-motion);
+}
+.sim-task.locked {
+  background: var(--result-neutral);
+  cursor: default;
+}
+.sim-task.deferred {
+  background: var(--result-warning);
+  border-color: var(--result-warning-line);
+}
+.sim-task input {
+  min-height: 20px;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin: 0;
+  accent-color: var(--green);
+}
+.sim-task-text {
+  flex: 1;
+  min-width: 0;
+}
+.sim-task-text strong {
+  display: block;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+  font-weight: 600;
+}
+.sim-task small {
+  display: block;
+  color: var(--result-muted);
+  font-size: 14px;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+.sim-task-hours {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font: 22px var(--serif);
+}
+.scope-control {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+.scope-control > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.scope-control .scope-task-name {
+  margin-bottom: 12px;
+  color: var(--ink);
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+.scope-control strong {
+  font: 25px var(--serif);
+  white-space: nowrap;
+}
+.scope-control strong span {
+  font-size: 17px;
+  color: var(--result-muted);
+}
+.scope-control input {
+  width: 100%;
+  margin: 14px 0;
+  accent-color: var(--green);
+}
+.scope-control p,
+.scope-steps span {
+  color: var(--result-muted);
+  font-size: 14px;
+}
+.scope-control .scope-steps {
+  margin-bottom: 14px;
+}
+.scope-steps span {
+  flex: 1;
+}
+.scope-steps button {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--result-interactive);
+  font-size: 20px;
+}
+.scope-description {
+  display: block;
+  margin-top: 16px;
+}
+.sim-result {
+  border-left: 1px solid var(--line);
+  background: var(--result-neutral);
+}
+.sim-number {
+  font: 44px var(--serif);
+  margin: 10px 0;
+}
+.sim-number span {
+  font-size: 27px;
+  color: var(--result-muted);
+}
+.sim-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 4px;
+  background: var(--result-warning);
+  color: var(--result-warning-ink);
+  transition: background-color var(--result-motion);
+}
+.sim-status.fits {
+  background: var(--result-success);
+  color: var(--result-success-ink);
+}
+.sim-explanation {
+  margin-block: 12px;
+}
+.sim-result > .text-button {
+  margin-top: 8px;
+}
+.results-screen button:disabled {
+  opacity: 1;
+  background: var(--result-disabled);
+  color: #60685f;
+  border-color: var(--line);
+}
+.results-screen .option-card:focus-within {
+  border-color: var(--green);
+  box-shadow: 0 0 0 1px var(--green);
+}
+.results-screen .button:active:not(:disabled) {
+  background: #365c47;
+}
+.results-screen details[open] > :not(summary) {
+  animation: result-reveal 180ms ease-out;
+}
+.decision-page-enter {
+  animation: page-enter 220ms ease-out;
+}
+@keyframes result-reveal {
+  from {
+    opacity: 0.6;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 700px) {
+  .reality,
+  .option-grid,
+  .simulator {
+    grid-template-columns: 1fr;
+  }
+  .reality,
+  .option-card,
+  .sim-controls,
+  .sim-result {
+    padding: 20px;
+  }
+  .reality-message {
+    padding: 16px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .sim-result {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .advanced-toggle > span:first-child {
+    font-size: 22px;
   }
 }

@@ -499,7 +499,7 @@ function App() {
       <main
         id="main"
         key={page}
-        className={`page-enter ${page === "workload" ? "input-page-enter" : ""}`}
+        className={`page-enter ${page === "workload" ? "input-page-enter" : page === "results" || page === "proposal" ? "decision-page-enter" : ""}`}
       >
         {removingDraft && (
           <ConfirmDialog

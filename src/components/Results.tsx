@@ -51,7 +51,7 @@ export function Results({
   const [advanced, setAdvanced] = useState(false);
   const options = startingOptions(scenario);
   return (
-    <>
+    <div className="results-screen">
       <div className="page-heading">
         <div>
           <p className="eyebrow">Find your if</p>
@@ -81,7 +81,10 @@ export function Results({
             : "Choose a change you could discuss. We’ll help you put it into words."}
         </p>
       )}
-      <section className="reality" aria-label="Reality check">
+      <section
+        className={`reality ${output.baseline.fits ? "is-feasible" : "is-conflict"}`}
+        aria-label="Reality check"
+      >
         <div>
           <p className="eyebrow">If you accept everything</p>
           <div className="big-number">
@@ -375,6 +378,6 @@ export function Results({
           combined changes. Other combinations can be explored above.
         </p>
       </details>
-    </>
+    </div>
   );
 }
