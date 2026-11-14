@@ -189,6 +189,13 @@ function App() {
   function editScope(text: string) {
     editSimulation(() => setScope(text));
   }
+  function editProposalScope(text: string) {
+    // A deliverable description is not a schedule change. Never rewrite the editor
+    // on keystrokes; the explicit update button uses the existing reset guard.
+    setScope(text);
+    setDirty(true);
+    setNotice("");
+  }
   function editMessage(text: string) {
     setMessage(text);
     setDirty(true);
@@ -722,6 +729,7 @@ function App() {
                 message={message}
                 setMessage={editMessage}
                 scope={scope}
+                setScope={editProposalScope}
                 copy={copy}
                 save={save}
                 saveDraft={saveCurrentDraft}

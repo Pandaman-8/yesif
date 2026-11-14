@@ -68,12 +68,17 @@ describe("complete product flows", () => {
     expect(await navigator.clipboard.readText()).toBe(
       "Can we agree on the report date?",
     );
+    await user.click(screen.getByRole("button", { name: "Start practice" }));
     await user.click(
-      screen.getByRole("button", { name: /With .*focused hours available/ }),
+      screen.getByRole("button", {
+        name: /Keeping that work changes the checked plan/,
+      }),
     );
     expect(
-      screen.getByText("You made the decision explicit."),
-    ).toBeInTheDocument();
+      within(
+        screen.getByRole("region", { name: "Step 1 of 2 · Your response" }),
+      ).getByRole("status"),
+    ).toHaveTextContent("Keeping it this week changes the checked plan");
     await user.click(screen.getByRole("button", { name: "Save decision" }));
     expect(
       JSON.parse(localStorage.getItem(STORAGE_KEY)!).decisions[0].message,
@@ -114,7 +119,7 @@ describe("complete product flows", () => {
           name: "Your proposal",
         }) as HTMLTextAreaElement
       ).value,
-    ).toContain("Client brief (1 hour)");
+    ).toContain("Client brief by Friday fits my current estimates");
     await user.click(screen.getByRole("button", { name: "Compare options" }));
     await user.click(screen.getByRole("button", { name: "Edit workload" }));
     const hrs = screen.getByLabelText("New request hours");

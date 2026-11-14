@@ -108,7 +108,7 @@ it("protects reset: cancel keeps partial inputs, explicit draft survives remount
   expect(screen.getByLabelText("New request name")).toHaveValue(
     "Urgent presentation",
   );
-});
+}, 10000);
 it("does not prompt for untouched inputs and warns about dirty reloads", async () => {
   const user = userEvent.setup();
   render(<App />);

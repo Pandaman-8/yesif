@@ -153,8 +153,10 @@ describe("concrete allocation and conversation", () => {
       expect(p.prompt).toContain("Thursday");
       const index = p.choices.findIndex((c) => c.id === "grounded");
       positions.add(index);
-      expect(p.choices[index].text).toContain("Weekly report");
-      expect(p.choices[index].checks).toEqual([true, true, true, true]);
+      expect(p.context).toContain("Weekly report");
+      expect(p.choices[index].evidence.map((e) => e.status)).toEqual(
+        Array(5).fill("supported"),
+      );
     }
     expect(positions.size).toBe(3);
   });

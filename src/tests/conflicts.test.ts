@@ -154,7 +154,7 @@ it("A: attributes Tuesday 7/6 to existing work, not the Friday request; no futil
   );
   expect(
     practiceFor(s, null).choices.find((c) => c.id === "grounded")!.text,
-  ).toBe(text);
+  ).toContain("1h gap by Tuesday");
   expect(practiceFor(s, null).prompt).toContain("Tuesday");
 });
 it("B: new early request creates a constraint; only a rechecked smaller deliverable fits", () => {
@@ -309,11 +309,9 @@ it("I: old saved decisions and unresolved drafts remain readable with original m
 it("keeps practice grounded in the existing conflict even when a checked deferral is selected", () => {
   const s = scenario([task("report", 28, 1, true)]);
   const practice = practiceFor(s, simulate(s, ["report"], 4));
-  expect(practice.prompt).toContain("Tuesday");
-  expect(practice.choices.find((c) => c.id === "constraint")!.text).toContain(
-    "By Tuesday, 7h are due with 6h available",
-  );
-  expect(practice.choices.find((c) => c.id === "grounded")!.text).toContain(
-    "if we agree to move Work report",
+  expect(practice.context).toContain("Tuesday");
+  expect(practice.context).toContain("7h due / 6h usable by Tuesday");
+  expect(practice.context).toContain(
+    "Move Work report beyond this week, subject to agreement",
   );
 });

@@ -1,6 +1,6 @@
 import { analyzeConflicts, causalSummary } from "../domain/conflicts";
 import { NegotiationDirections } from "./ConflictView";
-import { useMemo, useState, type RefObject } from "react";
+import { useMemo, type RefObject } from "react";
 import { ArrowLeft, Bookmark, Copy, RotateCcw } from "lucide-react";
 import {
   hours,
@@ -8,7 +8,12 @@ import {
   type Option,
   type Scenario,
 } from "../domain/engine";
-import { detailedProposal, practiceFor } from "../domain/conversation";
+import {
+  blockedEvidence,
+  proposalEvidence,
+  selectedConsequences,
+} from "../domain/conversation";
+import { NegotiationPractice } from "./NegotiationPractice";
 import { AllocationView, ChangesView } from "./AllocationView";
 interface Props {
   scenario: Scenario;
@@ -16,6 +21,7 @@ interface Props {
   heading: RefObject<HTMLHeadingElement | null>;
   message: string;
   scope: string;
+  setScope: (s: string) => void;
   setMessage: (s: string) => void;
   copy: () => void;
   save: () => void;
@@ -30,6 +36,7 @@ export function Proposal({
   heading,
   message,
   scope,
+  setScope,
   setMessage,
   copy,
   save,
@@ -39,16 +46,17 @@ export function Proposal({
   compare,
 }: Props) {
   const analysis = useMemo(() => analyzeConflicts(scenario), [scenario]);
-  const [practice, setPractice] = useState<string | null>(null);
-  const exercise = useMemo(
-    () => practiceFor(scenario, chosen),
-    [scenario, chosen],
-  );
-  const explanation = useMemo(
-    () => detailedProposal(scenario, chosen, scope),
+  const facts = useMemo(
+    () => (chosen ? selectedConsequences(scenario, chosen, scope) : null),
     [scenario, chosen, scope],
   );
-  const answer = exercise.choices.find((c) => c.id === practice);
+  const evidence = useMemo(
+    () =>
+      chosen
+        ? proposalEvidence(scenario, chosen, scope)
+        : blockedEvidence(scenario),
+    [scenario, chosen, scope],
+  );
   return (
     <>
       <div className="page-heading">
@@ -72,11 +80,33 @@ export function Proposal({
       <div className={`proposal-layout ${chosen ? "" : "unresolved-proposal"}`}>
         <section className="panel proposal-panel">
           <div className="section-title">
-            <h2>
-              {chosen ? "Your short proposal" : "Your renegotiation request"}
-            </h2>
+            <h2>Your message</h2>
             <span className="small-pill">Editable draft</span>
           </div>
+          {facts?.smaller && (
+            <div className="proposal-scope">
+              <label htmlFor="proposal-scope">
+                What will the smaller version include?
+              </label>
+              <input
+                id="proposal-scope"
+                maxLength={500}
+                value={scope}
+                onChange={(e) => setScope(e.target.value)}
+                placeholder="For example: five core slides, without research or appendix"
+                aria-describedby="scope-note"
+              />
+              <p id="scope-note" className="help">
+                {scope.trim()
+                  ? "Agree these contents and their estimate together."
+                  : "Still to be defined and agreed. A time fit does not verify a useful deliverable."}{" "}
+                Your message stays unchanged until you update it.
+              </p>
+              <button className="text-button" onClick={reset}>
+                Update generated draft with this scope
+              </button>
+            </div>
+          )}
           <label className="sr-only" htmlFor="proposal-text">
             Your proposal
           </label>
@@ -126,8 +156,20 @@ export function Proposal({
             recalculated or scored.
           </p>
           <details className="detailed-explanation">
-            <summary>Detailed explanation from the calculation</summary>
-            <p>{explanation}</p>
+            <summary>
+              {chosen
+                ? "Why this fits the time constraints"
+                : "Why this is blocked"}
+            </summary>
+            <dl className="proposal-evidence">
+              {evidence.map((f) => (
+                <div key={f.label}>
+                  <dt>{f.label}</dt>
+                  <dd>{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+            {!chosen && <NegotiationDirections analysis={analysis} />}
             <p className="fine-print">
               This explanation stays tied to the calculation. Your edits above
               do not change it.
@@ -147,10 +189,15 @@ export function Proposal({
               <strong>{hours(chosen.result.total)}h</strong>
               <span>of {hours(chosen.result.capacity)}h available</span>
             </div>
-            <p>Fits every weekday deadline</p>
+            <p>Fits the entered time constraints</p>
+            <ul className="selected-consequences">
+              {facts!.items.map((text, index) => (
+                <li key={index}>{text}</li>
+              ))}
+            </ul>
             <p className="fine-print">
-              Proposed, not yet agreed. Confirm the scope and priorities. Future
-              capacity is unchecked.
+              Proposed, not yet agreed. Calculation checks the selected plan; it
+              does not verify your edited message.
             </p>
             <AllocationView scenario={scenario} plan={chosen} />
           </aside>
@@ -158,7 +205,6 @@ export function Proposal({
           <aside className="conflict-summary">
             <h2>Conditions still need to change.</h2>
             <p>{causalSummary(scenario, analysis)}</p>
-            <NegotiationDirections analysis={analysis} />
           </aside>
         )}
       </div>
@@ -168,56 +214,12 @@ export function Proposal({
           <ChangesView scenario={scenario} plan={chosen} />
         </details>
       )}
-      <section className="practice panel">
-        <div>
-          <p className="eyebrow">A short practice</p>
-          <h2>
-            {chosen?.kind === "accept"
-              ? "What if the scope grows?"
-              : "What if they push back?"}
-          </h2>
-          <p className="manager-quote">{exercise.prompt}</p>
-          <p className="help">
-            Choose the reply that names the constraint, offers a change and asks
-            for agreement.
-          </p>
-        </div>
-        <div className="practice-choices">
-          {exercise.choices.map((c, i) => (
-            <button
-              key={c.id}
-              className={`practice-choice ${practice === c.id ? "selected" : ""}`}
-              aria-pressed={practice === c.id}
-              onClick={() => setPractice(c.id)}
-            >
-              <span>{String.fromCharCode(65 + i)}</span>
-              {c.text}
-            </button>
-          ))}
-        </div>
-        {answer && (
-          <div className="practice-feedback" role="status">
-            <strong>{answer.feedback}</strong>
-            <ul>
-              {[
-                "Names the time constraint",
-                "Offers a concrete change or scoped commitment",
-                "Asks to agree priorities",
-                "Avoids an unchecked promise",
-              ].map((label, i) => (
-                <li key={label}>
-                  <span>{answer.checks[i] ? "✓" : "○"}</span>
-                  {label}
-                </li>
-              ))}
-            </ul>
-            <small>
-              Feedback describes this response only. It does not measure your
-              real negotiation ability. No AI analysis.
-            </small>
-          </div>
-        )}
-      </section>
+      <NegotiationPractice
+        key={JSON.stringify([scenario, chosen?.deferred, chosen?.requestUnits])}
+        scenario={scenario}
+        chosen={chosen}
+        scope={scope}
+      />
     </>
   );
 }

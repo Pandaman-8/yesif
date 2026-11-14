@@ -1,0 +1,746 @@
+[
+  {
+    "name": "deferral-step1",
+    "requested": 375,
+    "answers": [
+      {
+        "height": 123,
+        "words": 22
+      },
+      {
+        "height": 123,
+        "words": 21
+      },
+      {
+        "height": 123,
+        "words": 23
+      }
+    ],
+    "height": 922,
+    "scrollWidth": 360,
+    "top": 1931,
+    "width": 360
+  },
+  {
+    "name": "deferral-step1",
+    "requested": 390,
+    "answers": [
+      {
+        "height": 123,
+        "words": 22
+      },
+      {
+        "height": 123,
+        "words": 21
+      },
+      {
+        "height": 123,
+        "words": 23
+      }
+    ],
+    "height": 896,
+    "scrollWidth": 375,
+    "top": 1905,
+    "width": 375
+  },
+  {
+    "name": "deferral-step1",
+    "requested": 768,
+    "answers": [
+      {
+        "height": 81,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 21
+      },
+      {
+        "height": 81,
+        "words": 23
+      }
+    ],
+    "height": 730,
+    "scrollWidth": 753,
+    "top": 1530,
+    "width": 753
+  },
+  {
+    "name": "deferral-step1",
+    "requested": 900,
+    "answers": [
+      {
+        "height": 81,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 21
+      },
+      {
+        "height": 81,
+        "words": 23
+      }
+    ],
+    "height": 704,
+    "scrollWidth": 885,
+    "top": 1201,
+    "width": 885
+  },
+  {
+    "name": "deferral-step1",
+    "requested": 1280,
+    "answers": [
+      {
+        "height": 64,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 21
+      },
+      {
+        "height": 81,
+        "words": 23
+      }
+    ],
+    "height": 698,
+    "scrollWidth": 1265,
+    "top": 1148,
+    "width": 1265
+  },
+  {
+    "name": "deferral-step1",
+    "requested": 1440,
+    "answers": [
+      {
+        "height": 64,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 21
+      },
+      {
+        "height": 81,
+        "words": 23
+      }
+    ],
+    "height": 698,
+    "scrollWidth": 1425,
+    "top": 1148,
+    "width": 1425
+  },
+  {
+    "name": "deferral-step2-feedback",
+    "requested": 375,
+    "answers": [
+      {
+        "height": 123,
+        "words": 20
+      },
+      {
+        "height": 123,
+        "words": 23
+      },
+      {
+        "height": 123,
+        "words": 22
+      }
+    ],
+    "height": 1306,
+    "scrollWidth": 360,
+    "top": 1931,
+    "width": 360
+  },
+  {
+    "name": "deferral-step2-feedback",
+    "requested": 390,
+    "answers": [
+      {
+        "height": 123,
+        "words": 20
+      },
+      {
+        "height": 123,
+        "words": 23
+      },
+      {
+        "height": 123,
+        "words": 22
+      }
+    ],
+    "height": 1281,
+    "scrollWidth": 375,
+    "top": 1905,
+    "width": 375
+  },
+  {
+    "name": "deferral-step2-feedback",
+    "requested": 768,
+    "answers": [
+      {
+        "height": 81,
+        "words": 20
+      },
+      {
+        "height": 81,
+        "words": 23
+      },
+      {
+        "height": 81,
+        "words": 22
+      }
+    ],
+    "height": 944,
+    "scrollWidth": 753,
+    "top": 1530,
+    "width": 753
+  },
+  {
+    "name": "deferral-step2-feedback",
+    "requested": 900,
+    "answers": [
+      {
+        "height": 81,
+        "words": 20
+      },
+      {
+        "height": 81,
+        "words": 23
+      },
+      {
+        "height": 81,
+        "words": 22
+      }
+    ],
+    "height": 917,
+    "scrollWidth": 885,
+    "top": 1201,
+    "width": 885
+  },
+  {
+    "name": "deferral-step2-feedback",
+    "requested": 1280,
+    "answers": [
+      {
+        "height": 81,
+        "words": 20
+      },
+      {
+        "height": 81,
+        "words": 23
+      },
+      {
+        "height": 64,
+        "words": 22
+      }
+    ],
+    "height": 889,
+    "scrollWidth": 1265,
+    "top": 1148,
+    "width": 1265
+  },
+  {
+    "name": "deferral-step2-feedback",
+    "requested": 1440,
+    "answers": [
+      {
+        "height": 81,
+        "words": 20
+      },
+      {
+        "height": 81,
+        "words": 23
+      },
+      {
+        "height": 64,
+        "words": 22
+      }
+    ],
+    "height": 889,
+    "scrollWidth": 1425,
+    "top": 1148,
+    "width": 1425
+  },
+  {
+    "name": "scope-proposal",
+    "requested": 375,
+    "answers": [],
+    "height": 935,
+    "scrollWidth": 360,
+    "top": 606,
+    "width": 360
+  },
+  {
+    "name": "scope-proposal",
+    "requested": 390,
+    "answers": [],
+    "height": 888,
+    "scrollWidth": 375,
+    "top": 605,
+    "width": 375
+  },
+  {
+    "name": "scope-proposal",
+    "requested": 768,
+    "answers": [],
+    "height": 742,
+    "scrollWidth": 753,
+    "top": 476,
+    "width": 753
+  },
+  {
+    "name": "scope-proposal",
+    "requested": 900,
+    "answers": [],
+    "height": 767,
+    "scrollWidth": 885,
+    "top": 476,
+    "width": 885
+  },
+  {
+    "name": "scope-proposal",
+    "requested": 1280,
+    "answers": [],
+    "height": 750,
+    "scrollWidth": 1265,
+    "top": 483,
+    "width": 1265
+  },
+  {
+    "name": "scope-proposal",
+    "requested": 1440,
+    "answers": [],
+    "height": 750,
+    "scrollWidth": 1425,
+    "top": 483,
+    "width": 1425
+  },
+  {
+    "name": "scope-complete",
+    "requested": 375,
+    "answers": [],
+    "height": 1033,
+    "scrollWidth": 360,
+    "top": 2345,
+    "width": 360
+  },
+  {
+    "name": "scope-complete",
+    "requested": 390,
+    "answers": [],
+    "height": 959,
+    "scrollWidth": 375,
+    "top": 2298,
+    "width": 375
+  },
+  {
+    "name": "scope-complete",
+    "requested": 768,
+    "answers": [],
+    "height": 716,
+    "scrollWidth": 753,
+    "top": 1860,
+    "width": 753
+  },
+  {
+    "name": "scope-complete",
+    "requested": 900,
+    "answers": [],
+    "height": 719,
+    "scrollWidth": 885,
+    "top": 1352,
+    "width": 885
+  },
+  {
+    "name": "scope-complete",
+    "requested": 1280,
+    "answers": [],
+    "height": 707,
+    "scrollWidth": 1265,
+    "top": 1343,
+    "width": 1265
+  },
+  {
+    "name": "scope-complete",
+    "requested": 1440,
+    "answers": [],
+    "height": 707,
+    "scrollWidth": 1425,
+    "top": 1343,
+    "width": 1425
+  },
+  {
+    "name": "fits-proposal",
+    "requested": 375,
+    "answers": [],
+    "height": 656,
+    "scrollWidth": 360,
+    "top": 516,
+    "width": 360
+  },
+  {
+    "name": "fits-proposal",
+    "requested": 390,
+    "answers": [],
+    "height": 631,
+    "scrollWidth": 375,
+    "top": 516,
+    "width": 375
+  },
+  {
+    "name": "fits-proposal",
+    "requested": 768,
+    "answers": [],
+    "height": 506,
+    "scrollWidth": 753,
+    "top": 382,
+    "width": 753
+  },
+  {
+    "name": "fits-proposal",
+    "requested": 900,
+    "answers": [],
+    "height": 531,
+    "scrollWidth": 885,
+    "top": 382,
+    "width": 885
+  },
+  {
+    "name": "fits-proposal",
+    "requested": 1280,
+    "answers": [],
+    "height": 514,
+    "scrollWidth": 1265,
+    "top": 389,
+    "width": 1265
+  },
+  {
+    "name": "fits-proposal",
+    "requested": 1440,
+    "answers": [],
+    "height": 514,
+    "scrollWidth": 1425,
+    "top": 389,
+    "width": 1425
+  },
+  {
+    "name": "tuesday-evidence",
+    "requested": 375,
+    "answers": [],
+    "height": 1430,
+    "scrollWidth": 360,
+    "top": 476,
+    "width": 360
+  },
+  {
+    "name": "tuesday-evidence",
+    "requested": 390,
+    "answers": [],
+    "height": 1383,
+    "scrollWidth": 375,
+    "top": 476,
+    "width": 375
+  },
+  {
+    "name": "tuesday-evidence",
+    "requested": 768,
+    "answers": [],
+    "height": 1098,
+    "scrollWidth": 753,
+    "top": 408,
+    "width": 753
+  },
+  {
+    "name": "tuesday-evidence",
+    "requested": 900,
+    "answers": [],
+    "height": 1171,
+    "scrollWidth": 885,
+    "top": 382,
+    "width": 885
+  },
+  {
+    "name": "tuesday-evidence",
+    "requested": 1280,
+    "answers": [],
+    "height": 1106,
+    "scrollWidth": 1265,
+    "top": 389,
+    "width": 1265
+  },
+  {
+    "name": "tuesday-evidence",
+    "requested": 1440,
+    "answers": [],
+    "height": 1106,
+    "scrollWidth": 1425,
+    "top": 389,
+    "width": 1425
+  },
+  {
+    "name": "mixed-step2",
+    "requested": 375,
+    "answers": [
+      {
+        "height": 123,
+        "words": 20
+      },
+      {
+        "height": 123,
+        "words": 20
+      },
+      {
+        "height": 123,
+        "words": 21
+      }
+    ],
+    "height": 1445,
+    "scrollWidth": 360,
+    "top": 1469,
+    "width": 360
+  },
+  {
+    "name": "mixed-step2",
+    "requested": 390,
+    "answers": [
+      {
+        "height": 123,
+        "words": 20
+      },
+      {
+        "height": 123,
+        "words": 20
+      },
+      {
+        "height": 123,
+        "words": 21
+      }
+    ],
+    "height": 1420,
+    "scrollWidth": 375,
+    "top": 1417,
+    "width": 375
+  },
+  {
+    "name": "mixed-step2",
+    "requested": 768,
+    "answers": [
+      {
+        "height": 81,
+        "words": 20
+      },
+      {
+        "height": 81,
+        "words": 20
+      },
+      {
+        "height": 81,
+        "words": 21
+      }
+    ],
+    "height": 984,
+    "scrollWidth": 753,
+    "top": 1128,
+    "width": 753
+  },
+  {
+    "name": "mixed-step2",
+    "requested": 900,
+    "answers": [
+      {
+        "height": 81,
+        "words": 20
+      },
+      {
+        "height": 81,
+        "words": 20
+      },
+      {
+        "height": 81,
+        "words": 21
+      }
+    ],
+    "height": 987,
+    "scrollWidth": 885,
+    "top": 941,
+    "width": 885
+  },
+  {
+    "name": "mixed-step2",
+    "requested": 1280,
+    "answers": [
+      {
+        "height": 81,
+        "words": 20
+      },
+      {
+        "height": 64,
+        "words": 20
+      },
+      {
+        "height": 81,
+        "words": 21
+      }
+    ],
+    "height": 958,
+    "scrollWidth": 1265,
+    "top": 931,
+    "width": 1265
+  },
+  {
+    "name": "mixed-step2",
+    "requested": 1440,
+    "answers": [
+      {
+        "height": 81,
+        "words": 20
+      },
+      {
+        "height": 64,
+        "words": 20
+      },
+      {
+        "height": 81,
+        "words": 21
+      }
+    ],
+    "height": 958,
+    "scrollWidth": 1425,
+    "top": 931,
+    "width": 1425
+  },
+  {
+    "name": "early-deferral",
+    "requested": 375,
+    "answers": [
+      {
+        "height": 123,
+        "words": 22
+      },
+      {
+        "height": 146,
+        "words": 22
+      },
+      {
+        "height": 123,
+        "words": 23
+      }
+    ],
+    "height": 945,
+    "scrollWidth": 360,
+    "top": 1897,
+    "width": 360
+  },
+  {
+    "name": "early-deferral",
+    "requested": 390,
+    "answers": [
+      {
+        "height": 123,
+        "words": 22
+      },
+      {
+        "height": 123,
+        "words": 22
+      },
+      {
+        "height": 123,
+        "words": 23
+      }
+    ],
+    "height": 896,
+    "scrollWidth": 375,
+    "top": 1849,
+    "width": 375
+  },
+  {
+    "name": "early-deferral",
+    "requested": 768,
+    "answers": [
+      {
+        "height": 81,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 23
+      }
+    ],
+    "height": 730,
+    "scrollWidth": 753,
+    "top": 1474,
+    "width": 753
+  },
+  {
+    "name": "early-deferral",
+    "requested": 900,
+    "answers": [
+      {
+        "height": 81,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 23
+      }
+    ],
+    "height": 704,
+    "scrollWidth": 885,
+    "top": 1145,
+    "width": 885
+  },
+  {
+    "name": "early-deferral",
+    "requested": 1280,
+    "answers": [
+      {
+        "height": 64,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 23
+      }
+    ],
+    "height": 698,
+    "scrollWidth": 1265,
+    "top": 1092,
+    "width": 1265
+  },
+  {
+    "name": "early-deferral",
+    "requested": 1440,
+    "answers": [
+      {
+        "height": 64,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 22
+      },
+      {
+        "height": 81,
+        "words": 23
+      }
+    ],
+    "height": 698,
+    "scrollWidth": 1425,
+    "top": 1092,
+    "width": 1425
+  }
+]

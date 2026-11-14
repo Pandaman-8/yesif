@@ -3643,3 +3643,159 @@ button,
 .causal-directions {
   border-top: 1px solid var(--line);
 }
+
+/* V2.4 — only the proposal and optional conversation practice. */
+.proposal-layout {
+  align-items: start;
+}
+.proposal-scope {
+  margin: 0 0 22px;
+  padding: 16px;
+  background: var(--paper, #f7f6ef);
+  border: 1px solid #d9ddce;
+  border-radius: 10px;
+}
+.proposal-scope label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.proposal-scope input {
+  width: 100%;
+  min-width: 0;
+}
+.proposal-scope .text-button {
+  white-space: normal;
+  text-align: left;
+}
+.selected-consequences {
+  padding-left: 19px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.selected-consequences li + li {
+  margin-top: 9px;
+}
+.proposal-evidence {
+  margin: 18px 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.proposal-evidence > div + div {
+  margin-top: 14px;
+}
+.proposal-evidence dt,
+.rubric-evidence dt {
+  font-weight: 600;
+}
+.proposal-evidence dd,
+.rubric-evidence dd {
+  margin: 4px 0 0;
+}
+.proposal-panel #proposal-text {
+  min-height: 190px;
+}
+.negotiation-practice {
+  display: block;
+  max-width: 900px;
+  margin: 28px auto 0;
+  padding: 28px;
+}
+.practice-topline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.practice-topline .eyebrow {
+  margin: 0;
+}
+.negotiation-practice h2 {
+  margin: 16px 0;
+  font-size: clamp(25px, 3vw, 34px);
+}
+.practice-context {
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 12px 0 18px;
+}
+.negotiation-practice .manager-quote {
+  font-size: 19px;
+  line-height: 1.55;
+  margin: 20px 0 12px;
+}
+.negotiation-practice .practice-choices {
+  display: grid;
+  gap: 10px;
+}
+.negotiation-practice .practice-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  min-height: 64px;
+  padding: 16px;
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 400;
+  text-align: left;
+}
+.negotiation-practice .practice-choice > span {
+  flex: 0 0 24px;
+  font-weight: 600;
+}
+.negotiation-practice .practice-feedback {
+  margin: 18px 0;
+  padding: 18px;
+  background: #f0f2e8;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.negotiation-practice .practice-feedback > p {
+  margin: 0 0 10px;
+  font-size: 14px;
+}
+.rubric-evidence {
+  margin-top: 12px;
+}
+.rubric-evidence dl > div {
+  margin: 14px 0;
+}
+.rubric-evidence q {
+  font-style: italic;
+}
+.practice-navigation {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+.practice-selected {
+  margin: 14px 0;
+  padding-left: 16px;
+  border-left: 3px solid #647052;
+  line-height: 1.6;
+}
+.practice-recap {
+  line-height: 1.6;
+}
+.negotiation-practice > .fine-print {
+  margin-top: 18px;
+}
+@media (max-width: 600px) {
+  .negotiation-practice {
+    padding: 20px 16px;
+  }
+  .negotiation-practice .practice-choice {
+    padding: 14px 12px;
+    gap: 10px;
+  }
+  .practice-navigation .button {
+    width: 100%;
+  }
+  .proposal-panel #proposal-text {
+    min-height: 240px;
+  }
+}

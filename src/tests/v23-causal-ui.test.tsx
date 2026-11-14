@@ -24,9 +24,9 @@ function ResultHarness({ s }: { s: Scenario }) {
       deferred={deferred}
       units={units}
       scope=""
+      setScope={vi.fn()}
       setDeferred={setDeferred}
       setUnits={setUnits}
-      setScope={vi.fn()}
       choose={vi.fn()}
       edit={vi.fn()}
       unresolved={vi.fn()}
@@ -68,6 +68,7 @@ it("unresolved proposal separates a report-focused request from factual detailed
       heading={createRef()}
       message={renegotiationRequest(s)}
       scope=""
+      setScope={vi.fn()}
       setMessage={vi.fn()}
       copy={vi.fn()}
       save={vi.fn()}
@@ -84,18 +85,17 @@ it("unresolved proposal separates a report-focused request from factual detailed
       }) as HTMLTextAreaElement
     ).value,
   ).toMatch(/^By Tuesday, Weekly report requires 7h, but I have 6h/);
-  await user.click(
-    screen.getByText("Detailed explanation from the calculation"),
-  );
+  await user.click(screen.getByText("Why this is blocked"));
   expect(
-    screen.getByText(/First violated cumulative deadline:/),
-  ).toHaveTextContent("Existing-only demand by this date: 7h");
+    screen.getByText(/7h due by Tuesday; 1h shortfall at that date/),
+  ).toBeVisible();
   expect(screen.queryByText("Your week, mapped")).toBeNull();
   expect(screen.queryByRole("button", { name: "Save decision" })).toBeNull();
+  await user.click(screen.getByRole("button", { name: "Start practice" }));
   const practice = screen.getByRole("button", {
-    name: /By Tuesday, Weekly report requires/,
+    name: /There’s a 1h gap by Tuesday/,
   });
-  expect(practice).toHaveTextContent("recheck every deadline");
+  expect(practice).toHaveTextContent("recheck before committing");
 });
 it("manual later scope change stays infeasible; a relevant deferral creates and reset removes the map", async () => {
   const s = make();

@@ -1,17 +1,17 @@
 import {
   analyzeConflicts,
-  causalSummary,
   conflictBreakdown,
+  causalSummary,
 } from "./conflicts";
 import {
   analyze,
   DAYS,
   hours,
-  proposal,
   simulate,
   type Option,
   type Scenario,
 } from "./engine";
+export { practiceFor } from "./practice";
 
 export function shortProposal(s: Scenario, plan: Option, scope = ""): string {
   const o = simulate(s, plan.deferred, plan.requestUnits);
@@ -22,10 +22,13 @@ export function shortProposal(s: Scenario, plan: Option, scope = ""): string {
     .filter((t) => o.deferred.includes(t.id))
     .map((t) => t.name)
     .join(" and ");
-  const intro = smaller
-    ? `I can offer a smaller, ${hours(o.requestUnits)}-hour version of ${s.request.name} by ${DAYS[s.request.deadline]}`
-    : `Based on my estimates, I can take on ${s.request.name} (${hours(o.requestUnits)} ${o.requestUnits === 4 ? "hour" : "hours"}) by ${DAYS[s.request.deadline]}`;
-  return `${intro}${names ? ` if we agree to move ${names} out of this planning week` : smaller ? " if we agree on the reduced scope" : " with my current commitments"}.${smaller && scope.trim() ? ` The smaller deliverable would include: ${scope.trim()}.` : ""} ${names ? "Could we agree on the priorities and a new date first? Capacity beyond this week still needs checking." : smaller ? "Could we agree which parts to keep? This means a smaller deliverable, not the same work faster." : "Could we confirm the scope and priority before I commit?"}`;
+  const request = `${s.request.name} by ${DAYS[s.request.deadline]}`;
+  if (!names && !smaller)
+    return `${request} fits my current estimates while keeping the existing deadlines. Could we confirm the scope and priority before I commit?`;
+  const deliverable = smaller
+    ? `a smaller, ${hours(o.requestUnits)}-hour version of ${request}${scope.trim() ? ` (${scope.trim()})` : ""}`
+    : request;
+  return `I can ${smaller ? "offer" : "take on"} ${deliverable} if we agree ${names ? `to move ${names} beyond this week${smaller ? " and approve the reduced scope" : ""}` : "on the reduced scope"}.${smaller && !scope.trim() ? " The smaller deliverable still needs to be defined." : ""} ${names ? "Could we confirm the priorities and new deadlines after checking future capacity?" : "Could we agree on that smaller result before I commit?"}`;
 }
 
 export function conflictText(s: Scenario): string {
@@ -44,13 +47,135 @@ export function renegotiationRequest(s: Scenario): string {
     ...(c.requestContributes ? [s.request.name] : []),
   ].join(" and ");
   const context = `By ${DAYS[c.day]}, ${names} ${c.contributingCommitments.length + Number(c.requestContributes) === 1 ? "requires" : "require"} ${hours(c.due)}h, but I have ${hours(c.available)}h available — a ${hours(c.deficit)}h shortfall.`;
-  const attribution =
-    !a.existingFeasible && !c.requestContributes
-      ? ` This conflict exists before the ${DAYS[s.request.deadline]} request.`
-      : !a.existingFeasible
-        ? ` Existing work already has a shortfall by ${DAYS[a.existingFirstConflict!.day]}; the new request adds pressure.`
-        : "";
-  return `${context}${attribution} Could we discuss adjusting that work’s deadline or deliverable, or making more focused time available by ${DAYS[c.day]}? I’ll recheck every deadline before confirming ${s.request.name}.`;
+  const prior = !a.existingFeasible
+    ? c.requestContributes
+      ? "; existing work was already over capacity and this request adds pressure."
+      : "; this shortfall exists before the new request."
+    : "";
+  return `${prior ? context.slice(0, -1) + prior : context} Could we discuss that work’s deadline or free up time before ${DAYS[c.day]}? I’ll recheck every deadline before confirming ${s.request.name}.`;
+}
+
+// Factual records, not a second email. Always recompute; never trust a cached result.
+export function selectedConsequences(s: Scenario, plan: Option, scope = "") {
+  const o = simulate(s, plan.deferred, plan.requestUnits);
+  if (!o.result.fits) throw new Error("Consequences require a feasible plan.");
+  const moved = s.tasks.filter((t) => o.deferred.includes(t.id));
+  const smaller = o.requestUnits < s.request.units;
+  return {
+    plan: o,
+    moved,
+    smaller,
+    items: [
+      smaller
+        ? `${s.request.name}: ${hours(s.request.units)}h → ${hours(o.requestUnits)}h. A smaller result, not the original work done faster.`
+        : `${s.request.name}: the full ${hours(o.requestUnits)}h estimate stays, due ${DAYS[s.request.deadline]}.`,
+      ...moved.map(
+        (t) =>
+          `${t.name}: ${hours(t.units)}h moves beyond this week; it remains owed. A replacement for the ${DAYS[t.deadline]} deadline needs approval.`,
+      ),
+      ...(moved.length
+        ? []
+        : ["Existing commitments and their deadlines stay."]),
+      `${hours(o.result.capacity - o.result.total)}h remain unassigned this week.`,
+      ...(smaller
+        ? [
+            scope.trim()
+              ? `Proposed deliverable: ${scope.trim()}. Confirm the contents and estimate together.`
+              : "The smaller deliverable still needs to be defined and agreed.",
+          ]
+        : []),
+      ...(moved.length ? ["Future capacity has not been checked."] : []),
+    ],
+  };
+}
+
+export function proposalEvidence(s: Scenario, plan: Option, scope = "") {
+  const f = selectedConsequences(s, plan, scope);
+  return [
+    {
+      label: "Selected change",
+      value: f.moved.length
+        ? `Propose moving ${f.moved.map((t) => t.name).join(" and ")}${f.smaller ? " and reducing the new deliverable" : ""}.`
+        : f.smaller
+          ? "Reduce the new deliverable; retain existing commitments."
+          : "Retain all entered work and deadlines.",
+    },
+    {
+      label: "Assigned / usable",
+      value: `${hours(f.plan.result.total)}h / ${hours(f.plan.result.capacity)}h, after entered reserve.`,
+    },
+    {
+      label: "Deadlines checked",
+      value:
+        f.plan.result.checkpoints
+          .map(
+            (c) =>
+              `${DAYS[c.day]}: ${hours(c.due)}h due / ${hours(c.available)}h usable`,
+          )
+          .join("; ") + ".",
+    },
+    {
+      label: "Agreement needed",
+      value: `${f.moved.length ? "Replacement deadlines and priorities. " : "Scope and priority. "}${f.smaller ? "Define and approve the smaller result and its estimate. " : ""}No approval is assumed.`,
+    },
+    {
+      label: "Limits",
+      value:
+        "Fits the entered time constraints. Delivery quality, dependencies and future capacity are not verified.",
+    },
+  ];
+}
+
+export function blockedEvidence(s: Scenario) {
+  const a = analyzeConflicts(s),
+    c = a.firstConflict;
+  if (!c) throw new Error("No unresolved conflict.");
+  return [
+    {
+      label: "First violated deadline",
+      value: `${DAYS[c.day]}: ${hours(c.due)}h due / ${hours(c.available)}h usable — ${hours(c.deficit)}h shortfall.`,
+    },
+    {
+      label: "Existing work alone",
+      value: `${hours(c.existingDue)}h due by ${DAYS[c.day]}; ${hours(c.existingDeficit)}h shortfall at that date. ${a.existingFeasible ? "Existing deadlines fit without the request." : `Existing work first fails by ${DAYS[a.existingFirstConflict!.day]}.`}`,
+    },
+    {
+      label: "Relevant obligations",
+      value: [
+        ...c.contributingCommitments.map(
+          (t) =>
+            `${t.name}: ${hours(t.units)}h by ${DAYS[t.deadline]} (${t.movable ? "negotiable" : "fixed; permission required"})`,
+        ),
+        ...(c.requestContributes
+          ? [
+              `${s.request.name}: ${hours(s.request.units)}h by ${DAYS[s.request.deadline]} (new request)`,
+            ]
+          : []),
+      ].join("; "),
+    },
+    { label: "Cause", value: causalSummary(s, a) },
+    {
+      label: "Other failed checks",
+      value:
+        a.conflicts
+          .slice(1)
+          .map(
+            (x) =>
+              `${DAYS[x.day]}: ${hours(x.due)}h due / ${hours(x.available)}h usable`,
+          )
+          .join("; ") ||
+        "No later cumulative deadline fails under the current inputs.",
+    },
+    {
+      label: "Whole week",
+      value: `${hours(a.baseline.total)}h due / ${hours(a.baseline.capacity)}h usable. Weekly totals do not resolve an earlier conflict.`,
+    },
+    {
+      label: "Before confirming",
+      value:
+        "Negotiate relevant conditions, enter the revised inputs and recheck every weekday. No proposed repair or future capacity is verified.",
+    },
+  ];
 }
 
 export function detailedProposal(
@@ -58,68 +183,9 @@ export function detailedProposal(
   plan: Option | null,
   scope: string,
 ): string {
-  const analysis = analyzeConflicts(s);
   return plan
-    ? (!analysis.existingFeasible ? causalSummary(s, analysis) + " " : "") +
-        proposal(s, plan) +
-        (scope.trim() && plan.requestUnits < s.request.units
-          ? ` Proposed smaller deliverable: ${scope.trim()}.`
-          : "")
-    : conflictBreakdown(s, analysis);
-}
-
-export interface PracticeChoice {
-  id: string;
-  text: string;
-  checks: boolean[];
-  feedback: string;
-}
-export function practiceFor(
-  s: Scenario,
-  plan: Option | null,
-): { prompt: string; choices: PracticeChoice[] } {
-  const analysis = analyzeConflicts(s);
-  const cap = analysis.baseline.capacity;
-  const changes = plan ? shortProposal(s, plan) : renegotiationRequest(s);
-  const good: PracticeChoice = {
-    id: "grounded",
-    text: plan
-      ? `With ${hours(cap)} focused hours available, ${changes.startsWith("I ") ? changes : changes.charAt(0).toLowerCase() + changes.slice(1)}`
-      : changes,
-    checks: [true, true, true, true],
-    feedback: "You made the decision explicit.",
-  };
-  const choices: PracticeChoice[] = [
-    good,
-    {
-      id: "promise",
-      text: `Sure, I’ll complete the full ${s.request.name} plus anything else by ${DAYS[s.request.deadline]}.`,
-      checks: [false, false, false, false],
-      feedback: "That promises extra work the calculation has not checked.",
-    },
-    {
-      id: "constraint",
-      text:
-        (!plan || !analysis.existingFeasible) && analysis.firstConflict
-          ? `By ${DAYS[analysis.firstConflict.day]}, ${hours(analysis.firstConflict.due)}h are due with ${hours(analysis.firstConflict.available)}h available. I need you to sort this out.`
-          : `I have ${hours(cap)} focused hours available. You need to be more realistic about ${s.request.name}.`,
-      checks: [true, false, false, true],
-      feedback:
-        "The constraint is visible; add a specific change and invite agreement.",
-    },
-  ];
-  const offset =
-    [...s.request.name].reduce(
-      (n, c) => n + c.charCodeAt(0),
-      s.request.deadline,
-    ) % 3;
-  return {
-    prompt:
-      (!plan || !analysis.existingFeasible) && analysis.firstConflict
-        ? `“How can we address the work due by ${DAYS[analysis.firstConflict.day]} before confirming more?”`
-        : plan?.kind === "accept"
-          ? `“Could you add more to ${s.request.name} and still finish by ${DAYS[s.request.deadline]}?”`
-          : `“We still need the full ${s.request.name} by ${DAYS[s.request.deadline]}. What can we do?”`,
-    choices: [...choices.slice(offset), ...choices.slice(0, offset)],
-  };
+    ? proposalEvidence(s, plan, scope)
+        .map((f) => `${f.label}: ${f.value}`)
+        .join("\n")
+    : conflictBreakdown(s, analyzeConflicts(s));
 }

@@ -9,6 +9,16 @@ Start with clear context, compare verified trade-offs, inspect real task allocat
 - Primary track: Skills. Initial audience: US marketing/project coordinators aged 25–45.
 - Demand, pricing, and differentiation are hypotheses; this is a working product experiment, not a validated business.
 
+## V2.4 — human negotiation intelligence
+
+Checked decisions now produce shorter conditional messages with separate factual evidence. The selected-plan summary spells out obligations, approvals and reduced deliverables. A scope description can be explicitly applied to the draft without silently replacing manual edits.
+
+Optional two-step negotiation practice responds to the current scenario and the first answer. Comparable, plausible choices receive authored feedback with evidence for five criteria; this is not AI evaluation or proof of learning. Early deadline conflicts remain distinct from later request pressure.
+
+**118 tests pass** (103 preserved + 15 new), with clean install, typecheck and production build. Real browser evidence covers 48 state/width measurements at six widths with no horizontal overflow. Copy, manual edits, explicit scope updates and saved-decision recovery were exercised. Native keyboard delivery and a full screen-reader audit remain incomplete.
+
+See [audit](docs/V2_4_AUDIT.md), [Skills specification](docs/V2_4_SKILLS_SPEC.md), [communication](docs/V2_4_COMMUNICATION.md), [QA and screenshots](docs/V2_4_QA.md), and [pitch handoff](docs/V2_4_PITCH_HANDOFF.md). Rollback: `codex/yesif-v2-3-rollback` at `171b1d0cc1c645f5ecf58e186ab35e3025252ce0`. Full Block 07, Block 09 and Block 10 remain deferred. Demand, paid value, retention and skill improvement are unproven. No PDF deck is included.
+
 ## V2.3 — visual scheduling and causal decisions
 
 The weekly allocation is now a proportional five-day view, derived from the unchanged EDF allocator. It distinguishes real task hours, unassigned usable time and explicit reserve, with accessible details and cross-day task highlighting.
