@@ -90,3 +90,48 @@ export function writeNotebook(
     return "This browser could not save your decision. Copy your proposal before leaving.";
   }
 }
+
+// Compare persisted meaning, independent of object-key order, generated task IDs,
+// commitment order and the equivalent absent/zero reserve in legacy records.
+export function scenarioContent(s: Scenario): string {
+  const task = (t: Scenario["request"]) => [
+    t.name,
+    t.units,
+    t.deadline,
+    t.movable,
+    t.priority,
+  ];
+  return JSON.stringify({
+    capacity: s.capacity,
+    reserve: s.reserve ?? [0, 0, 0, 0, 0],
+    request: task(s.request),
+    tasks: s.tasks
+      .map(task)
+      .sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b))),
+  });
+}
+export function sameSavedContent(
+  a: Pick<SavedDecision, "scenario" | "plan" | "message" | "scope">,
+  b: Pick<SavedDecision, "scenario" | "plan" | "message" | "scope">,
+): boolean {
+  const moved = (d: typeof a) =>
+    JSON.stringify(
+      d.scenario.tasks
+        .map((t) => [
+          t.name,
+          t.units,
+          t.deadline,
+          t.movable,
+          t.priority,
+          d.plan.deferred.includes(t.id),
+        ])
+        .sort((x, y) => JSON.stringify(x).localeCompare(JSON.stringify(y))),
+    );
+  return (
+    scenarioContent(a.scenario) === scenarioContent(b.scenario) &&
+    moved(a) === moved(b) &&
+    a.plan.requestUnits === b.plan.requestUnits &&
+    a.message === b.message &&
+    (a.scope ?? "") === (b.scope ?? "")
+  );
+}

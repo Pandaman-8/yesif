@@ -47,11 +47,12 @@ export function renegotiationRequest(s: Scenario): string {
     ...(c.requestContributes ? [s.request.name] : []),
   ].join(" and ");
   const context = `By ${DAYS[c.day]}, ${names} ${c.contributingCommitments.length + Number(c.requestContributes) === 1 ? "requires" : "require"} ${hours(c.due)}h, but I have ${hours(c.available)}h available — a ${hours(c.deficit)}h shortfall.`;
-  const prior = !a.existingFeasible
-    ? c.requestContributes
-      ? "; existing work was already over capacity and this request adds pressure."
-      : "; this shortfall exists before the new request."
-    : "";
+  const prior =
+    c.existingDeficit > 0
+      ? c.requestContributes
+        ? `; ${hours(c.existingDeficit)}h of this shortfall already existed, and the request adds ${hours(c.additionalDeficit)}h.`
+        : "; this shortfall exists before the new request."
+      : `; the new request causes this early shortfall${a.existingFirstConflict ? `, while existing work separately falls short by ${hours(a.existingFirstConflict.deficit)}h on ${DAYS[a.existingFirstConflict.day]}` : ""}.`;
   return `${prior ? context.slice(0, -1) + prior : context} Could we discuss that work’s deadline or free up time before ${DAYS[c.day]}? I’ll recheck every deadline before confirming ${s.request.name}.`;
 }
 

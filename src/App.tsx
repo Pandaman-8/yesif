@@ -25,6 +25,7 @@ import {
   writeNotebook,
   type Notebook,
   type SavedDecision,
+  sameSavedContent,
 } from "./storage/scenarios";
 
 import { Landing } from "./components/Landing";
@@ -317,7 +318,7 @@ function App() {
       setDirty(true);
       setNotice("Draft reset to the current calculation.");
     };
-    if (messageEdited.current) guard(action);
+    if (messageEdited.current || !!savedId) guard(action);
     else action();
   }
   function submit(event: FormEvent) {
@@ -381,6 +382,22 @@ function App() {
   }
   function save() {
     if (!chosen) return;
+    const identical = notebook.decisions.find((d) =>
+      sameSavedContent(d, {
+        scenario,
+        plan: chosen,
+        message,
+        scope,
+      }),
+    );
+    if (!savedId && identical) {
+      setSavedId(identical.id);
+      setDirty(false);
+      setNotice(
+        "This exact decision is already saved. Its notes and outcome are unchanged.",
+      );
+      return;
+    }
     if (!savedId && notebook.decisions.length >= (unlocked ? 50 : 1)) {
       go("notebook");
       setNotice(

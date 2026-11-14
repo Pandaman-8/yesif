@@ -102,6 +102,19 @@ export function Proposal({
                   : "Still to be defined and agreed. A time fit does not verify a useful deliverable."}{" "}
                 Your message stays unchanged until you update it.
               </p>
+              <div
+                role={
+                  scope.trim() && !message.includes(scope.trim())
+                    ? "status"
+                    : undefined
+                }
+                aria-live="polite"
+                className="scope-sync-notice"
+              >
+                {scope.trim() && !message.includes(scope.trim())
+                  ? "This description is not included verbatim in your draft. Update the generated draft or edit the message yourself. Paraphrases are not checked."
+                  : ""}
+              </div>
               <button className="text-button" onClick={reset}>
                 Update generated draft with this scope
               </button>
