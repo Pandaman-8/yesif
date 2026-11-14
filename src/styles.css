@@ -3607,3 +3607,39 @@ button,
     transition: none !important;
   }
 }
+
+/* Causal evidence uses disclosures, separate from verified alternatives. */
+.causal-contributors,
+.causal-directions {
+  font-size: 14px;
+  margin-top: 12px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.causal-contributors summary,
+.causal-directions summary {
+  font-size: 14px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--green);
+}
+.causal-contributors ul,
+.causal-directions ul {
+  padding-left: 18px;
+  margin: 8px 0;
+}
+.causal-contributors li,
+.causal-directions li {
+  margin-bottom: 10px;
+}
+.causal-contributors p,
+.causal-directions p {
+  font-size: 14px;
+  margin: 6px 0;
+  line-height: 1.55;
+}
+.causal-directions {
+  border-top: 1px solid var(--line);
+}

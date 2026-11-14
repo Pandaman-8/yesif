@@ -1,4 +1,9 @@
 import {
+  analyzeConflicts,
+  causalSummary,
+  conflictBreakdown,
+} from "./conflicts";
+import {
   analyze,
   DAYS,
   hours,
@@ -31,12 +36,21 @@ export function conflictText(s: Scenario): string {
 }
 
 export function renegotiationRequest(s: Scenario): string {
-  if (analyze(s).baseline.fits) throw new Error("No unresolved conflict.");
-  const fixed = s.tasks
-    .filter((t) => !t.movable)
-    .map((t) => `${t.name} (${hours(t.units)}h, due ${DAYS[t.deadline]})`)
-    .join("; ");
-  return `I can’t commit to ${s.request.name} (${hours(s.request.units)}h) by ${DAYS[s.request.deadline]} under the current conditions. ${conflictText(s)}${fixed ? ` My fixed commitments include ${fixed}.` : ""} Could we agree on what must change — the deadline, deliverable, available time, or an existing commitment? I need to check the revised plan before confirming. No change has been agreed yet.`;
+  const a = analyzeConflicts(s);
+  const c = a.firstConflict;
+  if (!c) throw new Error("No unresolved conflict.");
+  const names = [
+    ...c.contributingCommitments.map((t) => t.name),
+    ...(c.requestContributes ? [s.request.name] : []),
+  ].join(" and ");
+  const context = `By ${DAYS[c.day]}, ${names} ${c.contributingCommitments.length + Number(c.requestContributes) === 1 ? "requires" : "require"} ${hours(c.due)}h, but I have ${hours(c.available)}h available — a ${hours(c.deficit)}h shortfall.`;
+  const attribution =
+    !a.existingFeasible && !c.requestContributes
+      ? ` This conflict exists before the ${DAYS[s.request.deadline]} request.`
+      : !a.existingFeasible
+        ? ` Existing work already has a shortfall by ${DAYS[a.existingFirstConflict!.day]}; the new request adds pressure.`
+        : "";
+  return `${context}${attribution} Could we discuss adjusting that work’s deadline or deliverable, or making more focused time available by ${DAYS[c.day]}? I’ll recheck every deadline before confirming ${s.request.name}.`;
 }
 
 export function detailedProposal(
@@ -44,12 +58,14 @@ export function detailedProposal(
   plan: Option | null,
   scope: string,
 ): string {
+  const analysis = analyzeConflicts(s);
   return plan
-    ? proposal(s, plan) +
+    ? (!analysis.existingFeasible ? causalSummary(s, analysis) + " " : "") +
+        proposal(s, plan) +
         (scope.trim() && plan.requestUnits < s.request.units
           ? ` Proposed smaller deliverable: ${scope.trim()}.`
           : "")
-    : renegotiationRequest(s);
+    : conflictBreakdown(s, analysis);
 }
 
 export interface PracticeChoice {
@@ -62,11 +78,14 @@ export function practiceFor(
   s: Scenario,
   plan: Option | null,
 ): { prompt: string; choices: PracticeChoice[] } {
-  const cap = analyze(s).baseline.capacity;
+  const analysis = analyzeConflicts(s);
+  const cap = analysis.baseline.capacity;
   const changes = plan ? shortProposal(s, plan) : renegotiationRequest(s);
   const good: PracticeChoice = {
     id: "grounded",
-    text: `With ${hours(cap)} focused hours available, ${changes.startsWith("I ") ? changes : changes.charAt(0).toLowerCase() + changes.slice(1)}`,
+    text: plan
+      ? `With ${hours(cap)} focused hours available, ${changes.startsWith("I ") ? changes : changes.charAt(0).toLowerCase() + changes.slice(1)}`
+      : changes,
     checks: [true, true, true, true],
     feedback: "You made the decision explicit.",
   };
@@ -80,7 +99,10 @@ export function practiceFor(
     },
     {
       id: "constraint",
-      text: `I have ${hours(cap)} focused hours available. You need to be more realistic about ${s.request.name}.`,
+      text:
+        (!plan || !analysis.existingFeasible) && analysis.firstConflict
+          ? `By ${DAYS[analysis.firstConflict.day]}, ${hours(analysis.firstConflict.due)}h are due with ${hours(analysis.firstConflict.available)}h available. I need you to sort this out.`
+          : `I have ${hours(cap)} focused hours available. You need to be more realistic about ${s.request.name}.`,
       checks: [true, false, false, true],
       feedback:
         "The constraint is visible; add a specific change and invite agreement.",
@@ -93,9 +115,11 @@ export function practiceFor(
     ) % 3;
   return {
     prompt:
-      plan?.kind === "accept"
-        ? `“Could you add more to ${s.request.name} and still finish by ${DAYS[s.request.deadline]}?”`
-        : `“We still need the full ${s.request.name} by ${DAYS[s.request.deadline]}. What can we do?”`,
+      (!plan || !analysis.existingFeasible) && analysis.firstConflict
+        ? `“How can we address the work due by ${DAYS[analysis.firstConflict.day]} before confirming more?”`
+        : plan?.kind === "accept"
+          ? `“Could you add more to ${s.request.name} and still finish by ${DAYS[s.request.deadline]}?”`
+          : `“We still need the full ${s.request.name} by ${DAYS[s.request.deadline]}. What can we do?”`,
     choices: [...choices.slice(offset), ...choices.slice(0, offset)],
   };
 }

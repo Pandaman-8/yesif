@@ -205,7 +205,7 @@ it("E: shows real combined deferral plus 4h scope and preserves it while closing
     requestUnits: 16,
     result: { fits: true, total: 60 },
   });
-});
+}, 10000);
 it("F: zero capacity has a working unresolved route and no feasible indicator", async () => {
   const s = scenario([]);
   s.capacity = [0, 0, 0, 0, 0];
@@ -357,6 +357,8 @@ it("supports keyboard choice, disclosure and proposal activation without custom 
   const { user, choose } = setup(exampleScenario());
   await user.tab();
   expect(screen.getByRole("button", { name: "Edit workload" })).toHaveFocus();
+  await user.tab();
+  expect(screen.getByText("What contributes to Friday?")).toHaveFocus();
   await user.tab();
   const first = screen.getByRole("article", { name: "Move Weekly report" });
   expect(

@@ -1,4 +1,6 @@
-import { useState, type RefObject } from "react";
+import { analyzeConflicts, causalSummary } from "../domain/conflicts";
+import { NegotiationDirections } from "./ConflictView";
+import { useMemo, useState, type RefObject } from "react";
 import { ArrowLeft, Bookmark, Copy, RotateCcw } from "lucide-react";
 import {
   hours,
@@ -36,8 +38,16 @@ export function Proposal({
   reset,
   compare,
 }: Props) {
+  const analysis = useMemo(() => analyzeConflicts(scenario), [scenario]);
   const [practice, setPractice] = useState<string | null>(null);
-  const exercise = practiceFor(scenario, chosen);
+  const exercise = useMemo(
+    () => practiceFor(scenario, chosen),
+    [scenario, chosen],
+  );
+  const explanation = useMemo(
+    () => detailedProposal(scenario, chosen, scope),
+    [scenario, chosen, scope],
+  );
   const answer = exercise.choices.find((c) => c.id === practice);
   return (
     <>
@@ -117,7 +127,7 @@ export function Proposal({
           </p>
           <details className="detailed-explanation">
             <summary>Detailed explanation from the calculation</summary>
-            <p>{detailedProposal(scenario, chosen, scope)}</p>
+            <p>{explanation}</p>
             <p className="fine-print">
               This explanation stays tied to the calculation. Your edits above
               do not change it.
@@ -147,10 +157,8 @@ export function Proposal({
         ) : (
           <aside className="conflict-summary">
             <h2>Conditions still need to change.</h2>
-            <p>
-              No feasible schedule has been established. Ask which constraint
-              can change, then return to your inputs and check again.
-            </p>
+            <p>{causalSummary(scenario, analysis)}</p>
+            <NegotiationDirections analysis={analysis} />
           </aside>
         )}
       </div>

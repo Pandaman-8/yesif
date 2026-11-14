@@ -14,3 +14,11 @@ Baseline: `c78be7e3b58b372f22a3b4f95d97100b3f29691b`; clean main; 80/80 tests pa
 No feasibility or EDF defect was found in this audit. Divisible work available from week start, no dependencies, and unchecked future capacity are model limitations, not bugs.
 
 Deferred: earliest starts, dependencies, multi-week optimization, calendars, automatic deadline transfers, AI coaching, full Skills redesign, commercial/payment changes. No PDF deck in this assignment. ShiftMargin is untouched.
+
+## Final status
+
+**Block 05 — FIXED:** proportional allocator-backed week, real option-specific plans, explicit reserve/free time, current task IDs, accessible text and selected-task highlighting. Checkpoint `46c0629` passed 87 tests and six-width visual review.
+
+**Block 06 — FIXED:** pure conflict comparison, re-simulated alternatives, relevant unverified directions, report-first unresolved messages, separate factual detail and minimal practice attribution fixes. Evidence: independent causal oracle, adversarial tests, integration tests and real browser scenarios.
+
+**PARTIALLY FIXED / validation limits:** native keyboard delivery in the browser harness was inconclusive; full screen-reader and human comprehension/timing validation are still pending. Eight-task legends and existing proposal columns can still be tall; no whole-app layout redesign is claimed.

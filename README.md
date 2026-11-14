@@ -9,6 +9,16 @@ Start with clear context, compare verified trade-offs, inspect real task allocat
 - Primary track: Skills. Initial audience: US marketing/project coordinators aged 25–45.
 - Demand, pricing, and differentiation are hypotheses; this is a working product experiment, not a validated business.
 
+## V2.3 — visual scheduling and causal decisions
+
+The weekly allocation is now a proportional five-day view, derived from the unchanged EDF allocator. It distinguishes real task hours, unassigned usable time and explicit reserve, with accessible details and cross-day task highlighting.
+
+A pure causal layer compares existing-only and full-workload deadline constraints. It separates preexisting conflicts from request-caused or additional pressure, rechecks every verified alternative, and keeps unverified negotiation directions distinct. Impossible-plan messages now name the work behind the binding deadline, with separate factual evidence.
+
+**103 tests pass**, including the unchanged 500 engine and 1,000 allocation cases, plus 500 new independently checked causal scenarios. Real browser review covers 44 state/width combinations; native keyboard and full screen-reader verification remain incomplete.
+
+See [audit](docs/V2_3_AUDIT.md), [scheduling contract](docs/V2_3_SCHEDULING.md), [causal engine](docs/V2_3_CAUSAL_ENGINE.md), [QA](docs/V2_3_QA.md), and [pitch handoff](docs/V2_3_PITCH_HANDOFF.md). Rollback: `codex/yesif-v2-2-rollback`. No PDF pitch deck is included in this release.
+
 ## V2.2 — visual system and results
 
 Results now separate **fits**, **checked alternatives**, and **unresolved conditions**. A fitting request gets one confirmation action and exact unassigned hours. Conflicting plans show the first missed deadline, separately from weekly totals, and identify conflicts already present in existing work. When no allowed combination fits, only the renegotiation route is prominent.

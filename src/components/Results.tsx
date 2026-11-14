@@ -1,5 +1,10 @@
-import { startingOptions } from "../domain/options";
-import { useState, type RefObject } from "react";
+import {
+  analyzeConflicts,
+  causalSummary,
+  simulationConstraint,
+} from "../domain/conflicts";
+import { ConflictContributors, NegotiationDirections } from "./ConflictView";
+import { useMemo, useState, type RefObject } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -9,14 +14,13 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import {
-  analyze,
   DAYS,
   hours,
   simulate,
   type Option,
   type Scenario,
 } from "../domain/engine";
-import { conflictText, DeadlineTable } from "./Shared";
+import { DeadlineTable } from "./Shared";
 import { AllocationView, ChangesView } from "./AllocationView";
 interface Props {
   scenario: Scenario;
@@ -48,19 +52,17 @@ export function Results({
   edit,
   unresolved,
 }: Props) {
-  const output = analyze(scenario);
+  const output = useMemo(() => analyzeConflicts(scenario), [scenario]);
   const baseline = output.baseline;
   const firstConflict = baseline.checkpoints.find((c) => c.deficit > 0);
-  const existingConflict = output.existing.checkpoints.find(
-    (c) => c.deficit > 0,
-  );
+  const existingConflict = output.existingFirstConflict;
   const possible = simulate(
     scenario,
     scenario.tasks.filter((t) => t.movable).map((t) => t.id),
     1,
   ).result.fits;
   const [advanced, setAdvanced] = useState(false);
-  const options = startingOptions(scenario);
+  const options = output.verifiedAlternatives.map((a) => a.plan);
   const deadlineLeads = !!firstConflict && (!possible || firstConflict.day < 4);
   const title = baseline.fits
     ? "This request fits your estimated week."
@@ -182,17 +184,20 @@ export function Results({
                     Spare time later in the week cannot repair this deadline.
                   </p>
                 )}
+                {!existingConflict && (
+                  <p className="result-caveat">
+                    {causalSummary(scenario, output)}
+                  </p>
+                )}
                 {existingConflict && (
                   <p className="existing-conflict">
                     <strong>
                       Your existing commitments already have a conflict.
-                    </strong>
-                    {existingConflict.day !== firstConflict.day ||
-                    existingConflict.deficit !== firstConflict.deficit
-                      ? ` Without the new request: ${hours(existingConflict.deficit)}h short by ${DAYS[existingConflict.day]}.`
-                      : " This shortfall exists before the new request."}
+                    </strong>{" "}
+                    {causalSummary(scenario, output)}
                   </p>
                 )}
+                <ConflictContributors analysis={output} />
               </>
             )
           )}
@@ -235,13 +240,25 @@ export function Results({
           <div>
             <h2>Ask to change the conditions.</h2>
             <p>
-              The allowed task moves and scope cuts cannot make this plan fit. A
-              deadline, available time or a protected commitment needs to be
-              reconsidered.
+              No verified solution under these conditions. The allowed moves and
+              scope cuts still leave a deadline conflict.
             </p>
             <p className="result-caveat">
-              These are discussion points, not a checked new plan.
+              {output.firstConflict && (
+                <>
+                  Address work or usable time by{" "}
+                  {DAYS[output.firstConflict.day]}.{" "}
+                  {output.firstConflict.contributingCommitments
+                    .map((t) => t.name)
+                    .join("; ")}
+                  {output.requestContributesToFirstConflict
+                    ? `${output.firstConflict.contributingCommitments.length ? "; " : ""}${scenario.request.name}`
+                    : ""}
+                  .
+                </>
+              )}
             </p>
+            <NegotiationDirections analysis={output} />
           </div>
           <button className="button primary" onClick={unresolved}>
             Prepare a renegotiation request <ArrowRight size={16} />
@@ -393,10 +410,7 @@ export function Results({
                     role="status"
                     aria-atomic="true"
                   >
-                    {simulation.result.fits
-                      ? `${hours(simulation.result.capacity - simulation.result.total)}h unassigned. Fits every weekday deadline; changes still need agreement.`
-                      : conflictText(simulation.result) +
-                        " Change a negotiable commitment or reduce the deliverable before using this plan."}
+                    {simulationConstraint(scenario, simulation)}
                   </p>
                 </div>
                 <button

@@ -58,7 +58,7 @@ export function AllocationView({
       <ol className="week-days" aria-label="Calculated weekday allocation">
         {allocation.days.map((day) => {
           const entered = day.capacity + day.reserve;
-          const description = `${DAYS[day.day]}: ${hours(entered)}h entered, ${hours(day.capacity)}h usable. ${day.assignments.map((a) => `${tasks.find((t) => t.id === a.taskId)!.name}${a.taskId === scenario.request.id ? " (new request)" : ""}: ${hours(a.units)}h`).join("; ")}. ${hours(day.available)}h unassigned; ${hours(day.reserve)}h reserved.`;
+          const description = `${DAYS[day.day]}: ${hours(entered)}h entered, ${hours(day.capacity)}h usable. ${day.assignments.map((a) => `${tasks.find((t) => t.id === a.taskId)!.name}${a.taskId === scenario.request.id ? " (new request)" : ""}: ${hours(a.units)}h`).join("; ") || "No work assigned"}. ${hours(day.available)}h unassigned; ${hours(day.reserve)}h reserved.`;
           return (
             <li key={day.day} data-day={day.day}>
               <div className="week-day-label">
