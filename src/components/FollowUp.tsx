@@ -3,14 +3,18 @@ import { simulate } from "../domain/engine";
 import type { SavedDecision } from "../storage/scenarios";
 export function FollowUp({ decision: d }: { decision: SavedDecision }) {
   const text = (() => {
+    const note = d.notes.trim();
+    const noteSentence = note
+      ? note + (/[.!?]$/.test(note) ? "" : ".")
+      : "[add the exact terms we agreed].";
     const condition = shortProposal(
       d.scenario,
       simulate(d.scenario, d.plan.deferred, d.plan.requestUnits),
       d.scope,
     );
     return d.outcome === "agreed"
-      ? `Thanks for discussing ${d.scenario.request.name}. My understanding is: ${d.notes.trim() || "[add the exact terms we agreed]"}. Could you confirm that I captured this correctly? I’ll check the updated timing before committing to any further changes.`
-      : `Following up on ${d.scenario.request.name}: ${condition}${d.notes.trim() ? ` My note for this conversation: ${d.notes.trim()}.` : ""} Could we confirm the next step?`;
+      ? `Thanks for discussing ${d.scenario.request.name}. My understanding is: ${noteSentence} Could you confirm that I captured this correctly? I’ll check the updated timing before committing to any further changes.`
+      : `Following up on ${d.scenario.request.name}: ${condition}${note ? ` My note for this conversation: ${noteSentence}` : ""} Could we confirm the next step?`;
   })();
   return (
     <details className="follow-up">
