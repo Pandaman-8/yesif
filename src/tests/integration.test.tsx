@@ -3,6 +3,8 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { STORAGE_KEY } from "../storage/scenarios";
+// These two long click-through flows exceeded 5s even on the unchanged baseline
+// in the local environment; their assertions stay intact with a 15s budget.
 // V1 scenarios retained; V2 intentionally places manual controls behind disclosure.
 async function openSimulator(user: ReturnType<typeof userEvent.setup>) {
   const toggle = screen.queryByRole("button", {
@@ -16,7 +18,7 @@ describe("complete product flows", () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(
-      screen.getByRole("button", { name: "Try a real example" }),
+      screen.getByRole("button", { name: "Explore an example" }),
     );
     await openSimulator(user);
     expect(
@@ -38,12 +40,12 @@ describe("complete product flows", () => {
         }) as HTMLTextAreaElement
       ).value,
     ).toContain("smaller, 2-hour version");
-  });
+  }, 15000);
   it("simulates an example, edits and copies the proposal, practices, saves and reopens", async () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(
-      screen.getByRole("button", { name: "Try a real example" }),
+      screen.getByRole("button", { name: "Explore an example" }),
     );
     await openSimulator(user);
     expect(
@@ -83,21 +85,20 @@ describe("complete product flows", () => {
     expect(screen.getByRole("textbox", { name: "Your proposal" })).toHaveValue(
       "Can we agree on the report date?",
     );
-  });
+  }, 15000);
   it("validates custom inputs, computes new data and removes stale results after edits", async () => {
     const user = userEvent.setup();
     render(<App />);
-    await user.click(
-      screen.getByRole("button", { name: "Use my own workload" }),
-    );
-    await user.click(screen.getByRole("button", { name: "Find my options" }));
+    await user.click(screen.getByRole("button", { name: "Plan my workload" }));
+    await user.click(screen.getByRole("button", { name: "Check my week" }));
     await openSimulator(user);
     expect(screen.getByRole("alert")).toHaveTextContent("New request");
     await user.type(screen.getByLabelText("New request name"), "Client brief");
+    await user.type(screen.getByLabelText("New request hours"), "1");
     const mon = screen.getByLabelText("Monday focused hours");
     await user.clear(mon);
     await user.type(mon, "2");
-    await user.click(screen.getByRole("button", { name: "Find my options" }));
+    await user.click(screen.getByRole("button", { name: "Check my week" }));
     await openSimulator(user);
     expect(
       screen.getByRole("heading", { name: "There’s room for this yes." }),
@@ -115,7 +116,7 @@ describe("complete product flows", () => {
     const hrs = screen.getByLabelText("New request hours");
     await user.clear(hrs);
     await user.type(hrs, "4");
-    await user.click(screen.getByRole("button", { name: "Find my options" }));
+    await user.click(screen.getByRole("button", { name: "Check my week" }));
     await openSimulator(user);
     expect(
       screen.getByRole("button", { name: "Use this plan" }),
@@ -134,7 +135,7 @@ describe("complete product flows", () => {
     ).toBeDisabled();
     expect(screen.getByRole("status")).toHaveTextContent("No payment");
     await user.click(screen.getByRole("button", { name: "Try the example" }));
-    await user.click(screen.getByRole("button", { name: "Find my options" }));
+    await user.click(screen.getByRole("button", { name: "Check my week" }));
     await openSimulator(user);
     await user.click(screen.getByLabelText("Defer Weekly report"));
     await user.click(screen.getByRole("button", { name: "Use this plan" }));
@@ -153,7 +154,7 @@ describe("complete product flows", () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(
-      screen.getByRole("button", { name: "Try a real example" }),
+      screen.getByRole("button", { name: "Explore an example" }),
     );
     await openSimulator(user);
     await user.click(screen.getByLabelText("Defer Weekly report"));
@@ -168,7 +169,7 @@ describe("complete product flows", () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(
-      screen.getByRole("button", { name: "Try a real example" }),
+      screen.getByRole("button", { name: "Explore an example" }),
     );
     await openSimulator(user);
     await user.click(screen.getByLabelText("Defer Weekly report"));

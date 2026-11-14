@@ -6,7 +6,7 @@ import { DRAFT_KEY } from "../storage/draft";
 import { STORAGE_KEY } from "../storage/scenarios";
 
 async function demo(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole("button", { name: "Try a real example" }));
+  await user.click(screen.getByRole("button", { name: "Explore an example" }));
 }
 async function chooseFirst(user: ReturnType<typeof userEvent.setup>) {
   await user.click(
@@ -45,10 +45,11 @@ it("introduces the demo, puts options first and exposes a concrete allocation", 
 it("keeps an impossible request distinct from a feasible proposal and saves its local draft", async () => {
   const user = userEvent.setup();
   render(<App />);
-  await user.click(screen.getByRole("button", { name: "Use my own workload" }));
+  await user.click(screen.getByRole("button", { name: "Plan my workload" }));
   await user.type(screen.getByLabelText("New request name"), "Board brief");
+  await user.type(screen.getByLabelText("New request hours"), "1");
   await user.selectOptions(screen.getByLabelText("New request deadline"), "1");
-  await user.click(screen.getByRole("button", { name: "Find my options" }));
+  await user.click(screen.getByRole("button", { name: "Check my week" }));
   await user.click(
     screen.getByRole("button", { name: "Prepare a renegotiation request" }),
   );
@@ -70,20 +71,20 @@ it("keeps an impossible request distinct from a feasible proposal and saves its 
 it("protects reset: cancel keeps partial inputs, explicit draft survives remount, discard replaces them", async () => {
   const user = userEvent.setup();
   const view = render(<App />);
-  await user.click(screen.getByRole("button", { name: "Use my own workload" }));
+  await user.click(screen.getByRole("button", { name: "Plan my workload" }));
   await user.type(
     screen.getByLabelText("New request name"),
     "My partial request",
   );
   await user.clear(screen.getByLabelText("Monday focused hours"));
-  await user.click(screen.getByRole("button", { name: "Reset example" }));
+  await user.click(screen.getByRole("button", { name: "Load example" }));
   const dialog = screen.getByRole("dialog");
   expect(within(dialog).getByRole("button", { name: "Cancel" })).toHaveFocus();
   await user.click(within(dialog).getByRole("button", { name: "Cancel" }));
   expect(screen.getByLabelText("New request name")).toHaveValue(
     "My partial request",
   );
-  await user.click(screen.getByRole("button", { name: "Reset example" }));
+  await user.click(screen.getByRole("button", { name: "Load example" }));
   await user.click(
     screen.getByRole("button", { name: "Save draft and continue" }),
   );
@@ -98,7 +99,7 @@ it("protects reset: cancel keeps partial inputs, explicit draft survives remount
   );
   expect(screen.getByLabelText("Monday focused hours")).toHaveValue(null);
   await user.type(screen.getByLabelText("New request name"), " changed");
-  await user.click(screen.getByRole("button", { name: "Reset example" }));
+  await user.click(screen.getByRole("button", { name: "Load example" }));
   await user.click(screen.getByRole("button", { name: "Discard changes" }));
   expect(screen.getByLabelText("New request name")).toHaveValue(
     "Urgent presentation",
@@ -107,8 +108,8 @@ it("protects reset: cancel keeps partial inputs, explicit draft survives remount
 it("does not prompt for untouched inputs and warns about dirty reloads", async () => {
   const user = userEvent.setup();
   render(<App />);
-  await user.click(screen.getByRole("button", { name: "Use my own workload" }));
-  await user.click(screen.getByRole("button", { name: "Reset example" }));
+  await user.click(screen.getByRole("button", { name: "Plan my workload" }));
+  await user.click(screen.getByRole("button", { name: "Load example" }));
   expect(screen.queryByRole("dialog")).toBeNull();
   await user.type(screen.getByLabelText("New request name"), " extra");
   const event = new Event("beforeunload", { cancelable: true });
@@ -206,17 +207,15 @@ it("validates explicit reserve and reflects a smaller deliverable in the proposa
   render(<App />);
   await demo(user);
   await user.click(screen.getByRole("button", { name: "Edit workload" }));
-  await user.click(
-    screen.getByText("Time I want to keep available (optional reserve)"),
-  );
+  await user.click(screen.getByText("Keep some time uncommitted"));
   const reserve = screen.getByLabelText("Monday reserved hours");
   await user.clear(reserve);
   await user.type(reserve, "4");
-  await user.click(screen.getByRole("button", { name: "Find my options" }));
+  await user.click(screen.getByRole("button", { name: "Check my week" }));
   expect(screen.getByRole("alert")).toHaveTextContent("Reserve");
   await user.clear(reserve);
   await user.type(reserve, "1");
-  await user.click(screen.getByRole("button", { name: "Find my options" }));
+  await user.click(screen.getByRole("button", { name: "Check my week" }));
   await user.click(
     screen.getByRole("button", { name: /Explore your own trade-off/ }),
   );
@@ -280,7 +279,7 @@ it("guards manual proposal text and disables stale proposals after simulation ed
   await user.click(screen.getByRole("button", { name: "Discard changes" }));
   expect(
     screen.getByRole("button", { name: /Make your proposal/ }),
-  ).toBeDisabled();
+  ).toHaveAttribute("aria-disabled", "true");
   expect(screen.getByRole("slider")).toHaveAttribute(
     "aria-valuetext",
     "4.75 hours",
@@ -290,9 +289,9 @@ it("guards manual proposal text and disables stale proposals after simulation ed
 it("does not prompt when an edit is fully reverted to the clean input state", async () => {
   const user = userEvent.setup();
   render(<App />);
-  await user.click(screen.getByRole("button", { name: "Use my own workload" }));
+  await user.click(screen.getByRole("button", { name: "Plan my workload" }));
   await user.type(screen.getByLabelText("New request name"), "Temporary");
   await user.clear(screen.getByLabelText("New request name"));
-  await user.click(screen.getByRole("button", { name: "Reset example" }));
+  await user.click(screen.getByRole("button", { name: "Load example" }));
   expect(screen.queryByRole("dialog")).toBeNull();
 });

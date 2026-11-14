@@ -9,6 +9,18 @@ Start with clear context, compare verified trade-offs, inspect real task allocat
 - Primary track: Skills. Initial audience: US marketing/project coordinators aged 25–45.
 - Demand, pricing, and differentiation are hypotheses; this is a working product experiment, not a validated business.
 
+## V2.1 — landing and input
+
+The primary **Plan my workload** action opens an empty personal request; **Explore an example** runs the original sample through the real engine. The landing preview calculates the sample's overload, named proposed move and feasible result.
+
+Input separates new work, usable focused time and existing commitments. Explicit weekday quick-entry remains editable per day; reserve is optional and visibly subtracted. Completed commitments have a compact review state with timing flexibility always visible, and an Edit action for effort, deadline and priority. New estimates are blank until entered. Start over and Load example use the existing save/discard/cancel guard.
+
+Verification: clean install, typecheck, **66 tests**, production build and whitespace check passed. Existing domain, storage, results/proposal logic, dependencies and deployment workflow are unchanged. [Observed browser/layout evidence](docs/V2_1_QA.json) covers 375, 390, 768, 900, 1280 and 1440 px without horizontal overflow, plus real 10/15, 18/15 and early-deadline 8/15 scenarios. At 900 px the primary CTA moved from about y=647 to y=461; the three-commitment form decreased from 1,979 to 1,650 px. At 375 px the form is still long (2,182 px versus V2's 2,194), but timing controls are now visible and completed cards are compact.
+
+Screenshots were unavailable due to browser capture timeout. DOM/layout checks and automated focus tests do not establish human comprehension, visual polish or full assistive-technology compatibility. A repeat first-time-user check and visual acceptance remain open. Demand and payments remain unvalidated.
+
+Rollback: `codex/yesif-v2-rollback` preserves `dc326f1ac7523c960efd5030466b79782581237d`. Restore that code with a reviewed revert/new commit and a successful deployment; do not force-push over later work.
+
 ## Run locally
 
 Node 22.22+ and npm 10+:

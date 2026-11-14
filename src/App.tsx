@@ -6,13 +6,11 @@ import {
   Check,
   Plus,
   X,
-  ShieldCheck,
   LockKeyhole,
   BookOpen,
   Download,
 } from "lucide-react";
 import {
-  DAYS,
   analyze,
   simulate,
   emptyScenario,
@@ -29,6 +27,7 @@ import {
   type SavedDecision,
 } from "./storage/scenarios";
 
+import { Landing } from "./components/Landing";
 import { Workload } from "./components/Workload";
 import { Results } from "./components/Results";
 import { Proposal } from "./components/Proposal";
@@ -69,6 +68,7 @@ function App() {
   const [notebook, setNotebook] = useState<Notebook>(initial.notebook);
   const [unlocked, setUnlocked] = useState(false);
   const [demo, setDemo] = useState(false);
+  const [inputRevision, setInputRevision] = useState(0);
   const [unresolved, setUnresolved] = useState(false);
   const [scope, setScope] = useState("");
   const [dirty, setDirty] = useState(false);
@@ -157,7 +157,10 @@ function App() {
   }
   function start(example: boolean) {
     guard(() => {
-      change(example ? exampleScenario() : emptyScenario());
+      setInputRevision((value) => value + 1);
+      const next = example ? exampleScenario() : emptyScenario();
+      if (!example) next.request.units = NaN;
+      change(next);
       setDemo(example);
       setDirty(false);
       setErrors([]);
@@ -315,7 +318,12 @@ function App() {
     const problems = validate(scenario);
     setErrors(problems);
     if (problems.length) {
-      setTimeout(() => document.getElementById("form-errors")?.focus(), 0);
+      setTimeout(() => {
+        const first = document.querySelector<HTMLElement>(
+          'form [aria-invalid="true"]',
+        );
+        (first ?? document.getElementById("form-errors"))?.focus();
+      }, 0);
       return;
     }
     go("results");
@@ -472,9 +480,7 @@ function App() {
           >
             yesif<span>.</span>
           </button>
-          <span className="brand-note">
-            A little clarity before you commit.
-          </span>
+          <span className="brand-note">Every yes needs an if.</span>
           <nav aria-label="Main navigation">
             <button className="nav-link" onClick={() => go("notebook")}>
               <BookOpen size={16} /> <span>My decisions</span>
@@ -482,9 +488,11 @@ function App() {
                 <span className="count">{notebook.decisions.length}</span>
               )}
             </button>
-            <button className="nav-kit" onClick={() => go("notebook")}>
-              The negotiation kit <ArrowUpRight size={14} />
-            </button>
+            {page !== "landing" && (
+              <button className="nav-kit" onClick={() => go("notebook")}>
+                The negotiation kit <ArrowUpRight size={14} />
+              </button>
+            )}
           </nav>
         </div>
       </header>
@@ -620,141 +628,7 @@ function App() {
                 </button>
               </div>
             )}
-            <section className="hero wrap">
-              <div className="hero-copy">
-                <p className="eyebrow">
-                  <span className="little-line" /> FOR THE NEXT “QUICK FAVOR”
-                </p>
-                <h1 ref={heading} tabIndex={-1}>
-                  Your week is full.
-                  <br />
-                  Your answer
-                  <br />
-                  has <em>options.</em>
-                </h1>
-                <p className="hero-description">
-                  A new request, an already full week. See which commitments can
-                  change, check how the work fits each day, and prepare a clear
-                  proposal for your manager.
-                </p>
-                <div className="hero-actions">
-                  <button
-                    className="button primary"
-                    onClick={() => start(true)}
-                  >
-                    Try a real example <ArrowRight size={18} />
-                  </button>
-                  <button className="text-button" onClick={() => start(false)}>
-                    Use my own workload <ArrowUpRight size={16} />
-                  </button>
-                </div>
-                <div className="trust-line">
-                  <ShieldCheck size={15} />
-                  <span>No account. Private on your device. Free to try.</span>
-                </div>
-              </div>
-              <div
-                className="hero-visual"
-                aria-label="Illustrative example: 18 hours of work, 15 available. Propose deferring a five-hour report to make room."
-              >
-                <div className="paper-top">
-                  <span className="paper-dot" />
-                  <span>A WEEK WITH A LITTLE TOO MUCH IN IT</span>
-                  <span className="paper-number">01 / 03</span>
-                </div>
-                <div className="week-paper">
-                  <div className="paper-title">
-                    <span>Your week, at a glance</span>
-                    <span className="small-pill">15h available</span>
-                  </div>
-                  <div className="mini-days">
-                    {DAYS.map((d) => (
-                      <span key={d}>{d.slice(0, 3).toUpperCase()}</span>
-                    ))}
-                  </div>
-                  <div className="week-block qa">
-                    Launch QA <span>5h</span>
-                  </div>
-                  <div className="week-block updates">
-                    Customer updates <span>3h</span>
-                  </div>
-                  <div className="week-block report">
-                    Weekly report <span>5h</span>
-                  </div>
-                  <div className="week-block request">
-                    ↳ The new presentation <span>+5h</span>
-                  </div>
-                  <div className="paper-total">
-                    <span>A full yes would mean</span>
-                    <strong>
-                      18h <span>/ 15h</span>
-                    </strong>
-                  </div>
-                </div>
-                <div className="if-note">
-                  <div className="note-icon">
-                    <ArrowUpRight size={23} />
-                  </div>
-                  <div>
-                    <p>THERE’S ANOTHER WAY TO SAY YES.</p>
-                    <blockquote>
-                      “Yes, if we move
-                      <br />
-                      the weekly report.”
-                    </blockquote>
-                    <span>
-                      One clear trade-off. A conversation you can have.
-                    </span>
-                  </div>
-                </div>
-                <span className="visual-caption">
-                  A fictional week. A very familiar situation.
-                </span>
-              </div>
-            </section>
-            <section className="how wrap">
-              <div className="how-intro">
-                <p className="eyebrow">
-                  LESS GUESSWORK. MORE GROUND TO STAND ON.
-                </p>
-                <h2>
-                  From “I’ll try”
-                  <br />
-                  to “here’s how.”
-                </h2>
-              </div>
-              <div className="how-step">
-                <span>01</span>
-                <h3>See the whole picture</h3>
-                <p>
-                  Add your available hours and commitments. We check the
-                  deadlines, too.
-                </p>
-              </div>
-              <div className="how-step">
-                <span>02</span>
-                <h3>Choose what can change</h3>
-                <p>
-                  Compare specific trade-offs. Keep your fixed commitments
-                  protected.
-                </p>
-              </div>
-              <div className="how-step">
-                <span>03</span>
-                <h3>Make a clear proposal</h3>
-                <p>
-                  Leave with an editable message and a little practice for the
-                  conversation.
-                </p>
-              </div>
-            </section>
-            <section className="landing-note wrap">
-              <span>EVERY YES NEEDS AN IF.</span>
-              <p>You bring the context. We help you see the choices.</p>
-              <button className="text-button" onClick={() => start(true)}>
-                Find your if <ArrowRight size={16} />
-              </button>
-            </section>
+            <Landing heading={heading} start={start} />
           </>
         ) : (
           <div className="workspace wrap">
@@ -771,7 +645,7 @@ function App() {
                     aria-current={page === id ? "step" : undefined}
                   >
                     <button
-                      disabled={
+                      aria-disabled={
                         id === "results"
                           ? !output
                           : id === "proposal"
@@ -785,29 +659,38 @@ function App() {
                             ? "Choose an option or prepare a renegotiation request first"
                             : label
                       }
-                      onClick={() => go(id as Page)}
+                      onClick={() => {
+                        if (id === "results" && !output) {
+                          setNotice(
+                            "Add a request and valid daily hours, then check your week.",
+                          );
+                        } else if (
+                          id === "proposal" &&
+                          !(chosen || unresolved)
+                        ) {
+                          setNotice(
+                            "Choose an option from your results or prepare a renegotiation request first.",
+                          );
+                        } else go(id as Page);
+                      }}
                     >
                       <span>{i + 1}</span>
                       {label}
                     </button>
-                    {id === "results" && !output && (
-                      <small>Complete valid inputs first</small>
-                    )}
-                    {id === "proposal" && !(chosen || unresolved) && (
-                      <small>Choose a plan or request a change</small>
-                    )}
                   </li>
                 ))}
               </ol>
             )}
             {page === "workload" && (
               <Workload
+                key={inputRevision}
                 scenario={scenario}
                 change={change}
                 heading={heading}
                 errors={errors}
                 submit={submit}
-                reset={() => start(true)}
+                reset={() => start(false)}
+                loadExample={() => start(true)}
               />
             )}
             {page === "results" && output && simulation && (

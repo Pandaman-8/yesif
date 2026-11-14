@@ -1,0 +1,194 @@
+{
+  "baseline": "dc326f1ac7523c960efd5030466b79782581237d",
+  "scope": [
+    "Landing",
+    "Custom workload input"
+  ],
+  "checks": {
+    "install": "pass",
+    "typecheck": "pass",
+    "tests": "66 passed across 7 files; 57 existing plus 9 new UI cases",
+    "build": "pass",
+    "diffCheck": "pass",
+    "protectedFiles": "No changes to domain, storage, Results, Proposal, workflow, dependencies"
+  },
+  "browser": {
+    "target": "http://localhost:5176/yesif/",
+    "screenshots": "Unavailable: Page.captureScreenshot timed out. No screenshots or visual sign-off claimed.",
+    "cases": {
+      "A": "Primary personal route; blank required estimate; secondary real example",
+      "B": "Manually entered 5h request + 5h report, applied 3h/day; 10/15 feasible; edit preserved inputs",
+      "C": "Real demo 18/15; calculated report deferral 13/15; independently entered equivalent also integration-tested",
+      "D": "Manually edited 7h fixed Tuesday report + 1h Friday request, 3h/day; 8/15 weekly and Tuesday 1h deficit; no feasible option",
+      "E": "Native replacement dialog focused Cancel; cancel retained 5h request; explicit discard loaded example; partial draft, navigation and failed-storage protection covered in integration tests"
+    },
+    "errors": [],
+    "landing": [
+      {
+        "client": 360,
+        "headingTop": 143.43014526367188,
+        "primaryBottom": 485.0395202636719,
+        "primaryTop": 433.3520202636719,
+        "scroll": 360,
+        "width": 375
+      },
+      {
+        "client": 375,
+        "headingTop": 142.12509155273438,
+        "primaryBottom": 483.7344665527344,
+        "primaryTop": 432.0469665527344,
+        "scroll": 375,
+        "width": 390
+      },
+      {
+        "client": 753,
+        "headingTop": 181.2718505859375,
+        "primaryBottom": 562.8187255859375,
+        "primaryTop": 511.1312255859375,
+        "scroll": 753,
+        "width": 768
+      },
+      {
+        "client": 885,
+        "headingTop": 181.09375,
+        "primaryBottom": 512.96875,
+        "primaryTop": 461.28125,
+        "scroll": 885,
+        "width": 900
+      },
+      {
+        "client": 1265,
+        "headingTop": 197.09375,
+        "primaryBottom": 474.5,
+        "primaryTop": 422.8125,
+        "scroll": 1265,
+        "width": 1280
+      },
+      {
+        "client": 1425,
+        "headingTop": 197.09375,
+        "primaryBottom": 474.5,
+        "primaryTop": 422.8125,
+        "scroll": 1425,
+        "width": 1440
+      }
+    ],
+    "inputWithThreeCompletedCommitments": [
+      {
+        "cards": [
+          222.671875,
+          199.578125,
+          220.578125
+        ],
+        "client": 360,
+        "form": 2182.40625,
+        "scroll": 360,
+        "width": 375
+      },
+      {
+        "cards": [
+          222.671875,
+          199.578125,
+          220.578125
+        ],
+        "client": 375,
+        "form": 2161.40625,
+        "scroll": 375,
+        "width": 390
+      },
+      {
+        "cards": [
+          176.578125,
+          176.578125,
+          176.578125
+        ],
+        "client": 753,
+        "form": 1671.3125,
+        "scroll": 753,
+        "width": 768
+      },
+      {
+        "cards": [
+          176.578125,
+          176.578125,
+          176.578125
+        ],
+        "client": 885,
+        "form": 1649.625,
+        "scroll": 885,
+        "width": 900
+      },
+      {
+        "cards": [
+          176.578125,
+          176.578125,
+          176.578125
+        ],
+        "client": 1265,
+        "form": 1649.625,
+        "scroll": 1265,
+        "width": 1280
+      },
+      {
+        "cards": [
+          176.578125,
+          176.578125,
+          176.578125
+        ],
+        "client": 1425,
+        "form": 1649.625,
+        "scroll": 1425,
+        "width": 1440
+      }
+    ],
+    "baselineInput": [
+      {
+        "commitments": [
+          268.96875,
+          268.96875,
+          249.96875
+        ],
+        "form": 2194.421875,
+        "hiddenTiming": [
+          true,
+          true,
+          true
+        ],
+        "width": 375
+      },
+      {
+        "commitments": [
+          272.96875,
+          272.96875,
+          253.96875
+        ],
+        "form": 1978.5625,
+        "hiddenTiming": [
+          true,
+          true,
+          true
+        ],
+        "width": 900
+      }
+    ],
+    "baselineLandingAt900": {
+      "headingTop": 322.25,
+      "primaryTop": 647.0625
+    },
+    "limits": [
+      "No screenshot comparison",
+      "No new human participant test or 10-second comprehension measurement",
+      "No full native keyboard/screen-reader audit",
+      "Reduced-motion rules source-reviewed; preference emulation not exercised",
+      "Native screenshot and some Playwright clicks time out; DOM reads and documented native actions worked"
+    ]
+  },
+  "testNotes": [
+    "Two original long interaction tests exceeded the original 5s timeout even before modifications. Their limits are now 15s with assertions unchanged. Baseline 57 passed sequentially; final npm test passed normally.",
+    "Blank request effort is initialized only in App UI. The engine factory and all math remain unchanged. Blank partial inputs preserve NaN via the existing draft codec."
+  ],
+  "rollback": {
+    "branch": "codex/yesif-v2-rollback",
+    "sha": "dc326f1ac7523c960efd5030466b79782581237d"
+  }
+}
