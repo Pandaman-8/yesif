@@ -45,3 +45,5 @@ Do not claim: proven demand, customers/revenue/conversion, unique algorithm, gua
 No PDF presentation is created in this task. Competition rules/deadline remain captain-supplied, not independently reverified against an attached official FAQ. Deadline supplied: November 15, 2026, 12:00 Astana (UTC+5). Preserve time for the separate English deck and submission.
 
 YESIF V2 is a candidate for a Skills/engineering demonstration. It is not an automatic replacement for ShiftMargin; no head-to-head user study or current ShiftMargin audit has been performed. ShiftMargin was not modified.
+
+Final automated evidence: **57 tests across 6 files**, original 500 generated oracle cases plus 1,000 new generated allocation scenarios. Final application code: `05ac2803107376739163970296ab5459ad8f5126`. Screenshot paths: **none obtained**; browser policy blocked the final production capture path. Capture actual production screens before building the deck. Full actual observations and unconfirmed download/clipboard/keyboard checks are in V2_QA_REPORT.md.

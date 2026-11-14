@@ -23,3 +23,7 @@ Reviewed README, foundation, product decision, engine specification, QA and pitc
 | Next week / release dates / dependencies absent                        | Declared model boundary, not an algorithm bug            | —        | Keep explicit assumptions; defer speculative scheduling features                                |
 
 Implementation order: computation and safety → progressive workflow → typography/motion → contextual practice/follow-through → full checks and release. No paid demand, usability validation or absolute uniqueness is established. Implementation status and remaining limitations are recorded in V2_QA_REPORT.md.
+
+## Completed status
+
+P0/P1/P2 fixes listed above are implemented and covered by the V2 QA report. Additional implementation checks found and fixed loss of outcome-note text on storage failure, stale proposal access after simulator edits, unnecessary confirmation after fully reverted inputs, and duplicate punctuation in follow-up notes. No core feasibility defect was found in V1. Deferred model extensions are explicit: release times, dependencies, within-week deadline renegotiation, future weeks, and automatic draft saving. Screenshot, live download receipt, successful clipboard access and full keyboard/accessibility verification remain limited by the available browser tooling. No demand or paid-use claim has been added.
