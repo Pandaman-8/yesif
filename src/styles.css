@@ -1811,3 +1811,6 @@ th {
   margin-bottom: 16px;
   overflow-wrap: anywhere;
 }
+.notebook-return {
+  margin-bottom: 18px;
+}

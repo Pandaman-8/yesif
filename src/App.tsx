@@ -1070,6 +1070,13 @@ function App() {
             )}
             {page === "notebook" && (
               <>
+                <button
+                  className="text-button notebook-return"
+                  onClick={() => go(chosen ? "proposal" : "workload")}
+                >
+                  <ArrowLeft size={15} />{" "}
+                  {chosen ? "Back to my proposal" : "Back to my workload"}
+                </button>
                 <div className="page-heading">
                   <div>
                     <p className="eyebrow">A LITTLE LESS STARTING OVER</p>

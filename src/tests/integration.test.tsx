@@ -123,4 +123,38 @@ describe("complete product flows", () => {
     await user.click(screen.getByRole("button", { name: "Copy proposal" }));
     expect(screen.getByRole("status")).toHaveTextContent("copy it manually");
   });
+  it("keeps the current proposal available through the free-slot limit and demo unlock", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+    await user.click(
+      screen.getByRole("button", { name: "Try a real example" }),
+    );
+    await user.click(screen.getByLabelText("Defer Weekly report"));
+    await user.click(screen.getByRole("button", { name: "Use this plan" }));
+    await user.click(screen.getByRole("button", { name: "Save decision" }));
+    await user.click(screen.getByRole("button", { name: "Compare options" }));
+    const options = screen.getAllByRole("article");
+    await user.click(
+      within(options[1]).getByRole("button", { name: "Use this trade-off" }),
+    );
+    await user.click(screen.getByRole("button", { name: "Save decision" }));
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Your free saved decision is safe",
+    );
+    await user.click(screen.getByRole("button", { name: "Unlock free demo" }));
+    await user.click(
+      screen.getByRole("button", { name: "Back to my proposal" }),
+    );
+    expect(
+      (
+        screen.getByRole("textbox", {
+          name: "Your proposal",
+        }) as HTMLTextAreaElement
+      ).value,
+    ).toContain("smaller, 2-hour version");
+    await user.click(screen.getByRole("button", { name: "Save decision" }));
+    expect(
+      JSON.parse(localStorage.getItem(STORAGE_KEY)!).decisions,
+    ).toHaveLength(2);
+  });
 });
