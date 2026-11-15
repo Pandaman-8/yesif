@@ -55,7 +55,7 @@ More product views: [negotiation practice](screenshots/04-practice.jpg), [Notebo
 
 **Kit demo:** additional locally saved decisions (up to 50), saved-snapshot comparison, playbook, follow-ups, and decision briefs. Unlocking the demo is **free and lasts for the current visit**; existing saved records remain readable and exportable afterward.
 
-**$4.99 one-time is a proposed, unvalidated price.** There is no payment processing, subscription, account, or automatic charge. No user demand, conversion, retention or willingness to pay is claimed.
+**Proposed monthly subscription — $4.99/month.** There is no payment processing, subscription, account, or automatic charge. No user demand, conversion, retention or willingness to pay is claimed.
 
 ## Privacy and limitations
 
